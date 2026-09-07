@@ -25,11 +25,15 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-        # jika wrapper jar belum ada, generate via gradle wrapper
+
       - name: Generate Gradle Wrapper if missing
         run: |
           if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
-            gradle wrapper --gradle-version 8.9
+            echo "Wrapper jar missing, downloading Gradle 8.9"
+            curl -sLo gradle-8.9-bin.zip https://services.gradle.org/distributions/gradle-8.9-bin.zip
+            unzip -q gradle-8.9-bin.zip
+            ./gradle-8.9/bin/gradle wrapper --gradle-version 8.9
+            rm -rf gradle-8.9 gradle-8.9-bin.zip
           fi
 
       - name: Create google-services.json placeholder if missing

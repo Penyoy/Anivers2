@@ -8,6 +8,8 @@ import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class AnimeRepository(
     private val api: com.anivers.anime.data.api.ApiService = RetrofitClient.api
@@ -76,7 +78,7 @@ class AnimeRepository(
     private fun createSeriesBody(clean: String): okhttp3.RequestBody {
         val map = mapOf("get" to "top", "post_type" to "1", "post_id" to clean.trimEnd('/'), "token" to "")
         val json = gson.toJson(map)
-        return okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain; charset=utf-8"), json)
+        return json.toRequestBody("text/plain; charset=utf-8".toMediaType())
     }
 
     private fun parseRawSeries(raw: String): com.google.gson.JsonElement {

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.ViewGroup
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
@@ -46,6 +47,7 @@ import com.anivers.anime.viewmodel.WatchViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun WatchScreen(
     seriesUrl: String,
@@ -244,7 +246,7 @@ fun WatchScreen(
                     }
 
                     // CENTER PLAY/PAUSE (big)
-                    AnimatedVisibility(
+                    androidx.compose.animation.AnimatedVisibility(
                         visible = showControls,
                         enter = fadeIn(),
                         exit = fadeOut(),
@@ -274,7 +276,7 @@ fun WatchScreen(
                     }
 
                     // TOP BAR (title + settings) - YouTube style
-                    AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.TopCenter)) {
+                    androidx.compose.animation.AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.TopCenter)) {
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
@@ -301,7 +303,7 @@ fun WatchScreen(
                     }
 
                     // BOTTOM CONTROLS - progress + time + fullscreen
-                    AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.BottomCenter)) {
+                    androidx.compose.animation.AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.BottomCenter)) {
                         Column(modifier = Modifier.fillMaxWidth().background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xAA000000)))).padding(horizontal = 12.dp, vertical = 8.dp)) {
                             // slider youtube style
                             val prog = if (duration > 0) (if (isUserSeeking) seekPos else position.toFloat() / duration.toFloat()).coerceIn(0f, 1f) else 0f

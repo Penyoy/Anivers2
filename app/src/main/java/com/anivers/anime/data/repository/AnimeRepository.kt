@@ -80,39 +80,88 @@ class AnimeRepository(
         // coba slug langsung dulu, lalu kandidat alias, lalu search fallback
         for (clean in cleans) {
             try {
-                android.util.Log.d("ANIVERS_API", "getSeries try slug=$clean orig=$slug")
-                val body = mapOf("get" to "top", "post_type" to "1", "post_id" to clean, "token" to "")
-                val res = api.getSeries(clean, body)
-                val parsed = parseSeriesDetail(res)
-                if (parsed != null) return@withContext parsed
-                // jika parse null tapi request 200, coba next candidate
-                android.util.Log.w("ANIVERS_API", "getSeries parse null for $clean raw=${res.toString().take(120)}")
+                val cleanNoSlash = clean.trimEnd('/')
+                val cleanWithSlash = if (clean.endsWith("/")) clean else "$clean/"
+                // coba both dengan dan tanpa slash
+                for (c in listOf(cleanNoSlash, cleanWithSlash).distinct()) {
+                    try {
+                        android.util.Log.d("ANIVERS_API", "getSeries try slug=$c orig=$slug")
+                        val body = mapOf("get" to "top", "post_type" to "1", "post_id" to c.trimEnd('/'), "token" to "")
+                        // query param juga coba dengan slash
+                        val res = api.getSeries(c.trimEnd('/'), body)
+                        val parsed = parseSeriesDetail(res)
+                        if (parsed != null) return@withContext parsed
+                        android.util.Log.w("ANIVERS_API", "getSeries parse null for $c raw=${res.toString().take(120)}")
+                    } catch (e: Exception) {
+                        android.util.Log.w("ANIVERS_API", "getSeries fail clean=$c", e)
+                        lastErr = e
+                        // lanjut ke kandidat berikutnya untuk semua error parse/network
+                        continue
+                    }
+                }
             } catch (e: Exception) {
-                android.util.Log.w("ANIVERS_API", "getSeries fail clean=$clean", e)
+                android.util.Log.w("ANIVERS_API", "getSeries outer fail", e)
                 lastErr = e
-                // jika error Expected value at line 1 column 5 (plain false), coba next
-                if (e.message?.contains("Expected value") == true || e.message?.contains("BEGIN_ARRAY") == true) continue
-                else throw e
             }
         }
-        // fallback: search keyword dari judul
+        // fallback: search keyword generik (progressive)
         try {
-            val keyword = slug.replace('-', ' ').take(40)
-            android.util.Log.d("ANIVERS_API", "getSeries fallback search keyword=$keyword")
-            val searchRes = try { api.search(keyword) } catch (_: Exception) { null }
-            if (searchRes != null) {
-                val list = extractSearchAnimes(searchRes)
-                val best = list.firstOrNull { it.url.isNotEmpty() && it.judul.contains("hanayome", ignoreCase = true) } ?: list.firstOrNull()
-                if (best != null && best.url.isNotEmpty() && best.url != cleans.first()) {
-                    android.util.Log.d("ANIVERS_API", "getSeries fallback found ${best.url} for $slug")
-                    val body = mapOf("get" to "top", "post_type" to "1", "post_id" to best.url, "token" to "")
-                    val res2 = api.getSeries(best.url, body)
-                    val parsed2 = parseSeriesDetail(res2)
-                    if (parsed2 != null) return@withContext parsed2
+            fun fallbackKeywords(s: String): List<String> {
+                val words = s.replace('-', ' ').split(" ").filter { it.isNotBlank() && it !in setOf("sub","indo","subtitle","indonesia") }
+                val stop = setOf("wa","no","wo","ni","ke","naka","de","toubun","hanayome","san","sama","kun","chan")
+                val set = LinkedHashSet<String>()
+                if (words.isNotEmpty()) set.add(words.take(2).joinToString(" "))
+                if (words.isNotEmpty()) set.add(words.first())
+                val filtered = words.filter { it !in stop }
+                if (filtered.isNotEmpty()) set.add(filtered.take(3).joinToString(" "))
+                set.add(s.replace('-',' ').substringBefore("-sub").take(40))
+                return set.filter { it.length>=2 && it.length<=40 }.distinct()
+            }
+            var searchResults: List<com.anivers.anime.data.model.Anime> = emptyList()
+            var usedKw = ""
+            for (kw in fallbackKeywords(slug)) {
+                try {
+                    android.util.Log.d("ANIVERS_API", "getSeries fallback search kw=$kw orig=$slug")
+                    val sr = api.search(kw)
+                    val lst = extractSearchAnimes(sr)
+                    if (lst.isNotEmpty()) { searchResults = lst; usedKw = kw; break }
+                } catch (_: Exception) {}
+            }
+            if (searchResults.isNotEmpty()) {
+                fun score(a: com.anivers.anime.data.model.Anime): Int {
+                    val normUrl = Normalizer.sanitizeSlug(a.url)
+                    val q = Normalizer.sanitizeSlug(slug)
+                    var s = normUrl.split("-").intersect(q.split("-").toSet()).size * 10
+                    if (a.judul.contains(q.replace("-"," "), ignoreCase = true)) s += 5
+                    // prefer judul yang mengandung kata pertama query
+                    val firstWord = usedKw.split(" ").firstOrNull() ?: ""
+                    if (firstWord.isNotEmpty() && a.judul.contains(firstWord, ignoreCase = true)) s += 3
+                    return s
                 }
+                val ranked = searchResults.sortedByDescending { score(it) }.take(3)
+                for (best in ranked) {
+                    if (best.url.isBlank()) continue
+                    val canon = best.url.trimEnd('/') + "/"
+                    val variants = listOf(canon, canon.trimEnd('/'), canon.replace("-subtitle-indonesia", "-sub-indo"), canon.replace("-sub-indo", "-subtitle-indonesia")).distinct()
+                    for (v in variants) {
+                        try {
+                            android.util.Log.d("ANIVERS_API", "getSeries fallback retry ${best.judul} url=$v for $slug")
+                            val body = mapOf("get" to "top", "post_type" to "1", "post_id" to v.trimEnd('/'), "token" to "")
+                            val res2 = api.getSeries(v.trimEnd('/'), body)
+                            val parsed2 = parseSeriesDetail(res2)
+                            if (parsed2 != null) return@withContext parsed2
+                        } catch (e: Exception) {
+                            android.util.Log.w("ANIVERS_API", "fallback retry fail $v", e)
+                            lastErr = e
+                        }
+                    }
+                }
+            } else {
+                android.util.Log.w("ANIVERS_API", "getSeries fallback search empty for $slug")
             }
         } catch (e: Exception) {
             android.util.Log.w("ANIVERS_API", "getSeries search fallback fail", e)
+            lastErr = e
         }
         // jika semua gagal, throw last error atau null
         if (lastErr != null) throw lastErr

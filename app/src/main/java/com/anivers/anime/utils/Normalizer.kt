@@ -62,18 +62,47 @@ object Normalizer {
     fun slugCandidates(raw: String?): List<String> {
         val base = sanitizeSlug(raw)
         if (base.isEmpty()) return emptyList()
-        val candidates = mutableListOf(base)
-        // variasi: dengan/tanpa -sub-indo, dengan angka
-        if (!base.endsWith("-sub-indo")) candidates.add("$base-sub-indo")
-        if (base.contains("-s2")) {
-            candidates.add(base.replace("-s2", "-season-2"))
-            candidates.add(base.replace("-s2", "-s2-sub-indo"))
+        val set = LinkedHashSet<String>()
+        fun add(v: String) {
+            if (v.isBlank()) return
+            set.add(v)
+            set.add("$v/")
+            // also without trailing slash
+            set.add(v.trimEnd('/'))
         }
-        if (base.contains("5toubun")) {
-            candidates.add(base.replace("5toubun", "gotoubun"))
+        fun expandSuffix(v: String): List<String> {
+            val no = v.removeSuffix("-sub-indo").removeSuffix("-subtitle-indonesia").removeSuffix("/")
+            return listOf(v, "$no-sub-indo", "$no-subtitle-indonesia", no)
         }
-        // unique
-        return candidates.distinct()
+        // honorific strip
+        val honor = base.removeSuffix("-san").removeSuffix("-sama").removeSuffix("-kun").removeSuffix("-chan").removeSuffix("-senpai")
+        val seeds = mutableListOf(base, honor).distinct()
+        for (seed in seeds) {
+            for (suf in expandSuffix(seed)) {
+                add(suf)
+                if ("-s2" in suf) {
+                    add(suf.replace("-s2", "-season-2"))
+                    add(suf.replace("-s2", "-2"))
+                }
+                if ("-season-2" in suf) add(suf.replace("-season-2", "-s2"))
+                if ("gotoubun" in suf) add(suf.replace("gotoubun", "5toubun"))
+                if ("5toubun" in suf) {
+                    add(suf.replace("5toubun", "gotoubun"))
+                    add(suf.replace("5toubun", "5-toubun"))
+                    add(suf.replace("5toubun", "gotobun"))
+                }
+                if (suf.contains("5-toubun")) add(suf.replace("5-toubun", "5toubun"))
+                add(suf.replace("_", "-")); add(suf.replace("-", "_"))
+                if ("-kei-" in suf) add(suf.replace("-kei-", "kei-"))
+                if ("nichijou-kei" in suf) add(suf.replace("nichijou-kei", "nichijoukei"))
+            }
+        }
+        // golden kamuy word order reversal - try both orders via search fallback, but add simple try
+        if (base == "golden-kamuy" || base == "golden-kamuy-sub-indo") {
+            add("kamuy-golden-subtitle-indonesia"); add("kamuy-golden-subtitle-indonesia/")
+            add("kamuy-golden-sub-indo"); add("kamuy-golden-sub-indo/")
+        }
+        return set.filter { it.trim('/').length >= 2 }.distinct().take(20)
     }
 
     fun parseEpisodeNumber(postUrl: String?): String {

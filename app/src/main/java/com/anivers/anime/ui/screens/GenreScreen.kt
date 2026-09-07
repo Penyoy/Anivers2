@@ -54,8 +54,7 @@ fun GenreScreen(slug: String, onAnimeClick: (String) -> Unit) {
             ).padding(horizontal = 16.dp, vertical = 16.dp).padding(top = 48.dp)
         ) {
             Column {
-                Text(slug.replace("-", " ").split(" ").joinToString(" ") { it.replaceFirstChar { c-> c.uppercase() } }, color = Color.White, fontSize = 20.sp)
-                Text("${list.size} anime • Hal $page", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+                Text(slug.replace("-", " ").split(" ").joinToString(" ") { it.replaceFirstChar { c-> c.uppercase() } }, color = Color.White, fontSize = 20.sp, fontFamily = com.anivers.anime.ui.theme.BestyFontFamily)
             }
         }
         if (loading && list.isEmpty()) {

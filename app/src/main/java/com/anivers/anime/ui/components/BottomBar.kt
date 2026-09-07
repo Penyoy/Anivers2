@@ -45,16 +45,16 @@ fun BottomBar(navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .navigationBarsPadding()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .padding(bottom = 4.dp),
+            .background(Color(0xFF030303)),
         contentAlignment = Alignment.Center
     ) {
-        Row(
-            modifier = Modifier
-                .clip(RoundedCornerShape(50))
-                .background(Color(0xCC030303)) // gold luxury black 80%
-                .border(1.dp, Color(0x33FFDB89), RoundedCornerShape(50))
-                .padding(4.dp),
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color(0x33FFDB89)))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFF030303))
+                    .padding(horizontal = 4.dp, vertical = 4.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -90,6 +90,7 @@ fun BottomBar(navController: NavController) {
                     )
                 )
             }
+        }
         }
     }
 }

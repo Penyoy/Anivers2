@@ -65,7 +65,7 @@ object Normalizer {
         val base = sanitizeSlug(raw)
         if (base.isEmpty()) return emptyList()
         val set = LinkedHashSet<String>()
-        fun add(v: String) {
+        fun addCandidate(v: String) {
             if (v.isBlank()) return
             set.add(v); set.add("$v/"); set.add(v.trimEnd('/'))
         }
@@ -95,25 +95,25 @@ object Normalizer {
         }
         for (seed in seeds.distinct()) {
             for (suf in expandSuffix(seed)) {
-                add(suf)
-                if ("-s2" in suf) { add(suf.replace("-s2", "-season-2")); add(suf.replace("-s2", "-2")) }
-                if ("-season-2" in suf) add(suf.replace("-season-2", "-s2"))
-                if ("gotoubun" in suf) add(suf.replace("gotoubun", "5toubun"))
+                addCandidate(suf)
+                if ("-s2" in suf) { addCandidate(suf.replace("-s2", "-season-2")); addCandidate(suf.replace("-s2", "-2")) }
+                if ("-season-2" in suf) addCandidate(suf.replace("-season-2", "-s2"))
+                if ("gotoubun" in suf) addCandidate(suf.replace("gotoubun", "5toubun"))
                 if ("5toubun" in suf) {
-                    add(suf.replace("5toubun", "gotoubun")); add(suf.replace("5toubun", "5-toubun")); add(suf.replace("5toubun", "gotobun"))
+                    addCandidate(suf.replace("5toubun", "gotoubun")); addCandidate(suf.replace("5toubun", "5-toubun")); addCandidate(suf.replace("5toubun", "gotobun"))
                 }
-                if (suf.contains("5-toubun")) add(suf.replace("5-toubun", "5toubun"))
-                add(suf.replace("_", "-")); add(suf.replace("-", "_"))
-                if ("-kei-" in suf) add(suf.replace("-kei-", "kei-"))
-                if ("nichijou-kei" in suf) add(suf.replace("nichijou-kei", "nichijoukei"))
-                if ("nichijoukei" in suf) add(suf.replace("nichijoukei", "nichijou-kei"))
+                if (suf.contains("5-toubun")) addCandidate(suf.replace("5-toubun", "5toubun"))
+                addCandidate(suf.replace("_", "-")); addCandidate(suf.replace("-", "_"))
+                if ("-kei-" in suf) addCandidate(suf.replace("-kei-", "kei-"))
+                if ("nichijou-kei" in suf) addCandidate(suf.replace("nichijou-kei", "nichijoukei"))
+                if ("nichijoukei" in suf) addCandidate(suf.replace("nichijoukei", "nichijou-kei"))
                 // inou-battle word order swap - handle all variants
-                if (suf.contains("inou-battle-wa")) add(suf.replace("inou-battle-wa", "inou-wa-battle"))
-                if (suf.contains("inou-wa-battle")) add(suf.replace("inou-wa-battle", "inou-battle-wa"))
+                if (suf.contains("inou-battle-wa")) addCandidate(suf.replace("inou-battle-wa", "inou-wa-battle"))
+                if (suf.contains("inou-wa-battle")) addCandidate(suf.replace("inou-wa-battle", "inou-battle-wa"))
                 if (suf.contains("nichijou-kei-no-naka-de")) {
-                    add(suf.replace("nichijou-kei-no-naka-de", "nichijou"))
-                    add(suf.replace("-nichijou-kei-no-naka-de", ""))
-                    add(suf.replace("nichijou-kei-no-naka-de", "nichijou-subtitle-indonesia"))
+                    addCandidate(suf.replace("nichijou-kei-no-naka-de", "nichijou"))
+                    addCandidate(suf.replace("-nichijou-kei-no-naka-de", ""))
+                    addCandidate(suf.replace("nichijou-kei-no-naka-de", "nichijou-subtitle-indonesia"))
                 }
             }
         }

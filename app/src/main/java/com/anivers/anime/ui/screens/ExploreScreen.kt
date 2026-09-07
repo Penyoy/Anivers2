@@ -85,37 +85,10 @@ fun ExploreScreen(
             .background(Color(0xFF030303))
             .padding(bottom = 100.dp)
     ) {
-        // hero
+        // hero - langsung genre tanpa stats
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp).padding(top = 48.dp)) {
-            Text("Jelajahi Genre", color = Color(0xFFF8FAFC), fontSize = 22.sp, fontWeight = FontWeight.ExtraBold)
-            Text("Pilih mood kamu hari ini" + if (initialType.isNotEmpty()) " • filter: $initialType" else "", color = Color(0xFF8A8FA3), fontSize = 13.sp)
-        }
-
-        // stats row
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StatCard("15+", "Genre Populer", Color(0xFFFFDB89))
-            StatCard("1000+", "Anime Tersedia", Color(0xFFD97706))
-            StatCard("Update", "Harian", Color(0xFF15803D))
-        }
-        Spacer(Modifier.height(16.dp))
-
-        // FILTER INFO if coming from Home More
-        if (initialType.isNotEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(12.dp)).background(Color(0x14FFDB89)).padding(10.dp)
-            ) {
-                Text(
-                    when (initialType) {
-                        "ongoing" -> "Menampilkan Trending (Ongoing) • ${filteredList.size} anime"
-                        "baruupload" -> "Menampilkan New Update • ${filteredList.size} anime"
-                        "movie" -> "Menampilkan Completed Movie • ${filteredList.size} anime"
-                        else -> "Menampilkan Top / Rekomendasi • ${filteredList.size} anime"
-                    },
-                    color = Color(0xFFA5B4FC), fontSize = 12.sp
-                )
-            }
-            Spacer(Modifier.height(12.dp))
+            Text("Jelajahi Genre", color = Color(0xFFF8FAFC), fontSize = 22.sp, fontWeight = FontWeight.ExtraBold, fontFamily = com.anivers.anime.ui.theme.BestyFontFamily)
+            Text("Pilih mood kamu hari ini", color = Color(0xFF8A8FA3), fontSize = 13.sp)
         }
 
         // GENRE GRID AT TOP (requested)
@@ -172,18 +145,6 @@ fun ExploreScreen(
                                     repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
                                 }
                             }
-                        }
-                    }
-                    Spacer(Modifier.height(16.dp))
-                    // quick kategori
-                    Text("Kategori Cepat", color = Color(0xFFF8FAFC), fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.height(8.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                        for ((label, _) in listOf("Shounen Populer" to "naruto", "Movie Terbaru" to "movie", "Isekai" to "isekai", "Romance" to "romance")) {
-                            Box(
-                                modifier = Modifier.weight(1f).clip(RoundedCornerShape(12.dp)).background(Color(0x0DFFFFFF)).padding(10.dp),
-                                contentAlignment = Alignment.Center
-                            ) { Text(label, color = Color(0xFFAEB2C7), fontSize = 11.sp) }
                         }
                     }
                     Spacer(Modifier.height(24.dp))

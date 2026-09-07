@@ -46,6 +46,8 @@ fun HomeScreen(
     val context = LocalContext.current
     val history by AppDatabase.get(context).historyDao().getRecentFlow(6).collectAsState(initial = emptyList())
 
+    // user profile header - request: foto profil dan nama di paling atas
+    val authUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,12 +55,33 @@ fun HomeScreen(
             .verticalScroll(rememberScrollState())
             .padding(bottom = 100.dp)
     ) {
-        // TopBar inside Home (custom)
-        TopBar(
-            onSearchClick = onNavigateSearch,
-            onProfileClick = {},
-            showSearch = false // we show large search below ala request but click navigates
-        )
+        // Profile header like Proyek Baru 51.png User name
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp).padding(top = 48.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Box(
+                modifier = Modifier.size(44.dp).clip(RoundedCornerShape(50)).background(Color(0xFF2C2C2E)),
+                contentAlignment = Alignment.Center
+            ) {
+                if (authUser?.photoUrl != null) {
+                    coil.compose.AsyncImage(model = authUser.photoUrl.toString(), contentDescription = null, modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(50)), contentScale = ContentScale.Crop)
+                } else {
+                    Text(
+                        text = (authUser?.displayName?.take(2) ?: "A").uppercase(),
+                        color = Color(0xFFFFDB89),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+            Column {
+                Text(authUser?.displayName ?: "Anivers User", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                Text(authUser?.email ?: "Selamat datang kembali", color = Color(0xFF8A8FA3), fontSize = 11.sp)
+            }
+        }
 
         // Big Search Card - reference Proyek Baru 51.png black pill
         Box(
@@ -134,29 +157,6 @@ fun HomeScreen(
             }
         }
 
-        // Continue Watching
-        if (history.isNotEmpty()) {
-            SectionHeader(title = "Continue Watching", onMore = { /* already recent is separate */ })
-            LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                items(history.size) { i ->
-                    val h = history[i]
-                    Column(
-                        modifier = Modifier.width(120.dp).clip(RoundedCornerShape(12.dp)).background(Color(0x0DFFFFFF)).clickable { /* navigate to watch - need seriesUrl/episode */ }
-                    ) {
-                        Box(modifier = Modifier.fillMaxWidth().aspectRatio(3f/4f).clip(RoundedCornerShape(12.dp))) {
-                            AsyncImage(model = h.cover, contentDescription = h.judul, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
-                            Box(
-                                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(3.dp).background(Color(0x66000000))
-                            ) {
-                                Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(h.progress/100f).background(Color(0xFFFFDB89)))
-                            }
-                        }
-                        Text(h.judul, color = Color(0xFFE6E8EE), fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(6.dp))
-                    }
-                }
-            }
-        }
-
         // TOP ANIME Section (requested di home)
         if (state.topAnime.isNotEmpty()) {
             SectionHeader(title = "Top Anime", onMore = { onMoreClick("rekomendasi") })
@@ -179,6 +179,30 @@ fun HomeScreen(
                                 modifier = Modifier.align(Alignment.BottomStart).padding(8.dp)
                             )
                         }
+                    }
+                }
+            }
+        }
+
+
+        // Continue Watching
+        if (history.isNotEmpty()) {
+            SectionHeader(title = "Continue Watching", onMore = { /* already recent is separate */ })
+            LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                items(history.size) { i ->
+                    val h = history[i]
+                    Column(
+                        modifier = Modifier.width(120.dp).clip(RoundedCornerShape(12.dp)).background(Color(0x0DFFFFFF)).clickable { /* navigate to watch - need seriesUrl/episode */ }
+                    ) {
+                        Box(modifier = Modifier.fillMaxWidth().aspectRatio(3f/4f).clip(RoundedCornerShape(12.dp))) {
+                            AsyncImage(model = h.cover, contentDescription = h.judul, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
+                            Box(
+                                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(3.dp).background(Color(0x66000000))
+                            ) {
+                                Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(h.progress/100f).background(Color(0xFFFFDB89)))
+                            }
+                        }
+                        Text(h.judul, color = Color(0xFFE6E8EE), fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(6.dp))
                     }
                 }
             }

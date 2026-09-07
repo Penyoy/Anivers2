@@ -63,6 +63,15 @@ fun WatchScreen(
     val quality by vm.quality.collectAsState()
     val scope = rememberCoroutineScope()
     val repo = remember { BookmarkRepository(context) }
+    // grafik setting sinkron - baca dari SettingsStore agar setting di Profile ngaruh
+    val settingsStore = remember { com.anivers.anime.data.local.SettingsStore(context) }
+    val appSettings by settingsStore.flow.collectAsState(initial = com.anivers.anime.data.local.AppSettings())
+    LaunchedEffect(appSettings.quality, stream) {
+        val resos = stream?.data?.firstOrNull()?.reso ?: emptyList()
+        if (resos.isNotEmpty() && appSettings.quality in resos && appSettings.quality != quality) {
+            vm.setQuality(appSettings.quality)
+        }
+    }
 
     var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
     var currentLink by remember { mutableStateOf<String?>(null) }

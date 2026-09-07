@@ -157,9 +157,7 @@ fun DetailScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Box(modifier = Modifier.size(40.dp).clip(RoundedCornerShape(8.dp)).background(Color(0xFFFFDB89)), contentAlignment = Alignment.Center) {
-                                    Text(ep.ch ?: "?", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
-                                }
+                                Text(ep.ch ?: "?", color = Color(0xFFFFDB89), fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.width(48.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text("Episode ${ep.ch}", color = Color(0xFFCCCCCC), fontSize = 13.sp)
                                     Text(ep.date ?: "", color = Color(0xFF666666), fontSize = 11.sp)

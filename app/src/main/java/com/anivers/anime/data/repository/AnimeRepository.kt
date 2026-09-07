@@ -74,16 +74,56 @@ class AnimeRepository(
     }
 
     suspend fun getSeries(slug: String): SeriesDetail? = withContext(Dispatchers.IO) {
-        try {
-            val clean = Normalizer.sanitizeSlug(slug)
-            require(clean.length >= 2 && clean != "undefined" && clean != "null") { "Slug tidak valid: $slug" }
-            val body = mapOf("get" to "top", "post_type" to "1", "post_id" to clean, "token" to "")
-            val res = api.getSeries(clean, body)
-            parseSeriesDetail(res)
-        } catch (e: Exception) {
-            android.util.Log.e("ANIVERS_API", "getSeries failed slug=$slug", e)
-            throw e
+        val cleans = Normalizer.slugCandidates(slug)
+        require(cleans.isNotEmpty() && cleans.first().length >= 2) { "Slug tidak valid: $slug" }
+        var lastErr: Exception? = null
+        // coba slug langsung dulu, lalu kandidat alias, lalu search fallback
+        for (clean in cleans) {
+            try {
+                android.util.Log.d("ANIVERS_API", "getSeries try slug=$clean orig=$slug")
+                val body = mapOf("get" to "top", "post_type" to "1", "post_id" to clean, "token" to "")
+                val res = api.getSeries(clean, body)
+                val parsed = parseSeriesDetail(res)
+                if (parsed != null) return@withContext parsed
+                // jika parse null tapi request 200, coba next candidate
+                android.util.Log.w("ANIVERS_API", "getSeries parse null for $clean raw=${res.toString().take(120)}")
+            } catch (e: Exception) {
+                android.util.Log.w("ANIVERS_API", "getSeries fail clean=$clean", e)
+                lastErr = e
+                // jika error Expected value at line 1 column 5 (plain false), coba next
+                if (e.message?.contains("Expected value") == true || e.message?.contains("BEGIN_ARRAY") == true) continue
+                else throw e
+            }
         }
+        // fallback: search keyword dari judul
+        try {
+            val keyword = slug.replace('-', ' ').take(40)
+            android.util.Log.d("ANIVERS_API", "getSeries fallback search keyword=$keyword")
+            val searchRes = try { api.search(keyword) } catch (_: Exception) { null }
+            if (searchRes != null) {
+                val list = extractSearchAnimes(searchRes)
+                val best = list.firstOrNull { it.url.isNotEmpty() && it.judul.contains("hanayome", ignoreCase = true) } ?: list.firstOrNull()
+                if (best != null && best.url.isNotEmpty() && best.url != cleans.first()) {
+                    android.util.Log.d("ANIVERS_API", "getSeries fallback found ${best.url} for $slug")
+                    val body = mapOf("get" to "top", "post_type" to "1", "post_id" to best.url, "token" to "")
+                    val res2 = api.getSeries(best.url, body)
+                    val parsed2 = parseSeriesDetail(res2)
+                    if (parsed2 != null) return@withContext parsed2
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.w("ANIVERS_API", "getSeries search fallback fail", e)
+        }
+        // jika semua gagal, throw last error atau null
+        if (lastErr != null) throw lastErr
+        // coba raw dump untuk debug
+        try {
+            val first = cleans.first()
+            val body = mapOf("get" to "top", "post_type" to "1", "post_id" to first, "token" to "")
+            val res = api.getSeries(first, body)
+            android.util.Log.e("ANIVERS_SERIES_RAW", "raw for $first: ${res.toString().take(400)}")
+        } catch (_: Exception) {}
+        null
     }
 
     suspend fun getEpisodeData(postUrl: String, seriesUrl: String, episode: String? = null): EpisodeDataResponse = withContext(Dispatchers.IO) {
@@ -176,20 +216,50 @@ class AnimeRepository(
 
     private fun parseSeriesDetail(element: JsonElement): SeriesDetail? {
         return try {
+            if (element == null || element.isJsonNull) return null
+            // jika server balas primitive string/false (cases gotoubun not found: "false" 5 char)
+            if (element.isJsonPrimitive) {
+                val prim = element.asJsonPrimitive
+                if (prim.isString) {
+                    val s = prim.asString.trim()
+                    android.util.Log.w("ANIVERS_API", "parseSeriesDetail primitive string: $s")
+                    if (s.equals("false", ignoreCase = true) || s.equals("null", ignoreCase = true) || s.isEmpty()) return null
+                }
+                if (prim.isBoolean && !prim.asBoolean) return null
+                return null
+            }
             if (element.isJsonObject) {
                 val obj = element.asJsonObject
                 if (obj.has("data")) {
                     val d = obj.get("data")
+                    if (d == null || d.isJsonNull) return null
+                    if (d.isJsonPrimitive) {
+                        // data: "false" / "null"
+                        android.util.Log.w("ANIVERS_API", "parseSeriesDetail data primitive: $d")
+                        return null
+                    }
                     if (d.isJsonArray && d.asJsonArray.size() > 0) {
-                        return gson.fromJson(d.asJsonArray[0], SeriesDetail::class.java)
+                        val first = d.asJsonArray[0]
+                        if (first.isJsonPrimitive) return null
+                        return gson.fromJson(first, SeriesDetail::class.java)
                     }
                     if (d.isJsonObject) return gson.fromJson(d, SeriesDetail::class.java)
+                } else {
+                    // langsung object series tanpa wrapper data (beberapa mirror)
+                    if (obj.has("judul") || obj.has("cover") || obj.has("chapter")) {
+                        return gson.fromJson(obj, SeriesDetail::class.java)
+                    }
                 }
             }
             if (element.isJsonArray && element.asJsonArray.size() > 0) {
-                return gson.fromJson(element.asJsonArray[0], SeriesDetail::class.java)
+                val first = element.asJsonArray[0]
+                if (first.isJsonObject) return gson.fromJson(first, SeriesDetail::class.java)
             }
+            android.util.Log.w("ANIVERS_API", "parseSeriesDetail unhandled shape: ${element.toString().take(200)}")
             null
-        } catch (e: Exception) { e.printStackTrace(); null }
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "parseSeriesDetail error element=${element.toString().take(200)}", e)
+            null
+        }
     }
 }

@@ -30,8 +30,10 @@ fun AniVerseTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = DarkColorScheme,
         typography = Typography(
-            titleLarge = Typography().titleLarge.copy(fontSize = 20.sp),
-            bodyMedium = Typography().bodyMedium.copy(color = Color(0xFFAEB2C7))
+            titleLarge = Typography().titleLarge.copy(fontSize = 20.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.ExtraBold, letterSpacing = (-0.5).sp),
+            titleMedium = Typography().titleMedium.copy(fontWeight = androidx.compose.ui.text.font.FontWeight.Bold, color = Color(0xFFF8FAFC)),
+            bodyMedium = Typography().bodyMedium.copy(color = Color(0xFFAEB2C7), lineHeight = 18.sp),
+            labelSmall = Typography().labelSmall.copy(color = Color(0xFF8A8FA3), letterSpacing = 0.3.sp)
         ),
         content = content
     )

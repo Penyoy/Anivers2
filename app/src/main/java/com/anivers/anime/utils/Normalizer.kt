@@ -50,7 +50,30 @@ object Normalizer {
         s = s.trim('/').split("?")[0].split("#")[0]
         s = s.replace(Regex("\\s+"), "-")
         s = s.replace(Regex("[^a-z0-9\\-_]"), "-").replace(Regex("-+"), "-")
+        s = s.trim('-')
+        // alias khusus untuk kasus gotoubun (Reqable sering 5toubun, user ketik gotoubun)
+        s = s.replace("gotoubun", "5toubun")
+            .replace("hanayome-season-2", "hanayome-s2")
+            .replace("season-2", "s2")
+            .replace("season2", "s2")
         return s.trim('-')
+    }
+
+    fun slugCandidates(raw: String?): List<String> {
+        val base = sanitizeSlug(raw)
+        if (base.isEmpty()) return emptyList()
+        val candidates = mutableListOf(base)
+        // variasi: dengan/tanpa -sub-indo, dengan angka
+        if (!base.endsWith("-sub-indo")) candidates.add("$base-sub-indo")
+        if (base.contains("-s2")) {
+            candidates.add(base.replace("-s2", "-season-2"))
+            candidates.add(base.replace("-s2", "-s2-sub-indo"))
+        }
+        if (base.contains("5toubun")) {
+            candidates.add(base.replace("5toubun", "gotoubun"))
+        }
+        // unique
+        return candidates.distinct()
     }
 
     fun parseEpisodeNumber(postUrl: String?): String {

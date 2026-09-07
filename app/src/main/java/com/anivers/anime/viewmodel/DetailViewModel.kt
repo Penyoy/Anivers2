@@ -27,10 +27,14 @@ class DetailViewModel(private val repo: AnimeRepository = AnimeRepository()) : V
             }
             try {
                 val d = repo.getSeries(slug)
-                if (d == null) _error.value = "Data tidak ditemukan untuk $slug"
+                if (d == null) {
+                    _error.value = "Data tidak ditemukan untuk $slug (coba cari \"gotoubun\" di Search)"
+                    android.util.Log.w("ANIVERS_DETAIL", "null for slug=$slug")
+                }
                 _detail.value = d
             } catch (e: Exception) {
-                _error.value = e.message
+                android.util.Log.e("ANIVERS_DETAIL", "load fail slug=$slug", e)
+                _error.value = "Gagal memuat detail: ${e.message?.take(140)}\nRaw: ${e.toString().take(120)}"
             }
             _loading.value = false
         }

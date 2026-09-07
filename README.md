@@ -3,8 +3,8 @@
 Port native Android dari `hanime-main` (Vue) dengan API `animeloversv3-api.txt`. Siap compile via GitHub Actions, minSdk 23 (Android 6.0) — naik dari 21 karena Firebase BOM 33.7.0 butuh min 23 — targetSdk 35 (Android 15).
 
 ##ScreenShot
-(assets/Screenshot_2026-09-07-20-59-51-72.jpg)
-(assets/Screenshot_2026-09-07-20-59-39-10.jpg)
+![gambar1](assets/Screenshot_2026-09-07-20-59-51-72.jpg)
+![gambar2](assets/Screenshot_2026-09-07-20-59-39-10.jpg)
 
 ## Fitur sesuai request
 

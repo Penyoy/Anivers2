@@ -49,7 +49,7 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF10131C))
+            .background(Color(0xFF030303))
             .verticalScroll(rememberScrollState())
             .padding(bottom = 100.dp)
     ) {
@@ -103,7 +103,7 @@ fun HomeScreen(
                             .width(300.dp)
                             .aspectRatio(16f / 9f)
                             .clip(RoundedCornerShape(16.dp))
-                            .background(Color(0xFF0A0F1E))
+                            .background(Color(0xFF1A1A1A))
                             .clickable { onAnimeClick(a.url) }
                     ) {
                         AsyncImage(model = a.cover, contentDescription = a.judul, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
@@ -148,7 +148,7 @@ fun HomeScreen(
                             Box(
                                 modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(3.dp).background(Color(0x66000000))
                             ) {
-                                Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(h.progress/100f).background(Color(0xFF5B5BD6)))
+                                Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(h.progress/100f).background(Color(0xFFFFDB89)))
                             }
                         }
                         Text(h.judul, color = Color(0xFFE6E8EE), fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(6.dp))
@@ -166,7 +166,7 @@ fun HomeScreen(
                     Column(
                         modifier = Modifier.width(140.dp).clickable { onAnimeClick(a.url) }
                     ) {
-                        Box(modifier = Modifier.fillMaxWidth().aspectRatio(3f/4.2f).clip(RoundedCornerShape(14.dp)).background(Color(0xFF0A0F1E))) {
+                        Box(modifier = Modifier.fillMaxWidth().aspectRatio(3f/4.2f).clip(RoundedCornerShape(14.dp)).background(Color(0xFF1A1A1A))) {
                             AsyncImage(model = a.cover, contentDescription = a.judul, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                             Box(
                                 modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xAA000000))))
@@ -214,7 +214,7 @@ fun HomeScreen(
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 for ((idx, a) in state.rekomendasi.take(2).withIndex()) {
                     Box(
-                        modifier = Modifier.weight(1f).aspectRatio(3f/4.2f).clip(RoundedCornerShape(14.dp)).background(Color(0xFF0A0F1E)).clickable { onAnimeClick(a.url) }
+                        modifier = Modifier.weight(1f).aspectRatio(3f/4.2f).clip(RoundedCornerShape(14.dp)).background(Color(0xFF1A1A1A)).clickable { onAnimeClick(a.url) }
                     ) {
                         AsyncImage(model = a.cover, contentDescription = a.judul, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                         Box(modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xAA000000)))))

@@ -51,7 +51,7 @@ fun ProfileScreen() {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(Color(0xFF10131C)).verticalScroll(rememberScrollState()).padding(bottom = 100.dp).padding(horizontal = 16.dp).padding(top = 48.dp),
+        modifier = Modifier.fillMaxSize().background(Color(0xFF030303)).verticalScroll(rememberScrollState()).padding(bottom = 100.dp).padding(horizontal = 16.dp).padding(top = 48.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         if (user != null) {
@@ -60,7 +60,7 @@ fun ProfileScreen() {
                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(Color(0x0DFFFFFF)).padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(modifier = Modifier.size(84.dp).clip(CircleShape).background(Color(0xFF5B5BD6)), contentAlignment = Alignment.Center) {
+                Box(modifier = Modifier.size(84.dp).clip(CircleShape).background(Color(0xFFFFDB89)), contentAlignment = Alignment.Center) {
                     if (user?.photoUrl != null) AsyncImage(model = user?.photoUrl.toString(), contentDescription = null, modifier = Modifier.fillMaxSize())
                     else Text((user?.displayName?.take(2) ?: "U").uppercase(), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 24.sp)
                 }
@@ -125,7 +125,7 @@ fun ProfileScreen() {
                         }
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB89)),
                     shape = RoundedCornerShape(50.dp),
                     enabled = !loading
                 ) { Text(if (isLogin) "Login" else "Daftar", fontSize = 14.sp) }
@@ -175,6 +175,6 @@ private fun SettingRow(title: String, subtitle: String, checked: Boolean, onChan
             Text(title, color = Color.White, fontSize = 13.sp)
             Text(subtitle, color = Color(0xFF8A8FA3), fontSize = 11.sp)
         }
-        Switch(checked = checked, onCheckedChange = onChange, colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = Color(0xFF5B5BD6)))
+        Switch(checked = checked, onCheckedChange = onChange, colors = SwitchDefaults.colors(checkedThumbColor = Color.White, checkedTrackColor = Color(0xFFFFDB89)))
     }
 }

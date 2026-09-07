@@ -39,12 +39,12 @@ fun JadwalScreen(onAnimeClick: (String) -> Unit) {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF10131C)).verticalScroll(rememberScrollState()).padding(bottom = 100.dp).padding(top = 48.dp)) {
+    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF030303)).verticalScroll(rememberScrollState()).padding(bottom = 100.dp).padding(top = 48.dp)) {
         Text("Jadwal Rilis", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
         Text("Update mingguan", color = Color(0xFF8A8FA3), fontSize = 13.sp, modifier = Modifier.padding(horizontal = 16.dp))
         Spacer(Modifier.height(12.dp))
         if (loading) {
-            Box(Modifier.fillMaxWidth().height(120.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF5B5BD6)) }
+            Box(Modifier.fillMaxWidth().height(120.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFFFFDB89)) }
         } else {
             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(days.size) { idx ->

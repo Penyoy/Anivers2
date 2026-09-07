@@ -132,13 +132,23 @@ class AnimeRepository(
         try {
             fun fallbackKeywords(s: String): List<String> {
                 val words = s.replace('-', ' ').split(" ").filter { it.isNotBlank() && it !in setOf("sub","indo","subtitle","indonesia") }
-                val stop = setOf("wa","no","wo","ni","ke","naka","de","toubun","hanayome","san","sama","kun","chan")
+                val stop = setOf("wa","no","wo","ni","ke","naka","de","toubun","hanayome","san","sama","kun","chan","senpai")
                 val set = LinkedHashSet<String>()
-                if (words.isNotEmpty()) set.add(words.take(2).joinToString(" "))
-                if (words.isNotEmpty()) set.add(words.first())
+                if (words.isNotEmpty()) {
+                    set.add(words.take(2).joinToString(" "))
+                    set.add(words.take(2).joinToString("-"))
+                    set.add(words.first())
+                }
                 val filtered = words.filter { it !in stop }
-                if (filtered.isNotEmpty()) set.add(filtered.take(3).joinToString(" "))
+                if (filtered.isNotEmpty()) {
+                    set.add(filtered.take(3).joinToString(" "))
+                    set.add(filtered.take(2).joinToString("-"))
+                    set.add(filtered.take(2).joinToString(" "))
+                }
                 set.add(s.replace('-',' ').substringBefore("-sub").take(40))
+                set.add(s.replace('-',' ').split(" ").firstOrNull()?.take(20) ?: "")
+                // also original slug spaced
+                set.add(s.replace('-',' ').take(30))
                 return set.filter { it.length>=2 && it.length<=40 }.distinct()
             }
             var searchResults: List<com.anivers.anime.data.model.Anime> = emptyList()

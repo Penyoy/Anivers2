@@ -82,7 +82,7 @@ fun ExploreScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF10131C))
+            .background(Color(0xFF030303))
             .padding(bottom = 100.dp)
     ) {
         // hero
@@ -93,7 +93,7 @@ fun ExploreScreen(
 
         // stats row
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StatCard("15+", "Genre Populer", Color(0xFF5B5BD6))
+            StatCard("15+", "Genre Populer", Color(0xFFFFDB89))
             StatCard("1000+", "Anime Tersedia", Color(0xFFD97706))
             StatCard("Update", "Harian", Color(0xFF15803D))
         }
@@ -103,7 +103,7 @@ fun ExploreScreen(
         if (initialType.isNotEmpty()) {
             Box(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(12.dp)).background(Color(0x145B5BD6)).padding(10.dp)
+                    .clip(RoundedCornerShape(12.dp)).background(Color(0x14FFDB89)).padding(10.dp)
             ) {
                 Text(
                     when (initialType) {
@@ -124,7 +124,10 @@ fun ExploreScreen(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
         )
         // 2 columns grid manually in LazyColumn
-        LazyColumn(modifier = Modifier.weight(1f, fill = false)) {
+        LazyColumn(
+            modifier = Modifier.weight(1f, fill = false),
+            contentPadding = PaddingValues(bottom = 100.dp)
+        ) {
             item {
                 Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     for (row in genres.chunked(2)) {
@@ -155,7 +158,7 @@ fun ExploreScreen(
                     Text("Rekomendasi Lain", color = Color(0xFFF8FAFC), fontWeight = FontWeight.Bold, fontSize = 15.sp)
                     if (loading) {
                         Box(Modifier.fillMaxWidth().height(180.dp), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(color = Color(0xFF5B5BD6))
+                            CircularProgressIndicator(color = Color(0xFFFFDB89))
                         }
                     } else {
                         val list = if (filteredList.isNotEmpty()) filteredList else rekomendasi

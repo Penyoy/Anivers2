@@ -36,13 +36,13 @@ class MainActivity : ComponentActivity() {
                         // TopBar per-screen
                     },
                     bottomBar = { BottomBar(navController) },
-                    containerColor = Color(0xFF10131C),
+                    containerColor = Color(0xFF030303),
                     contentWindowInsets = WindowInsets(0, 0, 0, 0)
                 ) { padding ->
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color(0xFF10131C))
+                            .background(Color(0xFF030303))
                             .padding(bottom = padding.calculateBottomPadding())
                     ) {
                         AppNavGraph(navController = navController)

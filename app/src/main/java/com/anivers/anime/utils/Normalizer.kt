@@ -67,63 +67,57 @@ object Normalizer {
         val set = LinkedHashSet<String>()
         fun add(v: String) {
             if (v.isBlank()) return
-            set.add(v)
-            set.add("$v/")
-            // also without trailing slash
-            set.add(v.trimEnd('/'))
+            set.add(v); set.add("$v/"); set.add(v.trimEnd('/'))
         }
         fun expandSuffix(v: String): List<String> {
             val no = v.removeSuffix("-sub-indo").removeSuffix("-subtitle-indonesia").removeSuffix("/")
             return listOf(v, "$no-sub-indo", "$no-subtitle-indonesia", no)
         }
         // honorific strip
-        val honor = base.removeSuffix("-san").removeSuffix("-sama").removeSuffix("-kun").removeSuffix("-chan").removeSuffix("-senpai")
+        val honor = base.removeSuffix("-san").removeSuffix("-sama").removeSuffix("-kun").removeSuffix("-chan").removeSuffix("-senpai").removeSuffix("-sensei")
         val seeds = mutableListOf(base, honor).distinct()
-        for (seed in seeds) {
+        // also truncated first 1-2 tokens for server shortened like ijiranaide-nagatoro-san -> ijiranaide-sub-indo
+        val parts = base.split("-")
+        if (parts.size > 2) {
+            val first = parts.first()
+            seeds.add("$first-sub-indo"); seeds.add("$first-subtitle-indonesia")
+            if (parts.size >= 2) {
+                val first2 = parts.take(2).joinToString("-")
+                seeds.add("$first2-sub-indo"); seeds.add("$first2-subtitle-indonesia")
+            }
+        }
+        // word order reversal for golden kamuy
+        if (base.contains("golden-kamuy")) {
+            seeds.add("kamuy-golden-subtitle-indonesia"); seeds.add("kamuy-golden-sub-indo")
+        }
+        if (base.contains("kamuy-golden")) {
+            seeds.add("golden-kamuy"); seeds.add("golden-kamuy-sub-indo")
+        }
+        for (seed in seeds.distinct()) {
             for (suf in expandSuffix(seed)) {
                 add(suf)
-                if ("-s2" in suf) {
-                    add(suf.replace("-s2", "-season-2"))
-                    add(suf.replace("-s2", "-2"))
-                }
+                if ("-s2" in suf) { add(suf.replace("-s2", "-season-2")); add(suf.replace("-s2", "-2")) }
                 if ("-season-2" in suf) add(suf.replace("-season-2", "-s2"))
                 if ("gotoubun" in suf) add(suf.replace("gotoubun", "5toubun"))
                 if ("5toubun" in suf) {
-                    add(suf.replace("5toubun", "gotoubun"))
-                    add(suf.replace("5toubun", "5-toubun"))
-                    add(suf.replace("5toubun", "gotobun"))
+                    add(suf.replace("5toubun", "gotoubun")); add(suf.replace("5toubun", "5-toubun")); add(suf.replace("5toubun", "gotobun"))
                 }
                 if (suf.contains("5-toubun")) add(suf.replace("5-toubun", "5toubun"))
                 add(suf.replace("_", "-")); add(suf.replace("-", "_"))
                 if ("-kei-" in suf) add(suf.replace("-kei-", "kei-"))
                 if ("nichijou-kei" in suf) add(suf.replace("nichijou-kei", "nichijoukei"))
+                if ("nichijoukei" in suf) add(suf.replace("nichijoukei", "nichijou-kei"))
+                // inou-battle word order swap - handle all variants
+                if (suf.contains("inou-battle-wa")) add(suf.replace("inou-battle-wa", "inou-wa-battle"))
+                if (suf.contains("inou-wa-battle")) add(suf.replace("inou-wa-battle", "inou-battle-wa"))
+                if (suf.contains("nichijou-kei-no-naka-de")) {
+                    add(suf.replace("nichijou-kei-no-naka-de", "nichijou"))
+                    add(suf.replace("-nichijou-kei-no-naka-de", ""))
+                    add(suf.replace("nichijou-kei-no-naka-de", "nichijou-subtitle-indonesia"))
+                }
             }
         }
-        // golden kamuy word order reversal
-        if (base == "golden-kamuy" || base == "golden-kamuy-sub-indo") {
-            add("kamuy-golden-subtitle-indonesia"); add("kamuy-golden-subtitle-indonesia/")
-            add("kamuy-golden-sub-indo"); add("kamuy-golden-sub-indo/")
-        }
-        // truncation for long slugs like ijiranaide-nagatoro-san -> ijiranaide-sub-indo (server shortens)
-        val parts = base.split("-")
-        if (parts.size > 2) {
-            val first = parts.first()
-            add("$first-sub-indo"); add("$first-subtitle-indonesia")
-            if (parts.size >= 2) {
-                val first2 = parts.take(2).joinToString("-")
-                add("$first2-sub-indo"); add("$first2-subtitle-indonesia")
-            }
-        }
-        // inou-battle word order swap
-        if (base.contains("inou-battle-wa")) {
-            add(base.replace("inou-battle-wa", "inou-wa-battle"))
-            add(base.replace("inou-battle-wa-nichijou-kei", "inou-wa-battle-nichijou"))
-        }
-        if (base.contains("nichijou-kei-no-naka-de")) {
-            add(base.replace("nichijou-kei-no-naka-de", "nichijou"))
-            add(base.replace("-nichijou-kei-no-naka-de", ""))
-        }
-        return set.filter { it.trim('/').length >= 2 }.distinct().take(24)
+        return set.filter { it.trim('/').length >= 2 }.distinct().take(28)
     }
 
     fun parseEpisodeNumber(postUrl: String?): String {

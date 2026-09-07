@@ -2,6 +2,7 @@
 /build
 /app/build
 /app/release
+!gradle/wrapper/gradle-wrapper.jar
 *.iml
 .idea
 local.properties

@@ -32,8 +32,9 @@ jobs:
             echo "Wrapper jar missing, downloading Gradle 8.9"
             curl -sLo gradle-8.9-bin.zip https://services.gradle.org/distributions/gradle-8.9-bin.zip
             unzip -q gradle-8.9-bin.zip
-            ./gradle-8.9/bin/gradle wrapper --gradle-version 8.9
-            rm -rf gradle-8.9 gradle-8.9-bin.zip
+            ./gradle-8.9/bin/gradle wrapper --gradle-version 8.9 --no-daemon
+            ./gradle-8.9/bin/gradle --stop || true
+            # jangan hapus gradle-8.9 dulu, biarkan sampai build selesai
           fi
 
       - name: Create google-services.json placeholder if missing
@@ -44,7 +45,11 @@ jobs:
           fi
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
+
+      - name: Cleanup Gradle dist
+        if: always()
+        run: rm -rf gradle-8.9 gradle-8.9-bin.zip || true
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

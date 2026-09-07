@@ -40,11 +40,18 @@ fun BottomBar(navController: NavController) {
     val navBackStack by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStack?.destination?.route ?: "home"
 
-    Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(bottom = 4.dp),
+        contentAlignment = Alignment.Center
+    ) {
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
-                .background(Color(0xE6050714)) // glass strong
+                .background(Color(0xE61A1E2E)) // natural solid, not covering content
                 .padding(4.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
@@ -75,9 +82,9 @@ fun BottomBar(navController: NavController) {
                     colors = NavigationBarItemDefaults.colors(
                         selectedIconColor = Color.White,
                         selectedTextColor = Color.White,
-                        indicatorColor = Color(0xFF3730A3),
-                        unselectedIconColor = Color(0xFF7A7F9A),
-                        unselectedTextColor = Color(0xFF7A7F9A)
+                        indicatorColor = Color(0xFF5B5BD6),
+                        unselectedIconColor = Color(0xFF9AA0B6),
+                        unselectedTextColor = Color(0xFF9AA0B6)
                     )
                 )
             }

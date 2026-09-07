@@ -9,18 +9,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.sp
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF3730A3),
+    primary = Color(0xFF5B5BD6), // natural muted indigo (was harsh #3730A3)
     onPrimary = Color.White,
-    primaryContainer = Color(0xFF1E1B4B),
-    onPrimaryContainer = Color(0xFFA5B4FC),
-    secondary = Color(0xFF6366F1),
-    background = Color(0xFF05070E),
-    onBackground = Color(0xFFF8FAFC),
-    surface = Color(0xFF0A0F1E),
-    onSurface = Color(0xFFF8FAFC),
-    surfaceVariant = Color(0xFF141A2E),
+    primaryContainer = Color(0xFF242457),
+    onPrimaryContainer = Color(0xFFC7C5FF),
+    secondary = Color(0xFF8A7DFF),
+    background = Color(0xFF10131C), // softer charcoal, not pure black-blue
+    onBackground = Color(0xFFF1F1F3),
+    surface = Color(0xFF1A1E2E),
+    onSurface = Color(0xFFF1F1F3),
+    surfaceVariant = Color(0xFF252A3D),
     onSurfaceVariant = Color(0xFFAEB2C7),
-    outline = Color(0xFF1E293B)
+    outline = Color(0xFF2E3448)
 )
 
 private val LightColorScheme = DarkColorScheme // force dark like hanime
@@ -39,7 +39,7 @@ fun AniVerseTheme(content: @Composable () -> Unit) {
     )
 }
 
-// Glass card colors matching hanime-main
-val GlassBg = Color(0x0DFFFFFF) // rgba 255 5%
-val GlassBorder = Color(0x12FFFFFF) // rgba 7%
-val GlassStrong = Color(0x59050E14) // slightly opaque
+// Glass card colors - natural muted
+val GlassBg = Color(0x0FFFFFFF).copy(alpha = 0.06f)
+val GlassBorder = Color(0x1AFFFFFF)
+val GlassStrong = Color(0xE61A1E2E) // solid for bottom bar

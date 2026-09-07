@@ -46,11 +46,11 @@ fun GenreScreen(slug: String, onAnimeClick: (String) -> Unit) {
     }
     LaunchedEffect(slug) { load(true) }
 
-    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF05070E)).padding(bottom = 80.dp)) {
+    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF10131C)).padding(bottom = 100.dp)) {
         // hero
         Box(
             modifier = Modifier.fillMaxWidth().background(
-                Brush.linearGradient(listOf(Color(0xFF3730A3).copy(alpha = 0.2f), Color.Transparent))
+                Brush.linearGradient(listOf(Color(0xFF5B5BD6).copy(alpha = 0.2f), Color.Transparent))
             ).padding(horizontal = 16.dp, vertical = 16.dp).padding(top = 48.dp)
         ) {
             Column {
@@ -59,14 +59,14 @@ fun GenreScreen(slug: String, onAnimeClick: (String) -> Unit) {
             }
         }
         if (loading && list.isEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF3730A3)) }
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF5B5BD6)) }
         } else if (list.isEmpty()) {
             Column(Modifier.fillMaxSize().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("Belum ada anime", color = Color.White)
                 Text("Tidak ada anime untuk $slug", color = Color(0xFF8A8FA3), fontSize = 12.sp)
                 if (error != null) Text(error!!, color = Color(0xFFFBBF24), fontSize = 11.sp)
                 Spacer(Modifier.height(12.dp))
-                Button(onClick = { load(true) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3)), shape = RoundedCornerShape(50.dp)) { Text("Coba Lagi") }
+                Button(onClick = { load(true) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6)), shape = RoundedCornerShape(50.dp)) { Text("Coba Lagi") }
             }
         } else {
             LazyVerticalGrid(columns = GridCells.Fixed(3), contentPadding = PaddingValues(16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.weight(1f)) {

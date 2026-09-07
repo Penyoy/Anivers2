@@ -46,7 +46,7 @@ fun SearchScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().background(Color(0xFF05070E)).padding(bottom = 80.dp)
+        modifier = Modifier.fillMaxSize().background(Color(0xFF10131C)).padding(bottom = 100.dp)
     ) {
         // Search bar top
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 48.dp)) {
@@ -67,7 +67,7 @@ fun SearchScreen(
                             vm.setQuery(input.trim())
                             vm.search(input.trim())
                             hasSearched = true
-                        }) { Icon(Icons.Filled.Search, contentDescription = null, tint = Color.White, modifier = Modifier.background(Color(0xFF3730A3), RoundedCornerShape(50)).padding(6.dp)) }
+                        }) { Icon(Icons.Filled.Search, contentDescription = null, tint = Color.White, modifier = Modifier.background(Color(0xFF5B5BD6), RoundedCornerShape(50)).padding(6.dp)) }
                     }
                 },
                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(50.dp)),
@@ -76,7 +76,7 @@ fun SearchScreen(
                     unfocusedContainerColor = Color(0x0DFFFFFF),
                     focusedTextColor = Color(0xFFE6E8EE),
                     unfocusedTextColor = Color(0xFFE6E8EE),
-                    focusedBorderColor = Color(0xFF3730A3),
+                    focusedBorderColor = Color(0xFF5B5BD6),
                     unfocusedBorderColor = Color(0x1AFFFFFF)
                 ),
                 singleLine = true,
@@ -123,7 +123,7 @@ fun SearchScreen(
                     Button(
                         onClick = { vm.setQuery(input.trim()); vm.search(input.trim()); hasSearched = true },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3)),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6)),
                         shape = RoundedCornerShape(12.dp)
                     ) { Text("Lihat semua hasil", fontSize = 13.sp) }
                 }
@@ -139,7 +139,7 @@ fun SearchScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).clip(RoundedCornerShape(20.dp)).background(Color(0x0DFFFFFF)).padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(Icons.Filled.Search, contentDescription = null, tint = Color(0xFF3730A3), modifier = Modifier.size(48.dp))
+                    Icon(Icons.Filled.Search, contentDescription = null, tint = Color(0xFF5B5BD6), modifier = Modifier.size(48.dp))
                     Spacer(Modifier.height(10.dp))
                     Text("Mulai mencari", color = Color(0xFFF8FAFC), fontSize = 16.sp)
                     Text("Ketik minimal 2 huruf, preview akan muncul otomatis.", color = Color(0xFF8A8FA3), fontSize = 12.sp)
@@ -156,7 +156,7 @@ fun SearchScreen(
                 }
             }
             loading -> {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF3730A3)) }
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF5B5BD6)) }
             }
             results.isNotEmpty() -> {
                 Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
@@ -179,7 +179,7 @@ fun SearchScreen(
                     Text("Tidak ada anime untuk \"${vm.query.collectAsState().value}\"", color = Color(0xFF8A8FA3), fontSize = 12.sp)
                     Spacer(Modifier.height(12.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(onClick = { input = ""; vm.clear(); hasSearched = false }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3)), shape = RoundedCornerShape(50.dp)) { Text("Hapus Filter", fontSize = 12.sp) }
+                        Button(onClick = { input = ""; vm.clear(); hasSearched = false }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6)), shape = RoundedCornerShape(50.dp)) { Text("Hapus Filter", fontSize = 12.sp) }
                     }
                 }
             }

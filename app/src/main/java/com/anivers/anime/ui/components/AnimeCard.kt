@@ -56,7 +56,7 @@ fun AnimeCard(
                     modifier = Modifier
                         .padding(6.dp)
                         .clip(RoundedCornerShape(6.dp))
-                        .background(Color(0xFF3730A3))
+                        .background(Color(0xFF5B5BD6))
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                         .align(Alignment.TopStart)
                 ) {
@@ -75,7 +75,7 @@ fun AnimeCard(
                     Icon(
                         imageVector = if (isBookmarked) Icons.Filled.Bookmark else Icons.Filled.BookmarkBorder,
                         contentDescription = "bookmark",
-                        tint = if (isBookmarked) Color(0xFF3730A3) else Color.White,
+                        tint = if (isBookmarked) Color(0xFF5B5BD6) else Color.White,
                         modifier = Modifier.size(16.dp)
                     )
                 }

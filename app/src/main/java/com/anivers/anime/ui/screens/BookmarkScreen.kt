@@ -50,13 +50,13 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF05070E)).padding(bottom = 80.dp)) {
+    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF10131C)).padding(bottom = 100.dp)) {
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 48.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Icon(Icons.Filled.Bookmark, contentDescription = null, tint = Color(0xFF6366F1))
                 Text("Koleksi Saya", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 if (isLoggedIn && bookmarks.isNotEmpty()) {
-                    Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0x143730A3)).padding(horizontal = 8.dp, vertical = 2.dp)) {
+                    Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0x145B5BD6)).padding(horizontal = 8.dp, vertical = 2.dp)) {
                         Text("${bookmarks.size} anime", color = Color(0xFFA5B4FC), fontSize = 11.sp)
                     }
                 }
@@ -73,7 +73,7 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
                 Text("Login untuk melihat koleksi", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 Text("Bookmark tersimpan di akun dan tersinkron ke semua perangkat.", color = Color(0xFF8A8FA3), fontSize = 12.sp)
                 Spacer(Modifier.height(12.dp))
-                Button(onClick = {}, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3)), shape = RoundedCornerShape(50.dp)) { Text("Login Sekarang", fontSize = 13.sp) }
+                Button(onClick = {}, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6)), shape = RoundedCornerShape(50.dp)) { Text("Login Sekarang", fontSize = 13.sp) }
             }
         } else if (bookmarks.isEmpty()) {
             Column(

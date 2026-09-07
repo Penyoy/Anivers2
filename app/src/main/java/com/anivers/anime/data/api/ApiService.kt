@@ -31,10 +31,10 @@ interface ApiService {
 
     @POST("series.php")
     @Headers("Content-Type: text/plain; charset=utf-8")
-    suspend fun getSeries(
+    suspend fun getSeriesRaw(
         @Query("url") url: String,
-        @Body body: Map<String, String>
-    ): JsonElement
+        @Body body: okhttp3.RequestBody
+    ): okhttp3.ResponseBody
 
     @POST("series/episode/data.php")
     @Headers("Content-Type: text/plain; charset=utf-8")

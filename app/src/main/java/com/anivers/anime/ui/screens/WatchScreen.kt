@@ -171,17 +171,17 @@ fun WatchScreen(
             .fillMaxSize()
             .background(Color.Black)
             .verticalScroll(rememberScrollState())
-            .padding(bottom = if (isFullscreen) 0.dp else 80.dp)
+            .padding(bottom = if (isFullscreen) 0.dp else 100.dp)
     ) {
         if (!isFullscreen) Spacer(Modifier.height(48.dp))
 
         when {
-            loading -> Box(Modifier.fillMaxWidth().height(if (isFullscreen) 240.dp else 240.dp).background(Color.Black), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF3730A3)) }
+            loading -> Box(Modifier.fillMaxWidth().height(if (isFullscreen) 240.dp else 240.dp).background(Color.Black), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF5B5BD6)) }
             error != null -> Column(Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("Gagal memuat video", color = Color.White)
                 Text(error ?: "", color = Color(0xFF8A8FA3), fontSize = 12.sp)
                 Spacer(Modifier.height(12.dp))
-                Button(onClick = { vm.load(seriesUrl, episode) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3)), shape = RoundedCornerShape(50.dp)) { Text("Coba Lagi") }
+                Button(onClick = { vm.load(seriesUrl, episode) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6)), shape = RoundedCornerShape(50.dp)) { Text("Coba Lagi") }
             }
             currentLink != null -> {
                 // YOUTUBE-STYLE PLAYER
@@ -238,7 +238,7 @@ fun WatchScreen(
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     Button(onClick = {
                                         exoPlayer?.seekTo(savedTime * 1000); exoPlayer?.play(); showResume = false
-                                    }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3)), shape = RoundedCornerShape(50.dp)) { Text("Lanjutkan", fontSize = 12.sp) }
+                                    }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6)), shape = RoundedCornerShape(50.dp)) { Text("Lanjutkan", fontSize = 12.sp) }
                                     OutlinedButton(onClick = { showResume = false }, shape = RoundedCornerShape(50.dp)) { Text("Awal", fontSize = 12.sp, color = Color.White) }
                                 }
                             }
@@ -259,7 +259,7 @@ fun WatchScreen(
                             ) { Icon(Icons.Filled.Replay10, contentDescription = "-10s", tint = Color.White, modifier = Modifier.size(28.dp)) }
                             IconButton(
                                 onClick = { exoPlayer?.let { if (it.isPlaying) it.pause() else it.play() } },
-                                modifier = Modifier.size(64.dp).clip(CircleShape).background(Color(0xCC3730A3))
+                                modifier = Modifier.size(64.dp).clip(CircleShape).background(Color(0xCC5B5BD6))
                             ) {
                                 Icon(
                                     imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
@@ -314,8 +314,8 @@ fun WatchScreen(
                                     exoPlayer?.seekTo((seekPos * duration).toLong()); isUserSeeking = false
                                 },
                                 colors = SliderDefaults.colors(
-                                    thumbColor = Color(0xFF3730A3),
-                                    activeTrackColor = Color(0xFF3730A3),
+                                    thumbColor = Color(0xFF5B5BD6),
+                                    activeTrackColor = Color(0xFF5B5BD6),
                                     inactiveTrackColor = Color(0x44FFFFFF)
                                 ),
                                 modifier = Modifier.fillMaxWidth().height(20.dp)
@@ -342,7 +342,7 @@ fun WatchScreen(
                                 for (r in resos) {
                                     val sel = r == quality
                                     Box(
-                                        modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFF3730A3) else Color(0x14FFFFFF)).clickable { vm.setQuality(r); showQualitySheet = false }.padding(horizontal = 14.dp, vertical = 8.dp)
+                                        modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFF5B5BD6) else Color(0x14FFFFFF)).clickable { vm.setQuality(r); showQualitySheet = false }.padding(horizontal = 14.dp, vertical = 8.dp)
                                     ) { Text(r, color = if (sel) Color.White else Color(0xFFAEB2C7), fontSize = 13.sp, fontWeight = if (sel) FontWeight.Bold else FontWeight.Normal) }
                                 }
                             }
@@ -352,7 +352,7 @@ fun WatchScreen(
                                 for ((idx, _) in servers.withIndex()) {
                                     val sel = idx == currentServer
                                     Box(
-                                        modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFF3730A3) else Color(0x14FFFFFF)).clickable { currentServer = idx; showQualitySheet = false }.padding(horizontal = 14.dp, vertical = 8.dp)
+                                        modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFF5B5BD6) else Color(0x14FFFFFF)).clickable { currentServer = idx; showQualitySheet = false }.padding(horizontal = 14.dp, vertical = 8.dp)
                                     ) { Text("Server ${idx+1}", color = if (sel) Color.White else Color(0xFFAEB2C7), fontSize = 13.sp) }
                                 }
                             }
@@ -429,7 +429,7 @@ fun WatchScreen(
                             val isActive = ep.url == episode
                             Box(
                                 modifier = Modifier.size(44.dp, 36.dp).clip(RoundedCornerShape(8.dp))
-                                    .background(if (isActive) Color(0xFF3730A3) else Color(0x1AFFFFFF))
+                                    .background(if (isActive) Color(0xFF5B5BD6) else Color(0x1AFFFFFF))
                                     .clickable { /* nav to same screen with new ep */ },
                                 contentAlignment = Alignment.Center
                             ) { Text(ep.ch ?: "?", color = if (isActive) Color.White else Color(0xFF8A8FA3), fontSize = 12.sp, fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal) }

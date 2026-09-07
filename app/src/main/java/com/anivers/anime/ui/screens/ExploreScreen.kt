@@ -53,7 +53,7 @@ fun ExploreScreen(
             GenreDef("Adventure", "adventure", "Petualangan seru", Color(0xFF14532D), Brush.linearGradient(listOf(Color(0xFF14532D), Color(0xFF052E16)))),
             GenreDef("Comedy", "comedy", "Ngakak abis", Color(0xFF92400E), Brush.linearGradient(listOf(Color(0xFF92400E), Color(0xFF451A03)))),
             GenreDef("Drama", "drama", "Menguras emosi", Color(0xFF581C87), Brush.linearGradient(listOf(Color(0xFF581C87), Color(0xFF3B0764)))),
-            GenreDef("Fantasy", "fantasy", "Dunia sihir", Color(0xFF312E81), Brush.linearGradient(listOf(Color(0xFF312E81), Color(0xFF1E1B4B)))),
+            GenreDef("Fantasy", "fantasy", "Dunia sihir", Color(0xFF312E81), Brush.linearGradient(listOf(Color(0xFF312E81), Color(0xFF242457)))),
             GenreDef("Horror", "horror", "Mencekam", Color(0xFF111827), Brush.linearGradient(listOf(Color(0xFF1F2937), Color(0xFF020617)))),
             GenreDef("Isekai", "isekai", "Dunia lain", Color(0xFF164E63), Brush.linearGradient(listOf(Color(0xFF164E63), Color(0xFF083344)))),
             GenreDef("Mecha", "mecha", "Robot raksasa", Color(0xFF1E293B), Brush.linearGradient(listOf(Color(0xFF334155), Color(0xFF020617)))),
@@ -82,8 +82,8 @@ fun ExploreScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF05070E))
-            .padding(bottom = 80.dp)
+            .background(Color(0xFF10131C))
+            .padding(bottom = 100.dp)
     ) {
         // hero
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp).padding(top = 48.dp)) {
@@ -93,7 +93,7 @@ fun ExploreScreen(
 
         // stats row
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            StatCard("15+", "Genre Populer", Color(0xFF3730A3))
+            StatCard("15+", "Genre Populer", Color(0xFF5B5BD6))
             StatCard("1000+", "Anime Tersedia", Color(0xFFD97706))
             StatCard("Update", "Harian", Color(0xFF15803D))
         }
@@ -103,7 +103,7 @@ fun ExploreScreen(
         if (initialType.isNotEmpty()) {
             Box(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(12.dp)).background(Color(0x143730A3)).padding(10.dp)
+                    .clip(RoundedCornerShape(12.dp)).background(Color(0x145B5BD6)).padding(10.dp)
             ) {
                 Text(
                     when (initialType) {
@@ -155,7 +155,7 @@ fun ExploreScreen(
                     Text("Rekomendasi Lain", color = Color(0xFFF8FAFC), fontWeight = FontWeight.Bold, fontSize = 15.sp)
                     if (loading) {
                         Box(Modifier.fillMaxWidth().height(180.dp), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator(color = Color(0xFF3730A3))
+                            CircularProgressIndicator(color = Color(0xFF5B5BD6))
                         }
                     } else {
                         val list = if (filteredList.isNotEmpty()) filteredList else rekomendasi

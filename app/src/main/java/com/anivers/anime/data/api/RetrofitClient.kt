@@ -41,6 +41,7 @@ object RetrofitClient {
         Retrofit.Builder()
             .baseUrl(normalized)
             .client(client)
+            .addConverterFactory(retrofit2.converter.scalars.ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }

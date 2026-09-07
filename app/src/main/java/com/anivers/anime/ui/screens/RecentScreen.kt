@@ -34,10 +34,10 @@ fun RecentScreen(onWatchClick: (String, String) -> Unit) {
         dao.getAll().let { history = it.sortedByDescending { h -> h.timestamp } }
     }
 
-    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF05070E)).padding(bottom = 80.dp)) {
+    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF10131C)).padding(bottom = 100.dp)) {
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 48.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Icon(Icons.Filled.History, contentDescription = null, tint = Color(0xFF3730A3))
+                Icon(Icons.Filled.History, contentDescription = null, tint = Color(0xFF5B5BD6))
                 Text("Recent", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             }
             Text("Lanjutkan nonton dari terakhir berhenti", color = Color(0xFF8A8FA3), fontSize = 13.sp)
@@ -48,8 +48,8 @@ fun RecentScreen(onWatchClick: (String, String) -> Unit) {
                 modifier = Modifier.fillMaxWidth().padding(16.dp).clip(RoundedCornerShape(20.dp)).background(Color(0x0DFFFFFF)).padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(modifier = Modifier.size(64.dp).clip(RoundedCornerShape(50)).background(Color(0x143730A3)), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Filled.History, contentDescription = null, tint = Color(0xFF3730A3), modifier = Modifier.size(28.dp))
+                Box(modifier = Modifier.size(64.dp).clip(RoundedCornerShape(50)).background(Color(0x145B5BD6)), contentAlignment = Alignment.Center) {
+                    Icon(Icons.Filled.History, contentDescription = null, tint = Color(0xFF5B5BD6), modifier = Modifier.size(28.dp))
                 }
                 Spacer(Modifier.height(12.dp))
                 Text("Belum ada riwayat", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
@@ -66,7 +66,7 @@ fun RecentScreen(onWatchClick: (String, String) -> Unit) {
                         Box(modifier = Modifier.size(72.dp, 92.dp).clip(RoundedCornerShape(8.dp))) {
                             AsyncImage(model = h.cover, contentDescription = h.judul, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                             Box(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(3.dp).background(Color(0x66000000))) {
-                                Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(h.progress/100f).background(Color(0xFF3730A3)))
+                                Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(h.progress/100f).background(Color(0xFF5B5BD6)))
                             }
                             Box(modifier = Modifier.align(Alignment.TopEnd).padding(4.dp).clip(RoundedCornerShape(6.dp)).background(Color(0x99000000)).padding(horizontal = 4.dp, vertical = 2.dp)) {
                                 Text("${h.progress}%", color = Color.White, fontSize = 9.sp)
@@ -77,7 +77,7 @@ fun RecentScreen(onWatchClick: (String, String) -> Unit) {
                             Text("Episode ${h.episode} • ${fmt(h.currentTime)} / ${fmt(h.duration)}", color = Color(0xFFA5B4FC), fontSize = 11.sp)
                             Text("${formatDate(h.timestamp)} • sisa ${fmt(h.duration - h.currentTime)}", color = Color(0xFF8A8FA3), fontSize = 11.sp)
                         }
-                        Box(modifier = Modifier.size(36.dp).clip(RoundedCornerShape(50)).background(Color(0xFF1E1B4B)), contentAlignment = Alignment.Center) {
+                        Box(modifier = Modifier.size(36.dp).clip(RoundedCornerShape(50)).background(Color(0xFF242457)), contentAlignment = Alignment.Center) {
                             Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = Color(0xFFA5B4FC), modifier = Modifier.size(20.dp))
                         }
                     }

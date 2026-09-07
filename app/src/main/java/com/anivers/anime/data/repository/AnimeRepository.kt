@@ -73,35 +73,57 @@ class AnimeRepository(
         }
     }
 
+    private fun createSeriesBody(clean: String): okhttp3.RequestBody {
+        val map = mapOf("get" to "top", "post_type" to "1", "post_id" to clean.trimEnd('/'), "token" to "")
+        val json = gson.toJson(map)
+        return okhttp3.RequestBody.create(okhttp3.MediaType.parse("text/plain; charset=utf-8"), json)
+    }
+
+    private fun parseRawSeries(raw: String): com.google.gson.JsonElement {
+        val t = raw.trim()
+        if (t.isEmpty() || t.equals("false", ignoreCase = true) || t.equals("null", ignoreCase = true)) {
+            return com.google.gson.JsonParser.parseString("null")
+        }
+        // strip HTML warning prefix like <br /><b>Warning...  {"data":...
+        val cleaned = if (t.contains("<br") && t.contains("{")) {
+            val idx = t.indexOf("{")
+            if (idx >= 0) t.substring(idx) else t
+        } else t
+        return try {
+            com.google.gson.JsonParser.parseString(cleaned)
+        } catch (e: Exception) {
+            android.util.Log.w("ANIVERS_API", "parseRawSeries fail raw=${t.take(200)}", e)
+            com.google.gson.JsonParser.parseString("null")
+        }
+    }
+
     suspend fun getSeries(slug: String): SeriesDetail? = withContext(Dispatchers.IO) {
         val cleans = Normalizer.slugCandidates(slug)
-        require(cleans.isNotEmpty() && cleans.first().length >= 2) { "Slug tidak valid: $slug" }
+        require(cleans.isNotEmpty() && cleans.first().trim('/').length >= 2) { "Slug tidak valid: $slug" }
         var lastErr: Exception? = null
-        // coba slug langsung dulu, lalu kandidat alias, lalu search fallback
+        // coba slug langsung dulu, lalu kandidat alias
         for (clean in cleans) {
-            try {
-                val cleanNoSlash = clean.trimEnd('/')
-                val cleanWithSlash = if (clean.endsWith("/")) clean else "$clean/"
-                // coba both dengan dan tanpa slash
-                for (c in listOf(cleanNoSlash, cleanWithSlash).distinct()) {
-                    try {
-                        android.util.Log.d("ANIVERS_API", "getSeries try slug=$c orig=$slug")
-                        val body = mapOf("get" to "top", "post_type" to "1", "post_id" to c.trimEnd('/'), "token" to "")
-                        // query param juga coba dengan slash
-                        val res = api.getSeries(c.trimEnd('/'), body)
-                        val parsed = parseSeriesDetail(res)
-                        if (parsed != null) return@withContext parsed
-                        android.util.Log.w("ANIVERS_API", "getSeries parse null for $c raw=${res.toString().take(120)}")
-                    } catch (e: Exception) {
-                        android.util.Log.w("ANIVERS_API", "getSeries fail clean=$c", e)
-                        lastErr = e
-                        // lanjut ke kandidat berikutnya untuk semua error parse/network
+            val cleanNoSlash = clean.trimEnd('/')
+            val cleanWithSlash = if (clean.endsWith("/")) clean else "$clean/"
+            for (c in listOf(cleanNoSlash, cleanWithSlash).distinct()) {
+                try {
+                    android.util.Log.d("ANIVERS_API", "getSeries try slug=$c orig=$slug")
+                    val body = createSeriesBody(c)
+                    val respBody = api.getSeriesRaw(c.trimEnd('/'), body)
+                    val raw = respBody.string()
+                    android.util.Log.d("ANIVERS_API", "getSeries raw for $c: ${raw.take(200)}")
+                    if (raw.trim().equals("false", ignoreCase = true) || raw.trim().isEmpty()) {
+                        android.util.Log.w("ANIVERS_API", "getSeries raw false/empty for $c")
                         continue
                     }
+                    val el = parseRawSeries(raw)
+                    val parsed = parseSeriesDetail(el)
+                    if (parsed != null) return@withContext parsed
+                    android.util.Log.w("ANIVERS_API", "getSeries parse null for $c raw=${raw.take(120)}")
+                } catch (e: Exception) {
+                    android.util.Log.w("ANIVERS_API", "getSeries fail clean=$c", e)
+                    lastErr = e
                 }
-            } catch (e: Exception) {
-                android.util.Log.w("ANIVERS_API", "getSeries outer fail", e)
-                lastErr = e
             }
         }
         // fallback: search keyword generik (progressive)
@@ -146,9 +168,11 @@ class AnimeRepository(
                     for (v in variants) {
                         try {
                             android.util.Log.d("ANIVERS_API", "getSeries fallback retry ${best.judul} url=$v for $slug")
-                            val body = mapOf("get" to "top", "post_type" to "1", "post_id" to v.trimEnd('/'), "token" to "")
-                            val res2 = api.getSeries(v.trimEnd('/'), body)
-                            val parsed2 = parseSeriesDetail(res2)
+                            val body = createSeriesBody(v)
+                            val raw2 = api.getSeriesRaw(v.trimEnd('/'), body).string()
+                            if (raw2.trim().equals("false", ignoreCase = true)) continue
+                            val el2 = parseRawSeries(raw2)
+                            val parsed2 = parseSeriesDetail(el2)
                             if (parsed2 != null) return@withContext parsed2
                         } catch (e: Exception) {
                             android.util.Log.w("ANIVERS_API", "fallback retry fail $v", e)
@@ -168,9 +192,9 @@ class AnimeRepository(
         // coba raw dump untuk debug
         try {
             val first = cleans.first()
-            val body = mapOf("get" to "top", "post_type" to "1", "post_id" to first, "token" to "")
-            val res = api.getSeries(first, body)
-            android.util.Log.e("ANIVERS_SERIES_RAW", "raw for $first: ${res.toString().take(400)}")
+            val body = createSeriesBody(first)
+            val raw = api.getSeriesRaw(first.trimEnd('/'), body).string()
+            android.util.Log.e("ANIVERS_SERIES_RAW", "raw for $first: ${raw.take(400)}")
         } catch (_: Exception) {}
         null
     }

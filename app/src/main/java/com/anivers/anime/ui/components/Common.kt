@@ -26,7 +26,7 @@ fun GlassCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.()
 @Composable
 fun LoadingSkeleton(modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        CircularProgressIndicator(color = Color(0xFF3730A3), modifier = Modifier.size(36.dp))
+        CircularProgressIndicator(color = Color(0xFF5B5BD6), modifier = Modifier.size(36.dp))
         Spacer(Modifier.height(8.dp))
         Text("Memuat...", color = Color(0xFF8A8FA3), fontSize = 13.sp)
     }
@@ -65,7 +65,7 @@ fun ErrorState(message: String, onRetry: () -> Unit, debugDetail: String? = null
             Text("adb logcat | grep ANIVERS", color = Color(0xFF5C6076), fontSize = 10.sp)
         }
         Spacer(Modifier.height(12.dp))
-        Button(onClick = onRetry, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3))) {
+        Button(onClick = onRetry, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6))) {
             Text("Coba Lagi")
         }
     }

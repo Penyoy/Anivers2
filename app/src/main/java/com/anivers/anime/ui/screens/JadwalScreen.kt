@@ -39,19 +39,19 @@ fun JadwalScreen(onAnimeClick: (String) -> Unit) {
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF05070E)).verticalScroll(rememberScrollState()).padding(bottom = 80.dp).padding(top = 48.dp)) {
+    Column(modifier = Modifier.fillMaxSize().background(Color(0xFF10131C)).verticalScroll(rememberScrollState()).padding(bottom = 100.dp).padding(top = 48.dp)) {
         Text("Jadwal Rilis", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
         Text("Update mingguan", color = Color(0xFF8A8FA3), fontSize = 13.sp, modifier = Modifier.padding(horizontal = 16.dp))
         Spacer(Modifier.height(12.dp))
         if (loading) {
-            Box(Modifier.fillMaxWidth().height(120.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF3730A3)) }
+            Box(Modifier.fillMaxWidth().height(120.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF5B5BD6)) }
         } else {
             LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(days.size) { idx ->
                     val d = days[idx]
                     val sel = idx == active
                     Box(
-                        modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFF1E1B4B) else Color(0x0DFFFFFF)).clickable { active = idx }.padding(horizontal = 14.dp, vertical = 8.dp)
+                        modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFF242457) else Color(0x0DFFFFFF)).clickable { active = idx }.padding(horizontal = 14.dp, vertical = 8.dp)
                     ) { Text(d.day?.take(3) ?: "", color = if (sel) Color(0xFFA5B4FC) else Color(0xFF8A8FA3), fontSize = 13.sp, fontWeight = if (sel) FontWeight.Bold else FontWeight.Normal) }
                 }
             }

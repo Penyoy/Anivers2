@@ -33,16 +33,16 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 Scaffold(
                     topBar = {
-                        // TopBar will be shown inside each screen or globally; keep global for simplicity
-                        // We let screens provide their own but also show fallback
+                        // TopBar per-screen
                     },
                     bottomBar = { BottomBar(navController) },
-                    containerColor = Color(0xFF05070E)
+                    containerColor = Color(0xFF10131C),
+                    contentWindowInsets = WindowInsets(0, 0, 0, 0)
                 ) { padding ->
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color(0xFF05070E))
+                            .background(Color(0xFF10131C))
                             .padding(bottom = padding.calculateBottomPadding())
                     ) {
                         AppNavGraph(navController = navController)

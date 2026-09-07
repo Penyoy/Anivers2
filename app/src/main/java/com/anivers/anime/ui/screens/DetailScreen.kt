@@ -58,20 +58,20 @@ fun DetailScreen(
     }
 
     when {
-        loading -> Box(Modifier.fillMaxSize().background(Color(0xFF05070E)), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF3730A3)) }
+        loading -> Box(Modifier.fillMaxSize().background(Color(0xFF10131C)), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFF5B5BD6)) }
         error != null && detail == null -> Column(
-            Modifier.fillMaxSize().background(Color(0xFF05070E)).padding(24.dp).padding(top = 48.dp),
+            Modifier.fillMaxSize().background(Color(0xFF10131C)).padding(24.dp).padding(top = 48.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("Gagal memuat detail", color = Color(0xFFF8FAFC), fontSize = 16.sp)
             Text(error ?: "", color = Color(0xFF8A8FA3), fontSize = 12.sp)
             Spacer(Modifier.height(12.dp))
-            Button(onClick = { vm.load(slug) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3))) { Text("Coba Lagi") }
+            Button(onClick = { vm.load(slug) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5B5BD6))) { Text("Coba Lagi") }
         }
         detail != null -> {
             val d = detail!!
             Column(
-                modifier = Modifier.fillMaxSize().background(Color(0xFF05070E)).verticalScroll(rememberScrollState()).padding(bottom = 80.dp)
+                modifier = Modifier.fillMaxSize().background(Color(0xFF10131C)).verticalScroll(rememberScrollState()).padding(bottom = 100.dp)
             ) {
                 // hero with blur bg
                 Box(modifier = Modifier.fillMaxWidth().height(420.dp)) {
@@ -80,7 +80,7 @@ fun DetailScreen(
                         modifier = Modifier.fillMaxSize().blur(20.dp),
                         contentScale = ContentScale.Crop, alpha = 0.3f
                     )
-                    Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0x0005070E), Color(0xFF05070E)))))
+                    Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0x0005070E), Color(0xFF10131C)))))
                     Row(
                         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp).padding(top = 56.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -128,7 +128,7 @@ fun DetailScreen(
                                         isBookmarked = added
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = if (isBookmarked) Color(0xFF3730A3) else Color.Transparent),
+                                colors = ButtonDefaults.buttonColors(containerColor = if (isBookmarked) Color(0xFF5B5BD6) else Color.Transparent),
                                 border = if (isBookmarked) null else androidx.compose.foundation.BorderStroke(1.dp, Color(0x33FFFFFF)),
                                 shape = RoundedCornerShape(12.dp)
                             ) {
@@ -157,7 +157,7 @@ fun DetailScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
-                                Box(modifier = Modifier.size(40.dp).clip(RoundedCornerShape(8.dp)).background(Color(0xFF3730A3)), contentAlignment = Alignment.Center) {
+                                Box(modifier = Modifier.size(40.dp).clip(RoundedCornerShape(8.dp)).background(Color(0xFF5B5BD6)), contentAlignment = Alignment.Center) {
                                     Text(ep.ch ?: "?", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                                 }
                                 Column(modifier = Modifier.weight(1f)) {

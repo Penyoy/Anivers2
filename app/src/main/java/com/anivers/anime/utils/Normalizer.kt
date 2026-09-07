@@ -75,7 +75,7 @@ object Normalizer {
         }
         // honorific strip
         val honor = base.removeSuffix("-san").removeSuffix("-sama").removeSuffix("-kun").removeSuffix("-chan").removeSuffix("-senpai").removeSuffix("-sensei")
-        val seeds = mutableListOf(base, honor).distinct()
+        val seeds = mutableListOf(base, honor).distinct().toMutableList()
         // also truncated first 1-2 tokens for server shortened like ijiranaide-nagatoro-san -> ijiranaide-sub-indo
         val parts = base.split("-")
         if (parts.size > 2) {

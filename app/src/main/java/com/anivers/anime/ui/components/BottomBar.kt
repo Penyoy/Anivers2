@@ -49,7 +49,7 @@ fun BottomBar(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            items.forEach { item ->
+            for (item in items) {
                 val selected = when {
                     item.route == "home" && (currentRoute.startsWith("home") || currentRoute.startsWith("anime") || currentRoute.startsWith("watch") || currentRoute.startsWith("genre") || currentRoute.startsWith("explore") || currentRoute.startsWith("search")) -> true
                     currentRoute.startsWith(item.route) -> true

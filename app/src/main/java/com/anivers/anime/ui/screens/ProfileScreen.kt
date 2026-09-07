@@ -164,7 +164,7 @@ fun ProfileScreen() {
         }
 
         Spacer(Modifier.height(8.dp))
-        Text("AniVerse • v1.0.0 • Firebase ${if (user!=null) "Connected" else "Offline"}", color = Color(0xFF5C6076), fontSize = 11.sp, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), textAlign = androidx.compose.ui.text.style.TextAlignment.Center)
+        Text("AniVerse • v1.0.0 • Firebase ${if (user!=null) "Connected" else "Offline"}", color = Color(0xFF5C6076), fontSize = 11.sp, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
     }
 }
 

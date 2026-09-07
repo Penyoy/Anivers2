@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AniVerse</string>
+    <string name="search_hint">Cari anime...</string>
+    <string name="search_hint_long">Cari judul anime...</string>
+    <string name="continue_watching">Continue Watching</string>
+    <string name="trending">Trending</string>
+    <string name="new_update">New Update Anime</string>
+    <string name="hot_anime">Hot Anime</string>
+    <string name="top_anime">Top Anime</string>
+    <string name="completed">Completed Anime</string>
+    <string name="genres">Genres</string>
+    <string name="jadwal">Jadwal</string>
+    <string name="see_all">Show More</string>
+    <string name="show_less">Show Less</string>
+    <string name="explore_genre">Jelajahi Genre</string>
+    <string name="explore_sub">Pilih mood kamu hari ini</string>
+    <string name="recommended">Rekomendasi</string>
+    <string name="no_data">Tidak ada data</string>
+    <string name="loading">Memuat...</string>
+    <string name="login_required">Login untuk melihat koleksi</string>
+    <string name="recent_title">Recent</string>
+    <string name="bookmark_title">Koleksi Saya</string>
+    <string name="profile_title">Profil</string>
+</resources>

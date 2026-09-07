@@ -18,6 +18,7 @@ object Normalizer {
         // wrapper {jumlah,result} bukan anime
         if (map.containsKey("jumlah") && map.containsKey("result")) return Anime()
         val rawUrl = (map["link"] ?: map["url"] ?: map["slug"] ?: map["series_id"] ?: "").toString()
+        val originalUrl = rawUrl.trim() // preserve exact server link for API
         val url = rawUrl.trim().trim('/').lowercase()
         val judul = (map["anime_name"] ?: map["judul"] ?: map["title"] ?: map["name"] ?: "Tanpa Judul").toString().trim()
         val cover = (map["thumb"] ?: map["cover"] ?: map["image"] ?: map["thumbnail"] ?: "").toString().trim()
@@ -25,6 +26,7 @@ object Normalizer {
         return Anime(
             id = (map["id"] ?: "").toString(),
             url = url,
+            originalUrl = originalUrl,
             judul = judul,
             cover = cover,
             genre = genre,
@@ -97,12 +99,31 @@ object Normalizer {
                 if ("nichijou-kei" in suf) add(suf.replace("nichijou-kei", "nichijoukei"))
             }
         }
-        // golden kamuy word order reversal - try both orders via search fallback, but add simple try
+        // golden kamuy word order reversal
         if (base == "golden-kamuy" || base == "golden-kamuy-sub-indo") {
             add("kamuy-golden-subtitle-indonesia"); add("kamuy-golden-subtitle-indonesia/")
             add("kamuy-golden-sub-indo"); add("kamuy-golden-sub-indo/")
         }
-        return set.filter { it.trim('/').length >= 2 }.distinct().take(20)
+        // truncation for long slugs like ijiranaide-nagatoro-san -> ijiranaide-sub-indo (server shortens)
+        val parts = base.split("-")
+        if (parts.size > 2) {
+            val first = parts.first()
+            add("$first-sub-indo"); add("$first-subtitle-indonesia")
+            if (parts.size >= 2) {
+                val first2 = parts.take(2).joinToString("-")
+                add("$first2-sub-indo"); add("$first2-subtitle-indonesia")
+            }
+        }
+        // inou-battle word order swap
+        if (base.contains("inou-battle-wa")) {
+            add(base.replace("inou-battle-wa", "inou-wa-battle"))
+            add(base.replace("inou-battle-wa-nichijou-kei", "inou-wa-battle-nichijou"))
+        }
+        if (base.contains("nichijou-kei-no-naka-de")) {
+            add(base.replace("nichijou-kei-no-naka-de", "nichijou"))
+            add(base.replace("-nichijou-kei-no-naka-de", ""))
+        }
+        return set.filter { it.trim('/').length >= 2 }.distinct().take(24)
     }
 
     fun parseEpisodeNumber(postUrl: String?): String {

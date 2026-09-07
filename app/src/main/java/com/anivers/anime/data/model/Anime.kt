@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 data class Anime(
     val id: String = "",
-    val url: String = "",
+    val url: String = "", // sanitized slug for routing
+    val originalUrl: String = "", // exact link from server (preserve slash/case) for API
     val judul: String = "Tanpa Judul",
     val cover: String = "",
     val genre: List<String> = emptyList(),

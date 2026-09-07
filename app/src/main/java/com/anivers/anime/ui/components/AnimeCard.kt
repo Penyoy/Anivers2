@@ -129,19 +129,25 @@ fun AnimeGrid(
 
 @Composable
 fun SectionHeader(title: String, onMore: (() -> Unit)? = null) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(title, color = Color(0xFFF8FAFC), fontSize = 16.sp, style = MaterialTheme.typography.titleMedium)
-        if (onMore != null) {
-            Text(
-                "Show More",
-                color = Color(0xFF6366F1),
-                fontSize = 12.sp,
-                modifier = Modifier.clickable { onMore() }.padding(4.dp)
-            )
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(title, color = Color(0xFFF8FAFC), fontSize = 16.sp, style = MaterialTheme.typography.titleMedium)
+            if (onMore != null) {
+                Text(
+                    "Show More",
+                    color = Color(0xFFFFDB89),
+                    fontSize = 12.sp,
+                    modifier = Modifier.clickable { onMore() }.padding(4.dp)
+                )
+            }
         }
+        Spacer(Modifier.height(6.dp))
+        Box(
+            modifier = Modifier.fillMaxWidth().height(2.dp).clip(RoundedCornerShape(50)).background(Color(0xFFFFDB89).copy(alpha = 0.85f))
+        )
     }
 }

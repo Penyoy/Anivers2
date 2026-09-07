@@ -10,3 +10,7 @@ local.properties
 *.jks
 .DS_Store
 google-services.json
+/bahan.zip
+/ss.zip
+/log*.zip
+/logs.zip

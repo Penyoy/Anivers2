@@ -60,23 +60,23 @@ fun HomeScreen(
             showSearch = false // we show large search below ala request but click navigates
         )
 
-        // Big Search Card -> click navigates to Search section (tidak inline)
+        // Big Search Card - reference Proyek Baru 51.png black pill
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 10.dp)
                 .clip(RoundedCornerShape(50))
-                .background(Color(0x0DFFFFFF))
+                .background(Color(0xFF0A0A0A))
                 .clickable { onNavigateSearch() }
                 .padding(horizontal = 16.dp, vertical = 14.dp)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Icon(Icons.Filled.Search, contentDescription = null, tint = Color(0xFF5C6076), modifier = Modifier.size(18.dp))
-                Text("Cari anime...", color = Color(0xFF5C6076), fontSize = 14.sp, modifier = Modifier.weight(1f))
+                Icon(Icons.Filled.Search, contentDescription = null, tint = Color(0xFFFFDB89), modifier = Modifier.size(18.dp))
+                Text("Cari anime...", color = Color(0xFF8A8FA3), fontSize = 14.sp, modifier = Modifier.weight(1f))
                 Box(
-                    modifier = Modifier.size(32.dp).clip(RoundedCornerShape(50)).background(Color(0xFF242457)),
+                    modifier = Modifier.size(32.dp).clip(RoundedCornerShape(50)).background(Color(0xFFFFDB89)),
                     contentAlignment = Alignment.Center
-                ) { Icon(Icons.Filled.Search, contentDescription = null, tint = Color(0xFFA5B4FC), modifier = Modifier.size(16.dp)) }
+                ) { Icon(Icons.Filled.Search, contentDescription = null, tint = Color(0xFF030303), modifier = Modifier.size(16.dp)) }
             }
         }
 
@@ -116,10 +116,14 @@ fun HomeScreen(
                             modifier = Modifier.align(Alignment.BottomStart).padding(12.dp)
                         ) {
                             Box(
-                                modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0xFF242457)).padding(horizontal = 8.dp, vertical = 2.dp)
-                            ) { Text("Featured", color = Color(0xFFA5B4FC), fontSize = 10.sp) }
-                            Text(a.judul, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
-                            Text(a.genre.take(2).joinToString(" • "), color = Color(0xFFAEB2C7), fontSize = 11.sp)
+                                modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0xFFFFDB89)).padding(horizontal = 8.dp, vertical = 2.dp)
+                            ) { Text("Featured", color = Color(0xFF030303), fontSize = 10.sp, fontWeight = FontWeight.Bold) }
+                            Text(a.judul, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.titleMedium)
+                            if (a.sinopsis.isNotBlank()) {
+                                Text(a.sinopsis, color = Color(0xFFAEB2C7), fontSize = 11.sp, maxLines = 2, overflow = TextOverflow.Ellipsis, lineHeight = 13.sp)
+                            } else {
+                                Text(a.genre.take(2).joinToString(" • "), color = Color(0xFFAEB2C7), fontSize = 11.sp)
+                            }
                         }
                         Box(
                             modifier = Modifier.align(Alignment.Center).size(44.dp).clip(RoundedCornerShape(50)).background(Color(0x66000000)),

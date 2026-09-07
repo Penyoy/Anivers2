@@ -1,6 +1,7 @@
 package com.anivers.anime.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -51,7 +52,8 @@ fun BottomBar(navController: NavController) {
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(50))
-                .background(Color(0xE61A1E2E)) // natural solid, not covering content
+                .background(Color(0xCC030303)) // gold luxury black 80%
+                .border(1.dp, Color(0x33FFDB89), RoundedCornerShape(50))
                 .padding(4.dp),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.CenterVertically
@@ -80,9 +82,9 @@ fun BottomBar(navController: NavController) {
                     },
                     label = { Text(item.label, fontSize = 10.sp) },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = Color.White,
-                        selectedTextColor = Color.White,
-                        indicatorColor = Color(0xFF5B5BD6),
+                        selectedIconColor = Color(0xFF030303),
+                        selectedTextColor = Color(0xFFFFDB89),
+                        indicatorColor = Color(0xFFFFDB89),
                         unselectedIconColor = Color(0xFF9AA0B6),
                         unselectedTextColor = Color(0xFF9AA0B6)
                     )

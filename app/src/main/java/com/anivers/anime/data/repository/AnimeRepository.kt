@@ -15,58 +15,107 @@ class AnimeRepository(
     private val gson = Gson()
 
     suspend fun getBaruUpload(page: Int = 1): List<com.anivers.anime.data.model.Anime> = withContext(Dispatchers.IO) {
-        api.getBaruUpload(page).map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() && it.url != "undefined" }
+        try {
+            api.getBaruUpload(page).map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() && it.url != "undefined" }
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "getBaruUpload failed page=$page", e)
+            throw e
+        }
     }
 
     suspend fun getMovie(): List<com.anivers.anime.data.model.Anime> = withContext(Dispatchers.IO) {
-        api.getMovie().map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() }
+        try {
+            api.getMovie().map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() }
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "getMovie failed", e)
+            throw e
+        }
     }
 
     suspend fun getRekomendasi(): List<com.anivers.anime.data.model.Anime> = withContext(Dispatchers.IO) {
-        api.getRekomendasi().map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() }
+        try {
+            api.getRekomendasi().map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() }
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "getRekomendasi failed", e)
+            throw e
+        }
     }
 
     suspend fun getOngoing(page: Int = 1, type: String = "all"): List<com.anivers.anime.data.model.Anime> = withContext(Dispatchers.IO) {
-        api.getOngoing(page, type).map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() }
+        try {
+            api.getOngoing(page, type).map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() }
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "getOngoing failed page=$page type=$type", e)
+            throw e
+        }
     }
 
-    suspend fun getJadwal(): JadwalResponse = withContext(Dispatchers.IO) { api.getJadwal() }
+    suspend fun getJadwal(): JadwalResponse = withContext(Dispatchers.IO) {
+        try { api.getJadwal() } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "getJadwal failed", e)
+            throw e
+        }
+    }
 
     suspend fun search(keyword: String): List<com.anivers.anime.data.model.Anime> = withContext(Dispatchers.IO) {
-        val raw = api.search(keyword)
-        extractSearchAnimes(raw)
+        try {
+            val raw = api.search(keyword)
+            extractSearchAnimes(raw)
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "search failed keyword=$keyword", e)
+            throw e
+        }
     }
 
-    suspend fun searchRaw(keyword: String): JsonElement = withContext(Dispatchers.IO) { api.search(keyword) }
+    suspend fun searchRaw(keyword: String): JsonElement = withContext(Dispatchers.IO) {
+        try { api.search(keyword) } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "searchRaw failed", e); throw e
+        }
+    }
 
     suspend fun getSeries(slug: String): SeriesDetail? = withContext(Dispatchers.IO) {
-        val clean = Normalizer.sanitizeSlug(slug)
-        require(clean.length >= 2 && clean != "undefined" && clean != "null") { "Slug tidak valid: $slug" }
-        val body = mapOf("get" to "top", "post_type" to "1", "post_id" to clean, "token" to "")
-        val res = api.getSeries(clean, body)
-        parseSeriesDetail(res)
+        try {
+            val clean = Normalizer.sanitizeSlug(slug)
+            require(clean.length >= 2 && clean != "undefined" && clean != "null") { "Slug tidak valid: $slug" }
+            val body = mapOf("get" to "top", "post_type" to "1", "post_id" to clean, "token" to "")
+            val res = api.getSeries(clean, body)
+            parseSeriesDetail(res)
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "getSeries failed slug=$slug", e)
+            throw e
+        }
     }
 
     suspend fun getEpisodeData(postUrl: String, seriesUrl: String, episode: String? = null): EpisodeDataResponse = withContext(Dispatchers.IO) {
-        val cleanPost = Normalizer.sanitizeSlug(postUrl)
-        val cleanSeries = Normalizer.sanitizeSlug(seriesUrl)
-        require(cleanPost.isNotEmpty() && cleanPost != "undefined") { "Episode slug invalid" }
-        require(cleanSeries.isNotEmpty() && cleanSeries != "undefined") { "Series slug invalid" }
-        val epNum = if (!episode.isNullOrBlank() && episode != "1") episode else Normalizer.parseEpisodeNumber(cleanPost).ifEmpty { "1" }
-        val body = mapOf(
-            "post_type" to "2",
-            "post_id" to cleanPost,
-            "series_id" to cleanSeries,
-            "series_url" to cleanSeries,
-            "episode" to if (epNum == "movie") "1" else epNum,
-            "token" to com.anivers.anime.utils.Constants.EPISODE_TOKEN
-        )
-        api.getEpisodeData(cleanPost, body)
+        try {
+            val cleanPost = Normalizer.sanitizeSlug(postUrl)
+            val cleanSeries = Normalizer.sanitizeSlug(seriesUrl)
+            require(cleanPost.isNotEmpty() && cleanPost != "undefined") { "Episode slug invalid" }
+            require(cleanSeries.isNotEmpty() && cleanSeries != "undefined") { "Series slug invalid" }
+            val epNum = if (!episode.isNullOrBlank() && episode != "1") episode else Normalizer.parseEpisodeNumber(cleanPost).ifEmpty { "1" }
+            val body = mapOf(
+                "post_type" to "2",
+                "post_id" to cleanPost,
+                "series_id" to cleanSeries,
+                "series_url" to cleanSeries,
+                "episode" to if (epNum == "movie") "1" else epNum,
+                "token" to com.anivers.anime.utils.Constants.EPISODE_TOKEN
+            )
+            api.getEpisodeData(cleanPost, body)
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "getEpisodeData failed post=$postUrl series=$seriesUrl", e)
+            throw e
+        }
     }
 
     suspend fun getGenre(page: Int = 1, genreUrl: String): List<com.anivers.anime.data.model.Anime> = withContext(Dispatchers.IO) {
-        val raw = api.getGenre(page, genreUrl)
-        raw.map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() && it.url != "undefined" }
+        try {
+            val raw = api.getGenre(page, genreUrl)
+            raw.map { Normalizer.normalizeAnime(it) }.filter { it.url.isNotEmpty() && it.url != "undefined" }
+        } catch (e: Exception) {
+            android.util.Log.e("ANIVERS_API", "getGenre failed genre=$genreUrl page=$page", e)
+            throw e
+        }
     }
 
     // helpers - mirrors api.js extractSearchAnimes

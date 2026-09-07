@@ -26,15 +26,18 @@ interface ApiService {
     suspend fun search(@Query("keyword") keyword: String): JsonElement
 
     @POST("jadwal.php")
+    @Headers("Content-Length: 0")
     suspend fun getJadwal(): JadwalResponse
 
     @POST("series.php")
+    @Headers("Content-Type: text/plain; charset=utf-8")
     suspend fun getSeries(
         @Query("url") url: String,
         @Body body: Map<String, String>
     ): JsonElement
 
     @POST("series/episode/data.php")
+    @Headers("Content-Type: text/plain; charset=utf-8")
     suspend fun getEpisodeData(
         @Query("url") url: String,
         @Body body: Map<String, String>

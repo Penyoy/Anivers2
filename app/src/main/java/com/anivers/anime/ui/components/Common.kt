@@ -33,7 +33,7 @@ fun LoadingSkeleton(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ErrorState(message: String, onRetry: () -> Unit) {
+fun ErrorState(message: String, onRetry: () -> Unit, debugDetail: String? = null) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -41,6 +41,29 @@ fun ErrorState(message: String, onRetry: () -> Unit) {
         Text("Gagal memuat", color = Color(0xFFF8FAFC), fontSize = 15.sp)
         Spacer(Modifier.height(6.dp))
         Text(message, color = Color(0xFF8A8FA3), fontSize = 12.sp)
+        if (!debugDetail.isNullOrBlank()) {
+            Spacer(Modifier.height(8.dp))
+            androidx.compose.foundation.rememberScrollState()
+            Box(
+                modifier = Modifier.fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0x1AFF0000))
+                    .padding(10.dp)
+            ) {
+                androidx.compose.foundation.layout.Column {
+                    Text("Detail (adb logcat ANIVERS_API):", color = Color(0xFFFCA5A5), fontSize = 10.sp)
+                    Spacer(Modifier.height(4.dp))
+                    androidx.compose.material3.Text(
+                        debugDetail.take(600),
+                        color = Color(0xFFFCA5A5),
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp
+                    )
+                }
+            }
+            Spacer(Modifier.height(4.dp))
+            Text("adb logcat | grep ANIVERS", color = Color(0xFF5C6076), fontSize = 10.sp)
+        }
         Spacer(Modifier.height(12.dp))
         Button(onClick = onRetry, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3730A3))) {
             Text("Coba Lagi")

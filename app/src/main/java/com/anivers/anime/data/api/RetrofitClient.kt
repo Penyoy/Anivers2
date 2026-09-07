@@ -13,12 +13,23 @@ object RetrofitClient {
     private val gson = GsonBuilder().setLenient().create()
 
     private val client by lazy {
-        val log = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
+        val log = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.BASIC
+        }
         OkHttpClient.Builder()
             .addInterceptor(ApiInterceptor())
             .addInterceptor(log)
+            .addInterceptor { chain ->
+                val resp = chain.proceed(chain.request())
+                // deteksi Cloudflare HTML challenge — seperti api.js isCloudflarePage
+                val peek = resp.peekBody(2048).string()
+                if (peek.contains("<!DOCTYPE", ignoreCase = true) && peek.contains("cloudflare", ignoreCase = true)) {
+                    throw java.io.IOException("Diblokir Cloudflare (challenge HTML) di ${chain.request().url}")
+                }
+                resp
+            }
             .connectTimeout(15, TimeUnit.SECONDS)
-            .readTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(20, TimeUnit.SECONDS)
             .writeTimeout(15, TimeUnit.SECONDS)
             .build()
     }

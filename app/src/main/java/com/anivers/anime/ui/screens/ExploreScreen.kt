@@ -127,9 +127,9 @@ fun ExploreScreen(
         LazyColumn(modifier = Modifier.weight(1f, fill = false)) {
             item {
                 Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    genres.chunked(2).forEach { row ->
+                    for (row in genres.chunked(2)) {
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                            row.forEach { g ->
+                            for (g in row) {
                                 Box(
                                     modifier = Modifier.weight(1f).clip(RoundedCornerShape(16.dp))
                                         .background(Color(0x0DFFFFFF)).clickable { onGenreClick(g.slug) }
@@ -161,9 +161,9 @@ fun ExploreScreen(
                         val list = if (filteredList.isNotEmpty()) filteredList else rekomendasi
                         // grid 3 columns
                         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            list.take(12).chunked(3).forEach { row ->
+                            for (row in list.take(12).chunked(3)) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                                    row.forEach { a ->
+                                    for (a in row) {
                                         Box(Modifier.weight(1f)) { AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }, showBookmark = false) }
                                     }
                                     repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
@@ -176,7 +176,7 @@ fun ExploreScreen(
                     Text("Kategori Cepat", color = Color(0xFFF8FAFC), fontSize = 14.sp, fontWeight = FontWeight.Bold)
                     Spacer(Modifier.height(8.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                        listOf("Shounen Populer" to "naruto", "Movie Terbaru" to "movie", "Isekai" to "isekai", "Romance" to "romance").forEach { (label, _) ->
+                        for ((label, _) in listOf("Shounen Populer" to "naruto", "Movie Terbaru" to "movie", "Isekai" to "isekai", "Romance" to "romance")) {
                             Box(
                                 modifier = Modifier.weight(1f).clip(RoundedCornerShape(12.dp)).background(Color(0x0DFFFFFF)).padding(10.dp),
                                 contentAlignment = Alignment.Center

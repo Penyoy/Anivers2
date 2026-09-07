@@ -102,7 +102,7 @@ fun AnimeCard(
         )
         if (anime.genre.isNotEmpty()) {
             Row(modifier = Modifier.padding(horizontal = 2.dp, vertical = 2.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                anime.genre.take(2).forEach { g ->
+                for (g in anime.genre.take(2)) {
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(4.dp))

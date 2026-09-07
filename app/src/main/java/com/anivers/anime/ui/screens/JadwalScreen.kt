@@ -58,7 +58,7 @@ fun JadwalScreen(onAnimeClick: (String) -> Unit) {
             Spacer(Modifier.height(12.dp))
             val list = days.getOrNull(active)?.animeList ?: emptyList()
             Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                list.forEach { a ->
+                for (a in list) {
                     Row(
                         modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x0DFFFFFF)).clickable { a.link?.let { onAnimeClick(it) } }.padding(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically

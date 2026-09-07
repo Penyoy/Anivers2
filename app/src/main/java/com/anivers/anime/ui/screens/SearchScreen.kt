@@ -106,7 +106,7 @@ fun SearchScreen(
                 ) {
                     Text("Preview \"${input}\"", color = Color(0xFFA5B4FC), fontSize = 12.sp)
                     Spacer(Modifier.height(6.dp))
-                    preview.forEach { a ->
+                    for (a in preview) {
                         Row(
                             modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).clickable { onAnimeClick(a.url) }.padding(6.dp),
                             verticalAlignment = Alignment.CenterVertically,
@@ -145,7 +145,7 @@ fun SearchScreen(
                     Text("Ketik minimal 2 huruf, preview akan muncul otomatis.", color = Color(0xFF8A8FA3), fontSize = 12.sp)
                     Spacer(Modifier.height(12.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        listOf("naruto", "one piece", "isekai", "movie").forEach { kw ->
+                        for (kw in listOf("naruto", "one piece", "isekai", "movie")) {
                             Box(
                                 modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0x1AFFFFFF)).clickable {
                                     input = kw; vm.setQuery(kw); vm.search(kw); hasSearched = true

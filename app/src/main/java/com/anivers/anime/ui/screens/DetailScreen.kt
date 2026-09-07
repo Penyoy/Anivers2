@@ -105,7 +105,7 @@ fun DetailScreen(
                             }
                             Spacer(Modifier.height(8.dp))
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(vertical = 4.dp)) {
-                                (d.genre ?: emptyList()).forEachIndexed { idx, g ->
+                                for ((idx, g) in (d.genre ?: emptyList()).withIndex()) {
                                     val slugG = d.genreurl?.getOrNull(idx) ?: g.lowercase()
                                     Box(
                                         modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Color(0x1AFFFFFF)).clickable { onGenreClick(slugG) }.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -147,7 +147,7 @@ fun DetailScreen(
                     ))
                     Text("Episode ${sorted.size}", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp))
                     Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        sorted.forEach { ep ->
+                        for (ep in sorted) {
                             Row(
                                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x0DFFFFFF)).clickable {
                                     val seriesId = d.seriesId ?: slug

@@ -146,7 +146,7 @@ fun WatchScreen(
                 if (resos.isNotEmpty()) {
                     Row(modifier = Modifier.fillMaxWidth().background(Color(0xE6050714)).padding(10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            resos.forEach { r ->
+                            for (r in resos) {
                                 val sel = r == quality
                                 Box(
                                     modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFF3730A3) else Color(0x14FFFFFF)).clickable { vm.setQuality(r) }.padding(horizontal = 10.dp, vertical = 6.dp)
@@ -156,7 +156,7 @@ fun WatchScreen(
                         val servers = stream?.data?.firstOrNull()?.streams?.get(quality) ?: emptyList()
                         if (servers.size > 1) {
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                servers.forEachIndexed { idx, _ ->
+                                for ((idx, _) in servers.withIndex()) {
                                     val sel = idx == currentServer
                                     Box(
                                         modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFF3730A3) else Color(0x14FFFFFF)).clickable { currentServer = idx }.padding(horizontal = 10.dp, vertical = 6.dp)

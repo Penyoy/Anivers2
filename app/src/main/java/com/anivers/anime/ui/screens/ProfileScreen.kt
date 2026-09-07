@@ -152,7 +152,7 @@ fun ProfileScreen() {
                 Box {
                     OutlinedButton(onClick = { expanded = true }, shape = RoundedCornerShape(50.dp)) { Text(settings.quality, color = Color(0xFFA5B4FC), fontSize = 12.sp) }
                     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                        listOf("480p","720p","1080p").forEach { q ->
+                        for (q in listOf("480p","720p","1080p")) {
                             DropdownMenuItem(text = { Text(q) }, onClick = { scope.launch { settingsStore.updateQuality(q) }; expanded = false })
                         }
                     }

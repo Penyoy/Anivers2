@@ -55,29 +55,31 @@ fun BottomBar(navController: NavController) {
                     currentRoute.startsWith(item.route) -> true
                     else -> false
                 }
-                BadgedBox(badge = {
-                    if (item.badge != null) Badge(containerColor = Color(0xFFEF4444)) { Text(if (item.badge > 9) "9+" else item.badge.toString(), fontSize = 10.sp) }
-                }) {
-                    NavigationBarItem(
-                        selected = selected,
-                        onClick = {
-                            navController.navigate(item.route) {
-                                popUpTo("home") { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        },
-                        icon = { Icon(item.icon, contentDescription = item.label, modifier = Modifier.size(20.dp)) },
-                        label = { Text(item.label, fontSize = 10.sp) },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color.White,
-                            selectedTextColor = Color.White,
-                            indicatorColor = Color(0xFF3730A3),
-                            unselectedIconColor = Color(0xFF7A7F9A),
-                            unselectedTextColor = Color(0xFF7A7F9A)
-                        )
+                NavigationBarItem(
+                    selected = selected,
+                    onClick = {
+                        navController.navigate(item.route) {
+                            popUpTo("home") { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    icon = {
+                        BadgedBox(badge = {
+                            if (item.badge != null) Badge(containerColor = Color(0xFFEF4444)) { Text(if (item.badge > 9) "9+" else item.badge.toString(), fontSize = 10.sp) }
+                        }) {
+                            Icon(item.icon, contentDescription = item.label, modifier = Modifier.size(20.dp))
+                        }
+                    },
+                    label = { Text(item.label, fontSize = 10.sp) },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = Color.White,
+                        selectedTextColor = Color.White,
+                        indicatorColor = Color(0xFF3730A3),
+                        unselectedIconColor = Color(0xFF7A7F9A),
+                        unselectedTextColor = Color(0xFF7A7F9A)
                     )
-                }
+                )
             }
         }
     }

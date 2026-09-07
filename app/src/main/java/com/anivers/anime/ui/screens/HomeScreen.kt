@@ -208,7 +208,7 @@ fun HomeScreen(
         if (state.rekomendasi.isNotEmpty()) {
             SectionHeader(title = "Hot Anime", onMore = { onMoreClick("rekomendasi") })
             Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                state.rekomendasi.take(2).forEachIndexed { idx, a ->
+                for ((idx, a) in state.rekomendasi.take(2).withIndex()) {
                     Box(
                         modifier = Modifier.weight(1f).aspectRatio(3f/4.2f).clip(RoundedCornerShape(14.dp)).background(Color(0xFF0A0F1E)).clickable { onAnimeClick(a.url) }
                     ) {
@@ -268,9 +268,9 @@ private fun AnimeGridSection(animes: List<Anime>, onAnimeClick: (String) -> Unit
     Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         // 2 rows grid manual
         val rows = animes.chunked(3)
-        rows.forEach { row ->
+        for (row in rows) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                row.forEach { a ->
+                for (a in row) {
                     Box(modifier = Modifier.weight(1f)) {
                         AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }, showBookmark = false)
                     }

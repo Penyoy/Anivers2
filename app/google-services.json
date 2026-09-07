@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "944887542236",
+    "project_id": "animverss",
+    "storage_bucket": "animverss.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944887542236:android:ffb26ae2ee92dba2c19f19",
+        "android_client_info": {
+          "package_name": "com.anivers.anime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944887542236-f8306ahk9d1fnbbt85st7c57546pe9rf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvVbJ544cA_Jj5FyZTsmlCHlubhdl4EuM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944887542236-f8306ahk9d1fnbbt85st7c57546pe9rf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

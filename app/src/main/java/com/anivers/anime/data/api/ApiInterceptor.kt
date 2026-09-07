@@ -11,7 +11,6 @@ class ApiInterceptor : Interceptor {
         val builder = req.newBuilder()
             .header("User-Agent", if (isEpisode) Constants.UA_FLUTTER else Constants.UA_DART)
             .header("Accept", "application/json")
-            .header("Accept-Encoding", "gzip")
         // remove browser-ish headers that trigger CF challenge
         builder.removeHeader("Referer")
         builder.removeHeader("Origin")

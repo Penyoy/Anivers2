@@ -85,7 +85,7 @@ fun HomeScreen(
             return@Column
         }
         if (state.error != null && state.ongoing.isEmpty() && state.baruUpload.isEmpty()) {
-            ErrorState(state.error!!, debugDetail = state.debugDetail) { vm.load() }
+            ErrorState(message = state.error!!, onRetry = { vm.load() }, debugDetail = state.debugDetail)
             return@Column
         }
 

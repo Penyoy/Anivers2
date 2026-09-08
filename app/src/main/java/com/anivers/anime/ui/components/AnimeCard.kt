@@ -2,8 +2,6 @@ package com.anivers.anime.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.interaction.rememberInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,15 +35,10 @@ fun AnimeCard(
     showBookmark: Boolean = true,
     modifier: Modifier = Modifier
 ) {
-    val interactionSource = androidx.compose.foundation.interaction.rememberInteractionSource()
-    val isPressed by interactionSource.collectIsPressedAsState()
-    val scale = if (isPressed) 0.96f else 1f
-
     Column(
         modifier = modifier
-            .graphicsLayer { scaleX = scale; scaleY = scale }
             .clip(RoundedCornerShape(14.dp))
-            .clickable(interactionSource = interactionSource, indication = null) { onClick() }
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier

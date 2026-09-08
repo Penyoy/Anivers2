@@ -53,11 +53,11 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize().background(Color(0xFF030303)).padding(bottom = 100.dp)) {
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(top = 48.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Icon(Icons.Filled.Bookmark, contentDescription = null, tint = Color(0xFF6366F1))
+                Icon(Icons.Filled.Bookmark, contentDescription = null, tint = Color(0xFFFFDB89))
                 Text("Koleksi Saya", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 if (isLoggedIn && bookmarks.isNotEmpty()) {
                     Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0x14FFDB89)).padding(horizontal = 8.dp, vertical = 2.dp)) {
-                        Text("${bookmarks.size} anime", color = Color(0xFFA5B4FC), fontSize = 11.sp)
+                        Text("${bookmarks.size} anime", color = Color(0xFF030303), fontSize = 11.sp)
                     }
                 }
             }
@@ -80,7 +80,7 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
                 modifier = Modifier.fillMaxWidth().padding(16.dp).clip(RoundedCornerShape(20.dp)).background(Color(0x0DFFFFFF)).padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(Icons.Filled.Bookmark, contentDescription = null, tint = Color(0xFF6366F1), modifier = Modifier.size(48.dp))
+                Icon(Icons.Filled.Bookmark, contentDescription = null, tint = Color(0xFFFFDB89), modifier = Modifier.size(48.dp))
                 Spacer(Modifier.height(8.dp))
                 Text("Belum ada yang disimpan", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
                 Text("Ketuk ikon bookmark pada anime favoritmu untuk menyimpannya di sini.", color = Color(0xFF8A8FA3), fontSize = 12.sp)

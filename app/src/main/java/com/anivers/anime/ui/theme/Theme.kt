@@ -11,18 +11,22 @@ import androidx.compose.ui.unit.sp
 import com.anivers.anime.R
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFFFDB89), // luxury gold #ffdb89 from palette
+    primary = Color(0xFFFFDB89),
     onPrimary = Color(0xFF030303),
-    primaryContainer = Color(0xFF2C2C2E), // charcoal #2c2c2e
-    onPrimaryContainer = Color(0xFFFFDB89),
-    secondary = Color(0xFFFFDB89),
-    background = Color(0xFF030303), // pure black #030303
-    onBackground = Color(0xFFF1F1F1),
-    surface = Color(0xFF1A1A1A),
-    onSurface = Color(0xFFF1F1F1),
-    surfaceVariant = Color(0xFF2C2C2E),
-    onSurfaceVariant = Color(0xFFAEB2C7),
-    outline = Color(0xFF3A3A3A)
+    primaryContainer = Color(0xFFD8B76D),
+    onPrimaryContainer = Color(0xFF030303),
+    secondary = Color(0xFFD8B76D),
+    onSecondary = Color(0xFF030303),
+    background = Color(0xFF030303),
+    onBackground = Color(0xFFFFFFFF),
+    surface = Color(0xFF2C2C2E),
+    onSurface = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0xFF1C1C1E),
+    onSurfaceVariant = Color(0xFFB8B8B8),
+    surfaceContainer = Color(0xFF2C2C2E),
+    outline = Color(0xFF3A3A3C),
+    error = Color(0xFFFF5F5F),
+    onError = Color(0xFFFFFFFF)
 )
 
 private val LightColorScheme = DarkColorScheme // force dark like hanime
@@ -43,8 +47,20 @@ fun AniVerseTheme(content: @Composable () -> Unit) {
     )
 }
 
+// Spec palette extras
+val GoldPrimary = Color(0xFFFFDB89)
+val GoldVariant = Color(0xFFD8B76D)
+val BgBlack = Color(0xFF030303)
+val SurfaceGray = Color(0xFF2C2C2E)
+val SurfaceDark = Color(0xFF1C1C1E)
+val TextPrimary = Color(0xFFFFFFFF)
+val TextSecondary = Color(0xFFB8B8B8)
+val DividerGray = Color(0xFF3A3A3C)
+val ErrorRed = Color(0xFFFF5F5F)
+val SuccessGreen = Color(0xFF8FD694)
+
 // Glass luxury
-val GlassBg = Color(0x14FFDB89).copy(alpha = 0.08f) // gold translucent
-val GlassBorder = Color(0x33FFDB89) // gold border
-val GlassStrong = Color(0xCC030303) // black 80%
+val GlassBg = Color(0x14FFDB89).copy(alpha = 0.08f)
+val GlassBorder = Color(0x33FFDB89)
+val GlassStrong = Color(0xCC030303)
 val BestyFontFamily = FontFamily(Font(R.font.besty))

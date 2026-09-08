@@ -1,3 +1,10 @@
+.gradle/
+build/
+**/build/
+local.properties
+.env
+*.jks
+*.keystore
 .gradle
 /build
 /app/build
@@ -5,12 +12,12 @@
 !gradle/wrapper/gradle-wrapper.jar
 *.iml
 .idea
-local.properties
-*.keystore
-*.jks
 .DS_Store
 google-services.json
 /bahan.zip
 /ss.zip
 /log*.zip
 /logs.zip
+# proxy
+proxy/node_modules/
+proxy/dist/

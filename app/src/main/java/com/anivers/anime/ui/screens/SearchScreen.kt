@@ -104,7 +104,7 @@ fun SearchScreen(
                 Column(
                     modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(Color(0x1AFFFFFF)).padding(8.dp)
                 ) {
-                    Text("Preview \"${input}\"", color = Color(0xFFA5B4FC), fontSize = 12.sp)
+                    Text("Preview \"${input}\"", color = Color(0xFFFFDB89), fontSize = 12.sp)
                     Spacer(Modifier.height(6.dp))
                     for (a in preview) {
                         Row(

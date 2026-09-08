@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_dark">#05070E</color>
-    <color name="bg_card">#0A0F1E</color>
-    <color name="primary">#3730A3</color>
-    <color name="primary_dark">#1E1B4B</color>
-    <color name="primary_light">#6366F1</color>
-    <color name="surface">#141A2E</color>
-    <color name="text_primary">#F8FAFC</color>
-    <color name="text_secondary">#AEB2C7</color>
-    <color name="text_muted">#5C6076</color>
-    <color name="border">#1E293B</color>
+    <color name="primary_gold">#FFDB89</color>
+    <color name="primary_variant">#D8B76D</color>
+    <color name="background">#030303</color>
+    <color name="surface">#2C2C2E</color>
+    <color name="surface_dark">#1C1C1E</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B8B8B8</color>
+    <color name="divider">#3A3A3C</color>
+    <color name="error">#FF5F5F</color>
+    <color name="success">#8FD694</color>
+    <!-- Legacy aliases for compat -->
+    <color name="bg_dark">#030303</color>
+    <color name="bg_card">#2C2C2E</color>
+    <color name="primary">#FFDB89</color>
+    <color name="primary_dark">#D8B76D</color>
+    <color name="primary_light">#FFDB89</color>
+    <color name="text_muted">#B8B8B8</color>
+    <color name="border">#3A3A3C</color>
 </resources>

@@ -26,33 +26,66 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Generate Gradle Wrapper if missing
+      - name: Generate Gradle Wrapper if missing or placeholder
         run: |
-          if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then
-            echo "Wrapper jar missing, downloading Gradle 8.9"
+          NEED_GEN=false
+          if [ ! -f gradle/wrapper/gradle-wrapper.jar ]; then NEED_GEN=true; fi
+          if [ -f gradle/wrapper/gradle-wrapper.jar ] && grep -q "PLACEHOLDER" gradle/wrapper/gradle-wrapper.jar 2>/dev/null; then NEED_GEN=true; fi
+          if [ -f gradle/wrapper/gradle-wrapper.jar ] && [ $(stat -c%s gradle/wrapper/gradle-wrapper.jar 2>/dev/null || stat -f%z gradle/wrapper/gradle-wrapper.jar) -lt 10000 ]; then NEED_GEN=true; fi
+          if grep -q "Placeholder" gradlew 2>/dev/null; then NEED_GEN=true; fi
+          if [ ! -f gradlew.bat ]; then NEED_GEN=true; fi
+          if grep -q "Placeholder" gradlew.bat 2>/dev/null; then NEED_GEN=true; fi
+          if [ "$NEED_GEN" = "true" ]; then
+            echo "Wrapper missing or placeholder, generating Gradle 8.9 wrapper..."
             curl -sLo gradle-8.9-bin.zip https://services.gradle.org/distributions/gradle-8.9-bin.zip
             unzip -q gradle-8.9-bin.zip
             ./gradle-8.9/bin/gradle wrapper --gradle-version 8.9 --no-daemon
             ./gradle-8.9/bin/gradle --stop || true
-            # jangan hapus gradle-8.9 dulu, biarkan sampai build selesai
+          else
+            echo "Gradle wrapper OK"
           fi
 
-      - name: Create google-services.json placeholder if missing
+      - name: Setup google-services.json from secret or placeholder
         run: |
-          if [ ! -f app/google-services.json ]; then
+          if [ -n "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
+            echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json 2>/dev/null || echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > app/google-services.json
+            echo "Created google-services.json from secret GOOGLE_SERVICES_JSON"
+          elif [ ! -f app/google-services.json ]; then
             echo '{"project_info":{"project_number":"0","project_id":"anivers-placeholder","storage_bucket":""},"client":[{"client_info":{"mobilesdk_app_id":"1:0:android:placeholder","android_client_info":{"package_name":"com.anivers.anime"}},"oauth_client":[],"api_key":[{"current_key":"placeholder"}]}]}' > app/google-services.json
-            echo "Created placeholder google-services.json - replace with real Firebase config for release"
+            echo "Created placeholder google-services.json - replace with real Firebase config"
+            echo "Tip: set secret GOOGLE_SERVICES_JSON (base64 of file) for real Firebase"
+          else
+            echo "google-services.json already exists"
           fi
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace --no-daemon
 
+      - name: Setup Release Keystore (if secrets available)
+        if: env.ANDROID_KEYSTORE_BASE64 != ''
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > app/release.keystore
+          echo "Keystore decoded"
+          ./gradlew assembleRelease --stacktrace --no-daemon || echo "Release build failed - check keystore secrets"
+
       - name: Cleanup Gradle dist
         if: always()
         run: rm -rf gradle-8.9 gradle-8.9-bin.zip || true
 
-      - name: Upload APK
+      - name: Upload Debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: anivers-debug-apk
+          name: anivers-anime-debug.apk
           path: app/build/outputs/apk/debug/*.apk
+
+      - name: Upload Release APK (if built)
+        if: hashFiles('app/build/outputs/apk/release/*.apk') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: anivers-anime-release.apk
+          path: app/build/outputs/apk/release/*.apk

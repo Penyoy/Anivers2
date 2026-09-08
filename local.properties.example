@@ -1,2 +1,5 @@
 sdk.dir=/opt/android-sdk
 # copy to local.properties and set your sdk path
+# Optional: override API base to use proxy
+# proxyUrl=https://api.example.com/api/v1.2.5
+# PROXY_FALLBACKS=https://backup-proxy.example.com

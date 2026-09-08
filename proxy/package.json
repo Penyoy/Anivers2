@@ -1,0 +1,16 @@
+{
+  "name": "anivers-anime-proxy",
+  "version": "1.0.0",
+  "description": "Proxy layer between ANIVERS ANIME Android app and upstream Animekita API — hides API keys, handles Cloudflare UA & retry",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  }
+}

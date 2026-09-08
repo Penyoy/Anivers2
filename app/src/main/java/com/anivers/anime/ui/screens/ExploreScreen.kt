@@ -53,7 +53,7 @@ fun ExploreScreen(
             GenreDef("Adventure", "adventure", "Petualangan seru", Color(0xFF14532D), Brush.linearGradient(listOf(Color(0xFF14532D), Color(0xFF052E16)))),
             GenreDef("Comedy", "comedy", "Ngakak abis", Color(0xFF92400E), Brush.linearGradient(listOf(Color(0xFF92400E), Color(0xFF451A03)))),
             GenreDef("Drama", "drama", "Menguras emosi", Color(0xFF581C87), Brush.linearGradient(listOf(Color(0xFF581C87), Color(0xFF3B0764)))),
-            GenreDef("Fantasy", "fantasy", "Dunia sihir", Color(0xFF312E81), Brush.linearGradient(listOf(Color(0xFF312E81), Color(0xFF242457)))),
+            GenreDef("Fantasy", "fantasy", "Dunia sihir", Color(0xFF312E81), Brush.linearGradient(listOf(Color(0xFF312E81), Color(0xFFFFDB89)))),
             GenreDef("Horror", "horror", "Mencekam", Color(0xFF111827), Brush.linearGradient(listOf(Color(0xFF1F2937), Color(0xFF020617)))),
             GenreDef("Isekai", "isekai", "Dunia lain", Color(0xFF164E63), Brush.linearGradient(listOf(Color(0xFF164E63), Color(0xFF083344)))),
             GenreDef("Mecha", "mecha", "Robot raksasa", Color(0xFF1E293B), Brush.linearGradient(listOf(Color(0xFF334155), Color(0xFF020617)))),

@@ -1,0 +1,879 @@
+1. api baru upload https://apps.animekita.org/api/v1.2.5/baruupload.php?page=1
+ini requests nya
+GET /api/v1.2.5/baruupload.php?page=1 HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept-encoding: gzip
+host: apps.animekita.org
+
+ini respon
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:37:17 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 9323
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Methods: GET, POST, OPTIONS
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Content-Type, Accept, Authorization, X-Requested-With
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=mRS8gdw1XqAjnVN5dDMnnBaBOdrD4jmrSgxD6S0yWqFVkhL%2F5pIFjh0FAQClPNSmKHVjbR%2Fbz5cJNQLWmJVG0AEc7%2BmVsM53q4vIoSdZbkC5XJd8eI7y1o5lxom%2BM8vggQ2iB5s%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c15efac530502-HKG
+alt-svc: h3=":443"; ma=86400
+
+[{"id":"150898","url":"chaos-child-movie","judul":"Chaos Child Movie","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/9/88031l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Mystery","Sci-Fi","Supernatural"],"sinopsis":"Silent Sky merupakan gabungan dari episode tambahan 13 dan 14. Ceritanya berlatar di masa depan, tiga bulan setelah insiden yang mirip dengan \"New Generation Madness\" dan penyakit Sindrom Anak Kacau yang disebabkan oleh gempa bumi di Shibuya di masa lalu.","studio":"SILVER LINK.","score":"6.48","status":"Completed","rilis":"17 Juni 2017","total_episode":2},{"id":"152919","url":"ryuu-to-sobakasu-no-hime","judul":"Ryuu to Sobakasu no Hime","cover":"https://i0.wp.com/myanimelist.net/images/anime/1081/115716l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Drama","Fantasy","Sci-Fi"],"sinopsis":"\"U\" adalah platform media sosial populer tempat orang dapat menciptakan kepribadian virtual dan memulai hidup baru. Di antara lima miliar penggunanya, satu pendatang baru dengan cepat mendapatkan perhatian: Belle, seorang penyanyi cantik yang melodi memikatnya perlahan memikat hati banyak orang. Tapi di ruang di mana semua orang bersembunyi di balik avatar,\r\nrasa ingin tahu pun muncul mengenai siapa sebenarnya gadis misterius itu. \r\n\r\nSuzu Naito—seorang gadis pemalu dari pedesaan—tidak bisa lagi menyanyi karena trauma masa lalu, semua usahanya berujung pada kehancuran dan penyakit. Namun, saat Suzu bergabung dengan U, dia sekali lagi mampu mengeluarkan suaranya. Dengan nama samaran \"Belle\", vokalnya segera menjadi viral,\r\nmenerima cinta dan kebencian. Sementara itu, rumor menyebar tentang makhluk buas yang kacau di dalam U, yang hanya dikenal sebagai \"Naga\". Setelah bertemu secara kebetulan selama konsernya, Belle menyadari bahwa dia tidak sejahat yang diceritakan dalam cerita. Kini, baik online maupun di dunia nyata, Suzu harus menghadapi perjuangan identitas, ketenaran, dan keterbukaan hati.","studio":"Studio Chizu","score":"7.47","status":"Completed","rilis":"16 Juli 2021","total_episode":1},{"id":"151559","url":"bai-yao-pu-2nd-season","judul":"Bai Yao Pu 2nd Season","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1898/115957l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Adventure","Mystery","Supernatural"],"sinopsis":"Tao Yao adalah seorang dokter dengan perpaduan sifat malaikat dan iblis. Ia berkeliling dunia bersama seorang biksu muda bernama Moya. Tak lama kemudian, Gungun si rubah, Pangeran Liu si iblis ular, dan yang lainnya bergabung dalam petualangan mereka. Mereka menunjukkan keahlian mereka, mengobati berbagai penyakit pada monster, dan juga membantu manusia sepanjang perjalanan mereka.","studio":"CMC Media","score":"7.56","status":"Completed","rilis":"18 Juli 2021","total_episode":12},{"id":"150181","url":"persona-3-the-movie-4-winter-of-rebirth","judul":"Persona 3 the Movie 4: Winter of Rebirth","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/9/77828.jpg","lastch":"","lastup":"Baru di Upload","genre":["Action","Supernatural"],"sinopsis":"\"Waktu kehancuran semakin dekat tanpa diragukan lagi. Tidak dapat dihentikan.\"\r\nUntuk mengetahui kematian, untuk menatap kematian, untuk menghadapi kematian.\r\n\r\nMakoto dan sekutunya telah tumbuh melalui banyak pertemuan dan perpisahan yang telah mereka alami.\r\n\r\nPerjuangan mereka mungkin bukan untuk dunia, tetapi untuk diri mereka sendiri. Meski begitu, mereka terus berjuang, percaya bahwa ada hari-hari damai yang menunggu di akhir pertempuran.\r\n\r\nNamun, seorang anak laki-laki mengatakan bahwa kehancuran adalah takdir yang harus ditanggung manusia. Anak laki-laki yang mereka yakini sebagai teman mereka mengatakan kebenaran situasi tersebut tanpa emosi di wajahnya.\r\n\r\nMusim berganti menjadi musim dingin. Makoto membuat keputusan untuk menyambut musim semi yang menunggu di luar sana...","studio":"A-1 Pictures","score":"8.04","status":"Completed","rilis":"Jan 23, 2016","total_episode":1},{"id":"149128","url":"suki-demo-kirai-na-amanojaku","judul":"Suki demo Kirai na Amanojaku","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/05/18/series-149128-anilist-148080-134630-f30de8d0.png","lastch":"","lastup":"Baru di Upload","genre":["Supernatural"],"sinopsis":"Hiiragi, siswa SMA tahun pertama, hanya ingin diterima dan tidak dibenci. Karena itu, ia selalu kesulitan menolak permintaan orang lain, meski sering berakhir merepotkan dirinya sendiri. Suatu hari di musim panas, saat mencoba menuntaskan satu permintaan lagi yang lagi-lagi tidak berjalan mulus, ia bertemu Tsumugi, gadis oni yang datang ke dunia manusia untuk mencari ibunya.\n\nBerbanding terbalik dengan Hiiragi, Tsumugi bertindak sesuka hati dan tak ragu mengikuti kata hatinya. Ketika salju tiba-tiba turun secara misterius, keduanya terseret ke dalam perjalanan yang tak terduga, mempertemukan dua pribadi yang bertolak belakang dalam sebuah petualangan yang perlahan mengubah segalanya.","studio":"Studio Colorido","score":"6.8","status":"Completed","rilis":"May 24, 2024","total_episode":1},{"id":"258","url":"beem-sub-indo/","judul":"Bem","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/03/15/series-258-anilist-107876-092253-2116b5a9.png","lastch":"","lastup":"Baru di Upload","genre":["Demons","Horror","Supernatural"],"sinopsis":"Libra City adalah kota pelabuhan yang terbagi tajam. Upper Town menjadi pusat politik, ekonomi, dan budaya, tempat seluruh kemewahan menumpuk, sementara Outside di seberangnya dikuasai kejahatan dan korupsi, membuat orang sulit saling percaya. Di antara keduanya terbentang kanal raksasa yang hanya dihubungkan oleh satu jembatan, seolah menjadi wujud nyata dari diskriminasi manusia.\n\nSonia, detektif muda yang baru dipindahkan dari Upper Town ke Outside, menyelidiki serangkaian kasus hingga bertemu tiga makhluk mengerikan yang diam diam melindungi manusia. Mereka adalah youkai ningen, “manusia iblis” yang menyembunyikan jati diri sambil memendam harapan dan keraguan masing masing. Bem bertarung demi manusia sembari mendambakan menjadi manusia seutuhnya, Bela berusaha memahami manusia dengan bersekolah, dan Belo menenggelamkan diri dalam dunia gim sambil memandang hidup dengan caranya sendiri. Namun setiap kali mereka menolong, wujud mereka justru membuat mereka mustahil diterima. Di saat yang sama, seseorang dari balik layar yang mengendalikan Libra City mulai memburu mereka, dan tujuan sebenarnya masih menjadi misteri.","studio":"Production I.G, LandQ studios","score":"5.6","status":"Completed","rilis":"Jul 15, 2019","total_episode":12},{"id":"150777","url":"ano-hi-no-kokoro-wo-toraete","judul":"Ano Hi no Kokoro wo Toraete","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1820/106104l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Drama","Sci-Fi"],"sinopsis":"Cerita ini berlatar di sebuah kota yang melestarikan alam dan keindahan alamnya dengan menggunakan teknologi. Cerita ini berpusat pada seorang protagonis yang telah menjauh dari teman masa kecilnya, dan menggunakan FlatFormer untuk terhubung kembali melintasi waktu dan ruang.","studio":"Sunrise","score":"5.92","status":"Completed","rilis":"23 Oktober 2019","total_episode":1},{"id":"150217","url":"seishun-buta-yarou-wa-randoseru-girl-no-yume-wo-minaiii","judul":"Seishun Buta Yarou wa Randoseru Girl no Yume wo Minaii","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1937/138379.jpg","lastch":"","lastup":"Baru di Upload","genre":["Drama","Romance","Supernatural"],"sinopsis":"Akhirnya, hari kelulusan SMA Mai pun tiba. Saat Sakuta tak sabar menunggu kekasihnya, seorang anak SD yang mirip sekali dengannya muncul di hadapannya. Mencurigakan, dan untuk semua alasan yang salah... Sementara itu, ayah Sakuta dan Kaede tiba-tiba menelepon, mengatakan bahwa ibu mereka ingin bertemu putrinya. Ia dirawat di rumah sakit karena kondisi Kaede sudah terlalu berat untuk ditanggungnya, jadi apa lagi yang mungkin diinginkannya sekarang?","studio":"CloverWorks","score":"8.31","status":"Completed","rilis":"Dec 1, 2023","total_episode":1},{"id":"148932","url":"idaman-polsek-season-3-(tokyo-revengers-season-3)","judul":"Idaman Polsek Season 3 (Tokyo Revengers Season 3)","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/05/04/series-148932-anilist-163329-212750-90cb7abd.jpg","lastch":"","lastup":"Baru di Upload","genre":["Action","Drama","Supernatural"],"sinopsis":"Takemichi kembali ke masa lalu setelah melihat masa depan di mana Toman hancur akibat jalan pikir Mikey yang kian menyimpang. Bertekad tak mengulang tragedi yang sama, ia memilih untuk menjadi lebih kuat demi menghentikan rencana Kisaki sebelum semuanya terlambat.\n\nDi saat yang sama, sebuah geng misterius dari Yokohama bernama Tenjiku mulai menggulingkan divisi-divisi Toman satu per satu, dengan ambisi menghancurkan seluruh geng di Jepang dan menjadi yang terkuat. Meski Kisaki telah dilarang, ia ternyata masih bergerak dalam bayang-bayang, menyiapkan sesuatu yang mengancam Toman dari dalam dan luar.","studio":"LIDENFILMS","score":"7.7","status":"Completed","rilis":"Oct 4, 2023","total_episode":13},{"id":"152317","url":"wonderland-season-5","judul":"Wonderland Season 5","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/02/a35857d357e99fe1.webp","lastch":"","lastup":"Baru di Upload","genre":["Action","Adventure","Demons","Fantasy","Historical","Martial Arts","Romance"],"sinopsis":"Donghua Wonderland Season 5 mengisahkan tentang perjuangan Ye Xingyun dalam mendapatkan ramalan nasib dan melawan serangan besar-besaran dari para iblis yang menyerang keluarga Qingyu.\r\n\r\nDalam pertempuran sengit tersebut, sang pemimpin iblis akhirnya bertarung secara pribadi dengan Ye Xingyun yang berusaha untuk mempertahankan keluarganya.\r\n\r\nDalam serial ini, Ye Xingyun juga menemukan bahwa dirinya memiliki konstitusi langka yang tidak memiliki delapan meridian, sehingga ia dapat memanfaatkan Metode Leluhur Keluarga dari langit yang ekstrim.\r\n\r\nNamun, perjuangan Ye Xingyun tidak hanya berhenti pada itu saja, ia juga harus menghadapi intrik dan perselisihan dengan karakter lain seperti An Yun yang ingin mendapatkan Gambar Sembilan Surga Dewi di tubuh Ye Xingyun.","studio":"Ruo Hong Culture","score":"8.00","status":"Completed","rilis":"Jun 28, 2021","total_episode":270},{"id":"151580","url":"bannou-bunka-neko-musume","judul":"Bannou Bunka Neko-Musume","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/7/10720l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Adventure","Comedy","Sci-Fi"],"sinopsis":"Ryuunosuke Natsume adalah putra dari penemu jenius Kyusaku Natsume dan Akiko Natsume yang otoriter, CEO Mishima Heavy Industries. Dengan menggunakan dana dari perusahaan istrinya dan otak dari kucing kesayangan putranya, Kyusaku menciptakan android revolusioner bernama Atsuko \"Nuku Nuku\" Natsume. Yang membuat Kyusaku jijik, Akiko ingin menggunakan teknologi suaminya untuk menciptakan robot bersenjata bagi pelanggan perusahaannya, sehingga Ryuunosuke terjebak dalam pertengkaran sengit antara orang tuanya.\r\n\r\nAndroid Nuku Nuku mencoba hidup sebagai siswa SMA biasa, mengambil peran sebagai kakak perempuan Ryuunosuke, tetapi biasanya berakhir sebagai pelindung keluarganya. Nuku Nuku akan melakukan apa saja untuk melindungi orang-orang yang dicintainya.","studio":"Studio Fantasia","score":"6.68","status":"Completed","rilis":"21 Oktober 1992","total_episode":6},{"id":"147715","url":"sugar-apple-fairy-tale-part-2","judul":"Sugar Apple Fairy Tale Part 2","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/04/11/series-147715-anilist-163079-151607-4b19ed53.png","lastch":"","lastup":"Baru di Upload","genre":["Adventure","Fantasy","Romance"],"sinopsis":"Bagian kedua dari Sugar Apple Fairy Tale melanjutkan perjalanan Anne setelah ia berhasil meraih gelar Silver Sugar Master. Namun, kebahagiaan itu tak berlangsung lama ketika Shall tiba-tiba pergi, meninggalkan Anne dengan perasaan campur aduk.\n\nTak mau menyerah pada keadaan, Anne memulai perjalanan baru dengan tekad kuat untuk menemukan Shall dan membawanya kembali ke sisinya. Di tengah langkahnya mengejar harapan, ia harus menghadapi berbagai rintangan yang akan menguji keyakinan serta impiannya.","studio":"J.C.Staff","score":"7.6","status":"Completed","rilis":"Jul 7, 2023","total_episode":12},{"id":"151589","url":"irregular-hunter-x-the-day-of-sigma","judul":"Irregular Hunter X: The Day of Sigma","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/3/9131l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Action","Sci-Fi"],"sinopsis":"Tahun 21XX. Reploid kini sudah umum, setelah Dr. Cain menemukan kembali laboratorium lama Dr. Light dan mendasarkan beberapa desain pada desain asli Dr. Light, yang disebut \"Megaman X.\" Sementara itu, X telah bergabung dengan Maverick Hunters, dan bekerja dengan pemimpin unit Zero di bawah komando Jenderal Sigma. Tugas mereka adalah membasmi reploid pember叛, yaitu mereka yang telah menjadi ganas.","studio":"Xebec","score":"7.19","status":"Completed","rilis":"15 Desember 2005","total_episode":1},{"id":"153858","url":"kamiina-botan-yoeru-sugata-wa-yuri-no-hana","judul":"Kamiina Botan, Yoeru Sugata wa Yuri no Hana","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1026/155965l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Girls Love","Gourmet","Slice of Life"],"sinopsis":"Ini adalah kisah tentang Botan Kamiina, seorang mahasiswi tahun pertama berusia 20 tahun, dan kehidupannya di asrama, tempat ia bertemu dengan seniornya dan menjalin persahabatan melalui sesi minum-minum. Anime ini menampilkan banyak minuman beralkohol di kehidupan nyata - sake Jepang, wiski, anggur - dan juga menggambarkan musik, film, dan elemen budaya lainnya yang dapat dinikmati bersama alkohol. Setiap minuman dan kegiatan santai terkait erat dengan kepribadian dan emosi para karakter, menciptakan suasana yang istimewa.","studio":"Soigne","score":"7.8","status":"Ongoing","rilis":"11 April 2026","total_episode":12},{"id":"152349","url":"ze-tian-ji-season-1","judul":"Ze Tian Ji Season 1","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/02/50ad5c1fba281d0c.jpg","lastch":"","lastup":"Baru di Upload","genre":["Action","Adventure","Fantasy"],"sinopsis":"Pada awal waktu, sebuah meteor mistik jatuh dari luar angkasa dan tersebar di seluruh dunia. Sepotongnya mendarat di Benua Timur. Ada totem misterius yang diukir pada meteor, dan orang-orang berkumpul di sekitarnya ingin mengetahui penggunaannya. Mereka menemukan Jalan, dan mendirikan Tradisi. Beberapa ribu tahun kemudian, yatim piatu empat belas tahun Chen Chang Shang meninggalkan tuannya untuk menyembuhkan penyakitnya dan mengubah nasibnya. Dia membawa sumpah pernikahan bersamanya ke ibukota, sehingga memulai perjalanan pahlawan yang sedang bangkit.","studio":"Shanghai Foch Film Culture Investment","score":"6.91","status":"Completed","rilis":"Jul 15, 2021","total_episode":0},{"id":"597","url":"kyoukaisenjou-horizon-sub-indo/","judul":"Kyoukaisenjou no Horizon","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/03/24/series-597-anilist-10456-135158-71eb2685.jpg","lastch":"","lastup":"Baru di Upload","genre":["Action","Fantasy","Sci-Fi"],"sinopsis":"Di masa depan yang jauh, umat manusia meninggalkan Bumi yang hancur dan mencoba hidup di luar angkasa. Namun sebuah fenomena misterius membuat perjalanan antariksa mustahil, memaksa mereka kembali dan mendapati Bumi nyaris tak layak huni, kecuali Jepang. Demi menampung seluruh populasi, diciptakan dimensi-dimensi kantong di sekitar Jepang. Untuk mencari jalan kembali ke luar angkasa, manusia pun mulai mengulang sejarah sesuai kitab suci Testament, sampai akhirnya pada tahun 1413 Era Testament, bangsa-bangsa dari dimensi kantong menginvasi Jepang, membaginya menjadi wilayah feodal dan mengusir penduduk aslinya.\n\nKini tahun 1648 Era Testament, para pengungsi Jepang hidup di kapal-kota Musashi yang terus berkeliling perairan Jepang di bawah pengawasan Testament Union, otoritas yang mengatur “pengulangan” sejarah. Saat Testament tiba-tiba berhenti mengungkap kelanjutan peristiwa setelah 1648, rumor kiamat dan perang pun merebak. Di tengah ketidakpastian itu, Toori Aoi, pemimpin Supreme Federation Akademi Musashi Ariadust sekaligus ketua OSIS, mengajak teman-temannya memanfaatkan celah ini untuk merebut kembali tanah air mereka.","studio":"Sunrise","score":"6.6","status":"Completed","rilis":"Oct 2, 2011","total_episode":13},{"id":"149473","url":"kuma-miko","judul":"Kuma Miko","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/8/78863.jpg","lastch":"","lastup":"Baru di Upload","genre":["Comedy","Slice of Life"],"sinopsis":"Apa yang diketahui seekor beruang tentang kehidupan di kota besar? Demi Machi Amayadori, semoga saja banyak! Gadis kuil muda itu telah menghabiskan seluruh hidupnya di pegunungan pedesaan bersama Natsu, beruang penjaganya yang bisa berbicara. Sekarang, di usia empat belas tahun, dia ingin mengambil kesempatan dan bersekolah di sekolah menengah atas di kota besar. Bisakah Natsu benar-benar mempersiapkannya untuk kehidupan kota? Atau akankah cobaan anehnya terlalu berat untuk ditanggung bahkan oleh Machi?","studio":"Kinema Citrus","score":"6.31","status":"Completed","rilis":"Apr 3, 2016","total_episode":12},{"id":"150405","url":"shin-samurai-yaiba-sub-indo","judul":"Shin Samurai-den Yaiba","cover":"https://i0.wp.com/otakudesu.blog/wp-content/uploads/2025/04/148242.jpg","lastch":"","lastup":"Baru di Upload","genre":["Adventure","Samurai","Shounen"],"sinopsis":"N/A","studio":"Wit Studio","score":"N/A","status":"Ongoing","rilis":"N/A","total_episode":6},{"id":"150852","url":"bishoujo-senshi-sailor-moon","judul":"Bishoujo Senshi Sailor Moon","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1440/92258l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Romance"],"sinopsis":"Usagi Tsukino adalah siswi biasa yang cengeng dan sering gagal dalam ujian. Kehidupan monotonnya tiba-tiba berubah drastis ketika ia menyelamatkan seekor kucing dengan bulan sabit di kepalanya dari bahaya. Kucing tersebut, yang diberi nama Luna, kemudian mengungkapkan bahwa pertemuan mereka bukanlah kebetulan: Usagi ditakdirkan menjadi Sailor Moon, penjaga planet dengan kekuatan untuk melindungi Bumi. Dengan sebuah bros khusus yang memungkinkan dia bertransformasi, dia harus menggunakan kekuatan barunya untuk menyelamatkan kota dari monster-monster jahat yang mencuri energi, yang dikirim oleh Ratu Beryl yang jahat dari Kerajaan Kegelapan.\r\n\r\nNamun, beradaptasi dengan kekuatannya dan melawan penjahat bukanlah satu-satunya hal yang harus dia khawatirkan. Dia harus menemukan putri yang hilang dari Kerajaan Bulan, para Penjaga Sailor lainnya, dan Kristal Perak Legendaris untuk menyelamatkan planet ini dari kehancuran.","studio":"Toei Animation","score":"7.75","status":"Completed","rilis":"07 Maret 1993","total_episode":46},{"id":"705","url":"nora-to-oujo-to-noraneko-heart-sub-indo/","judul":"Nora to Oujo to Noraneko Heart","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/03/28/series-705-anilist-21568-200130-f92789ea.jpg","lastch":"","lastup":"Baru di Upload","genre":["Comedy"," "],"sinopsis":"Suatu pagi dalam perjalanan ke sekolah, Nora bertemu seorang gadis asing di taman bernama Patricia. Dengan percaya diri ia mengaku sebagai putri dunia bawah yang naik ke permukaan untuk memusnahkan seluruh kehidupan. Namun, begitu pertama kali menyentuh seseorang di dunia atas, Patricia malah pingsan, dan Nora tanpa sengaja harus merawatnya.\n\nSaat sadar, Patricia meminta Nora mengajarinya rahasia kehidupan di permukaan. Kebingungan sekaligus penasaran, Nora pun mencoba menjelaskan apa yang ia tahu, dimulai dari sebuah majalah dewasa yang mereka temukan di taman. Dari pertemuan konyol ini, hari-hari Nora berubah jadi serangkaian kejadian tak terduga bersama sang putri yang sama sekali tidak memahami dunia manusia.","studio":"W-Toon Studio, DMM.futureworks","score":"5.0","status":"Completed","rilis":"Jul 12, 2017","total_episode":12},{"id":"150527","url":"watashi-tabetai-hitodenashi-sub-indo","judul":"Watashi wo Tabetai, Hitodenashi","cover":"https://i0.wp.com/otakudesu.blog/wp-content/uploads/2025/10/Watashi-wo-Tabetai-Hitodenashi.jpg","lastch":"","lastup":"Baru di Upload","genre":["Drama","Girls Love","Seinen","Supernatural"],"sinopsis":"N/A","studio":"Studio Lings","score":"N/A","status":"Ongoing","rilis":"Okt 02, 2025","total_episode":13},{"id":"153885","url":"young-black-jack","judul":"Young Black Jack","cover":"https://i0.wp.com/myanimelist.net/images/anime/3/76125l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Drama"],"sinopsis":"Pada tahun 1960-an, seorang mahasiswa kedokteran muda yang berbakat berusaha untuk meraih namanya sendiri. Kuroo Hazama adalah seorang pemuda pendiam dengan rambut hitam-putih yang tidak biasa, tubuh yang dipenuhi bekas luka, dan masa lalu yang kelam. Meskipun hanya seorang mahasiswa kedokteran, kehebatan bedahnya mulai menarik perhatian setelah ia menyelesaikan operasi yang tampaknya mustahil. Bersama dengan Maiko Okamoto, seorang dokter magang yang bersemangat dan jujur, dan Yabu, seorang teman dekat dengan kehidupan yang penuh masalah, Hazama mengabdikan dirinya pada dunia kedokteran.\r\n\r\nNamun, jalannya untuk menjadi seorang ahli bedah yang terhormat penuh dengan kesulitan karena kerusuhan mahasiswa, perang, dan korupsi melanda Jepang. Hazama dengan cepat mendapati dirinya terjebak dalam serangkaian keadaan jahat yang menantang integritasnya sebagai pribadi dan jalannya menuju menjadi seorang ahli bedah. Young Black Jack mengisahkan kisah seorang pria yang mampu melakukan prestasi luar biasa dalam bidang kedokteran, dan perjalanan yang membawanya menjadi legenda yang dikenal sebagai Black Jack.","studio":"Tezuka Productions","score":"7.22","status":"Completed","rilis":"02 Oktober 2015","total_episode":12},{"id":"1401","url":"kono-jutsubu-sub-indo/","judul":"Konobi","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/04/09/series-1401-anilist-21457-114903-8c4e4b49.png","lastch":"","lastup":"Baru di Upload","genre":["Comedy","Romance","School"],"sinopsis":"Anime ini mengikuti keseharian klub seni di sebuah SMP yang isinya jauh dari kata “normal”. Ada Subaru Uchimaki, jago menggambar wajah tapi obsesinya cuma satu, menciptakan istri 2D yang sempurna. Lalu Colette, si kaya yang hobi bikin ulah dan selalu punya cara untuk mengacaukan suasana.\n\nDi tengah kekonyolan mereka, ketua klub lebih sering tertidur saat kegiatan dan bahkan mengoleksi berbagai obat tidur. Sementara itu, Mizuki Usami menjadi satu-satunya anggota yang benar-benar ingin menjalankan aktivitas klub seni dengan serius, meski harus terus berjuang menghadapi tingkah teman-temannya yang tidak bisa ditebak.","studio":"feel.","score":"7.0","status":"Completed","rilis":"Jul 8, 2016","total_episode":12},{"id":"561","url":"sakura-the-quest-subtitle-indonesia/","judul":"Sakura Quest","cover":"https://i0.wp.com/assets.animekita.org/cover/2026/03/24/series-561-anilist-97903-132756-d2678627.jpg","lastch":"","lastup":"Baru di Upload","genre":["Comedy","Slice Of Life"],"sinopsis":"Lima perempuan muda sama-sama menghadapi kenyataan pahit: karier yang mereka impikan tidak berjalan seperti rencana. Terjebak dalam pekerjaan yang tak memuaskan, kesulitan memenuhi kebutuhan hidup, dan berbagai rasa tidak percaya diri, mereka akhirnya bertemu di sebuah biro pariwisata daerah, tempat jalan hidup mereka perlahan saling bertaut.\n\nMemasuki tahun pertama bekerja, mereka mulai mengenal kota kecil itu lebih dalam, memahami kerasnya dunia pariwisata, dan menemukan pelajaran berharga tentang diri mereka sendiri. Di tengah suka duka membangkitkan daya tarik lokal, kelimanya berusaha mencari arah baru yang mungkin tak pernah mereka bayangkan sebelumnya.","studio":"P.A. Works","score":"7.5","status":"Completed","rilis":"Apr 6, 2017","total_episode":25},{"id":"153154","url":"offside-tv","judul":"Offside (TV)","cover":"https://i0.wp.com/myanimelist.net/images/anime/1130/155363l.jpg","lastch":"","lastup":"Baru di Upload","genre":["Drama","Sports"],"sinopsis":"Goro Kumagaya adalah seorang penjaga gawang SMP yang bertubuh tinggi dan berpengalaman. Ia ingin masuk SMA Yokonan, yang dianggap sebagai salah satu sekolah elit dalam hal klub sepak bola, namun gagal dan akhirnya masuk sekolah berperingkat rendah di seberang Yokonan karena sebuah kecelakaan. Namun, ia bertemu Shingo, Hideki, dan Kazuhito Oda yang semuanya adalah pemain sepak bola terampil di sana. Bersama-sama di klub sepak bola SMA Kawasaki, mereka menantang Yokonan dan sekolah-sekolah lain yang harus mereka hadapi untuk meningkatkan kemampuan dan menjadi juara. Setiap kemunduran yang mereka hadapi justru menjadi kesempatan untuk berkembang; salah satunya adalah penemuan bakat alami Goro sebagai penyerang andalan.","studio":"Ashi Productions","score":"7.17","status":"Completed","rilis":"10 Mei 2001","total_episode":39}]
+
+setiap page beda kan itu page 1 
+-------------------------------------------------------
+
+2.api movie https://apps.animekita.org/api/v1.2.5/movie.php
+GET /api/v1.2.5/movie.php HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept: application/json
+access-control-allow-origin: *
+accept-encoding: gzip
+host: apps.animekita.org
+
+respon
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:37:17 GMT
+Content-Type: application/json
+Content-Length: 2264
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Methods: GET, POST
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Access-Control-Allow-Origin, Accept
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=uhY8K7sow635l9FnP5t0Kpr7s84aD5WaXG1rwl3Uz260cqnZet04d6HRtnu3kwXSgl3oPqH1SsvNfSPn%2FhYhr4h2qJn0t3M7VO4GE6YRYskt%2Fd%2B504YVqxIU96y0V6ewa4%2F7nKM%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c15efae9584fc-HKG
+alt-svc: h3=":443"; ma=86400
+
+[{"id": 1,"url":"high-speed-movie-free-starting-days","judul":"High Speed! Movie: Free! Starting Days","cover":"https://cdn.myanimelist.net/images/anime/8/76967l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 2,"url":"kizumonogatari-i","judul":"Kizumonogatari I","cover":"https://cdn.myanimelist.net/images/anime/1783/112810l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 3,"url":"koimonogatari","judul":"Koimonogatari","cover":"https://assets.animekita.org/cover/2026/03/15/series-336-anilist-9260-102012-67095ffd.png","lastch":"","lastup":"Baru di Upload"},{"id": 4,"url":"battle-of-surabaya","judul":"Battle of Surabaya","cover":"https://upload.wikimedia.org/wikipedia/id/a/af/Battle_of_Surabaya.jpeg","lastch":"","lastup":"Baru di Upload"},{"id": 5,"url":"hotaru-no-haka","judul":"Hotaru no Haka","cover":"https://cdn.myanimelist.net/images/anime/1485/141208l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 6,"url":"kono-sekai-no-katasumi-ni","judul":"Kono Sekai no Katasumi ni","cover":"https://myanimelist.net/images/anime/2/87704l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 7,"url":"kaze-tachinu","judul":"Kaze Tachinu","cover":"https://myanimelist.net/images/anime/8/52353l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 8,"url":"vampire-hunter-d-2000","judul":"Vampire Hunter D (2000)","cover":"https://myanimelist.net/images/anime/1571/135153l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 9,"url":"vampire-hunter-d-1985","judul":"Vampire Hunter D (1985)","cover":"https://myanimelist.net/images/anime/1825/137673l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 10,"url":"berserk-ougon-jidai-hen-iii-kourin","judul":"Berserk: Ougon Jidai-hen III - Kourin","cover":"https://myanimelist.net/images/anime/12/41305l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 11,"url":"berserk-ougon-jidai-hen-ii-doldrey-kouryaku","judul":"Berserk: Ougon Jidai-hen II - Doldrey Kouryaku","cover":"https://myanimelist.net/images/anime/12/37193l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 12,"url":"berserk-ougon-jidai-hen-i-haou-no-tamago","judul":"Berserk: Ougon Jidai-hen I - Haou no Tamago","cover":"https://myanimelist.net/images/anime/12/62179l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 13,"url":"virgin-punk-clockwork-girl","judul":"Virgin Punk: Clockwork Girl","cover":"https://myanimelist.net/images/anime/1320/148690l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 14,"url":"zutto-mae-kara-suki-deshita-kokuhaku-jikkou-iinkai","judul":"Zutto Mae kara Suki deshita. Kokuhaku Jikkou Iinkai","cover":"https://myanimelist.net/images/anime/3/82121l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 15,"url":"zunda-horizon","judul":"Zunda Horizon","cover":"https://myanimelist.net/images/anime/8/83943l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 16,"url":"yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou-3-yakusoku","judul":"Yuuki Yuuna wa Yuusha de Aru: Washio Sumi no Shou 3 - Yakusoku","cover":"https://myanimelist.net/images/anime/7/86984l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 17,"url":"yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou-2-tamashii","judul":"Yuuki Yuuna wa Yuusha de Aru: Washio Sumi no Shou 2 - Tamashii","cover":"https://myanimelist.net/images/anime/9/86480l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 18,"url":"yuuki-yuuna-wa-yuusha-de-aru-washio-sumi-no-shou-1-tomodachi","judul":"Yuuki Yuuna wa Yuusha de Aru: Washio Sumi no Shou 1 - Tomodachi","cover":"https://myanimelist.net/images/anime/5/86481l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 19,"url":"oomuro-ke-dear-sisters","judul":"Oomuro-ke: Dear Sisters","cover":"https://myanimelist.net/images/anime/1401/140053l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 20,"url":"oomuro-ke-dear-friends","judul":"Oomuro-ke: Dear Friends","cover":"https://myanimelist.net/images/anime/1613/141223l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 21,"url":"yoru-wa-mijikashi-arukeyo-otome","judul":"Yoru wa Mijikashi Arukeyo Otome","cover":"https://myanimelist.net/images/anime/2/86940l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 22,"url":"yaneura-no-rudger","judul":"Yaneura no Rudger","cover":"https://myanimelist.net/images/anime/1032/139452l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 23,"url":"yoake-tsugeru-lu-no-uta","judul":"Yoake Tsugeru Lu no Uta","cover":"https://myanimelist.net/images/anime/5/84260l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 24,"url":"yes-precure-5-movie-kagami-no-kuni-no-miracle-daibouken","judul":"Yes! Precure 5 Movie: Kagami no Kuni no Miracle Daibouken!","cover":"https://myanimelist.net/images/anime/1878/142472l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 25,"url":"yes-precure-5-gogo-movie-okashi-no-kuni-no-happy-birthday","judul":"Yes! Precure 5 GoGo! Movie: Okashi no Kuni no Happy Birthday","cover":"https://myanimelist.net/images/anime/1889/142444l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 26,"url":"yeon-ui-pyeonji","judul":"Yeon-ui Pyeonji","cover":"https://myanimelist.net/images/anime/1764/152299l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 27,"url":"yatterman-the-movie-shin-yattermecha-dai-shuugou-omocha-no-kuni-de-dai-ketsudan-da-koron","judul":"Yatterman the Movie: Shin Yattermecha Dai Shuugou! Omocha no Kuni de Dai Ketsudan da Koron","cover":"https://myanimelist.net/images/anime/10/22013l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 28,"url":"overlord-movie-2-shikkoku-no-eiyuu","judul":"Overlord Movie 2: Shikkoku no Eiyuu","cover":"https://myanimelist.net/images/anime/5/87758l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 29,"url":"overlord-movie-1-fushisha-no-ou","judul":"Overlord Movie 1: Fushisha no Ou","cover":"https://myanimelist.net/images/anime/12/87759l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 30,"url":"oushitsu-kyoushi-heine-movie","judul":"Oushitsu Kyoushi Heine Movie","cover":"https://myanimelist.net/images/anime/1567/116866l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 31,"url":"ouritsu-uchuugun-honneamise-no-tsubasa","judul":"Ouritsu Uchuugun: Honneamise no Tsubasa","cover":"https://myanimelist.net/images/anime/1811/112663l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 32,"url":"otome-game-no-hametsu-movie","judul":"Otome Game no Hametsu Movie","cover":"https://myanimelist.net/images/anime/1360/138828l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 33,"url":"shelter","judul":"Shelter","cover":"https://myanimelist.net/images/anime/1503/115760l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 34,"url":"servamp-movie-alice-in-the-garden","judul":"Servamp Movie: Alice in the Garden","cover":"https://myanimelist.net/images/anime/5/89004l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 35,"url":"senpai-wa-otokonoko-movie-ame-nochi-hare","judul":"Senpai wa Otokonoko Movie: Ame Nochi Hare","cover":"https://myanimelist.net/images/anime/1469/146852l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 36,"url":"sennen-joyuu","judul":"Sennen Joyuu","cover":"https://myanimelist.net/images/anime/1648/93626l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 37,"url":"sengoku-basara-movie-the-last-party","judul":"Sengoku Basara Movie: The Last Party","cover":"https://myanimelist.net/images/anime/13/50871l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 38,"url":"selector-destructed-wixoss-movie","judul":"Selector Destructed WIXOSS Movie","cover":"https://myanimelist.net/images/anime/3/83118l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 39,"url":"sekaiichi-hatsukoi-valentine-hen","judul":"Sekaiichi Hatsukoi: Valentine-hen","cover":"https://myanimelist.net/images/anime/5/55723l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 40,"url":"sekaiichi-hatsukoi-movie-yokozawa-takafumi-no-baai","judul":"Sekaiichi Hatsukoi Movie: Yokozawa Takafumi no Baai","cover":"https://myanimelist.net/images/anime/11/65927l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 41,"url":"ooyukiumi-no-kaina-hoshi-no-kenja","judul":"Ooyukiumi no Kaina: Hoshi no Kenja","cover":"https://myanimelist.net/images/anime/1501/138171l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 42,"url":"omoide-no-marnie","judul":"Omoide no Marnie","cover":"https://myanimelist.net/images/anime/7/64293l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 43,"url":"odd-taxi-movie-in-the-woods","judul":"Odd Taxi Movie: In the Woods","cover":"https://myanimelist.net/images/anime/1390/120708l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 44,"url":"x1999","judul":"X/1999","cover":"https://myanimelist.net/images/anime/7/23579l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 45,"url":"windaria","judul":"Windaria","cover":"https://myanimelist.net/images/anime/12/25497l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 46,"url":"watashi-no-kaoF","judul":"Watashi no Kao","cover":"https://myanimelist.net/images/anime/13/69661l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 47,"url":"byousoku-5-centimeter","judul":"Byousoku 5 Centimeter","cover":"https://myanimelist.net/images/anime/1410/112994l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 48,"url":"wake-up-girls-shichinin-no-idol","judul":"Wake Up, Girls! Shichinin no Idol","cover":"https://myanimelist.net/images/anime/10/57869l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 49,"url":"wake-up-girls-seishun-no-kage","judul":"Wake Up, Girls! Seishun no Kage","cover":"https://myanimelist.net/images/anime/6/75337l.jpg","lastch":"","lastup":"Baru di Upload"},{"id": 50,"url":"wake-up-girls-beyond-the-bottom","judul":"Wake Up, Girls! Beyond the Bottom","cover":"https://myanimelist.net/images/anime/5/76402l.jpg","lastch":"","lastup":"Baru di Upload"}]
+
+---------
+
+3.
+api rekomendasihttps://apps.animekita.org/api/v1.2.5/rekomendasi.php
+GET /api/v1.2.5/rekomendasi.php HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept: application/json
+access-control-allow-origin: *
+accept-encoding: gzip
+host: apps.animekita.org
+
+
+respon
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:37:17 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 5163
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Methods: GET, POST, OPTIONS
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Content-Type, Accept, Authorization, X-Requested-With
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=7GJTG5gBzHgWlCn4FQSQNxcaPmyksDhJGGttRf46OF3nK653KzH6vD%2Fo%2BlqKDCsElMrW9WWKJrOt%2Fia8Re0OI0Pk04HXzga%2B8ubyPahTuTXbbUt3kGgLCwyrGPDGy1MhHUjXm08%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c15ef9dec1fac-HKG
+alt-svc: h3=":443"; ma=86400
+
+[{"id":"142659","url":"kuroko-no-basket-movie-1:-winter-cup---kage-to-hikari","judul":"Kuroko no Basket Movie 1: Winter Cup - Kage to Hikari","cover":"https://assets.animekita.org/cover/2026/04/11/series-142659-anilist-102093-151218-720de731.jpg","lastch":"","lastup":"","genre":["Sports"],"sinopsis":"Film kompilasi pertama dari Kuroko no Basket ini merangkum laga panas Seirin melawan Touou Gakuen di Winter Cup. Bertekad membalas kekalahan di Inter-High, Seirin kembali menantang Aomine yang kini semakin tak terbendung, sementara jurus baru Kuroko mulai terbaca dan membuat segalanya kian sulit.\n\nSaat usahanya dipatahkan oleh “cahaya” lamanya, Kuroko terpaksa duduk di bangku cadangan dan menelan rasa malu. Melihat partnernya terpuruk, Kagami seperti membangunkan sisi buas dalam dirinya dan memilih menantang Aomine secara langsung. Pertarungan keduanya pun memanas hingga mendorong mereka melampaui batas, menuju sebuah level permainan yang hanya bisa dicapai oleh segelintir pemain.","studio":"Production I.G","score":"7.3","status":"Completed","rilis":"Sep 3, 2016","total_episode":1},{"id":"692","url":"heike-sub-indo/","judul":"Heike Monogatari","cover":"https://assets.animekita.org/cover/2026/03/27/series-692-anilist-138714-135200-3b260afa.jpg","lastch":"","lastup":"","genre":["Historical"],"sinopsis":"Biwa, seorang anak yatim piatu, dibawa masuk ke dalam Klan Taira yang berkuasa, dikenal pula sebagai Heike, setelah pemimpin mereka menyaksikan kemampuan psikisnya yang luar biasa. Namun, penglihatan Biwa justru menyingkap masa depan yang kelam, dipenuhi pertumpahan darah, kekerasan, dan bayang-bayang perang saudara.\n\nTerinspirasi dari kisah epik abad ke-12 Heike Monogatari, anime ini mengikuti langkah Biwa di tengah pusaran ambisi dan kehancuran yang perlahan mendekat, ketika takdir yang ia lihat mulai menekan setiap pilihan yang harus diambil.","studio":"Science SARU","score":"7.7","status":"Completed","rilis":"Sep 16, 2021","total_episode":11},{"id":"172","url":"kkgurui-sub-indo/","judul":"Kakegurui","cover":"https://assets.animekita.org/cover/2026/03/12/series-172-anilist-98314-140028-b47631d3.jpg","lastch":"","lastup":"","genre":["Drama","Mystery","Psychological","School","Shounen"],"sinopsis":"Di siang hari, sebuah sekolah swasta bergengsi membentuk para murid elitnya untuk menapaki dunia bisnis, politik, dan kalangan atas. Namun ketika malam tiba, koridor megahnya berubah menjadi arena judi rahasia, tempat para remaja mempelajari seni menggertak, transaksi gelap, dan permainan pengaruh yang menentukan siapa yang berkuasa.\n\nDi sekolah para kaya ini, uang adalah segalanya, dan penguasa buku taruhan memegang kendali tanpa ampun. Kedatangan Yumeko Jabami, siswi cantik dengan hasrat tak terbendung pada sensasi perjudian, mengguncang tatanan yang sudah mapan. Saat ia mulai mengacaukan hierarki akademi, seluruh siswa pun bergerak untuk menjatuhkan “rumah kartu” miliknya sebelum semuanya terlambat.","studio":"MAPPA","score":"7.0","status":"Completed","rilis":"Jul 1, 2017","total_episode":12},{"id":"152342","url":"xiao-li-the-innocent-girl","judul":"Xiao Li the Innocent Girl","cover":"https://assets.animekita.org/cover/2026/02/7739c7883f351d34.jpg","lastch":"","lastup":"","genre":["Comedy","Fantasy","Slice of Life"],"sinopsis":"Cerita terjadi di era ketika manusia dan monster hidup berdampingan. Menurut legenda, selama manusia dan monster berlatih bersama, mereka akan mencapai alam kepolosan dan mencapai kebahagiaan bersama. Tetapi selalu ada beberapa orang, beberapa monster, karena keserakahan dan keinginan mereka, mereka menempuh jalan yang salah. Untuk menjadi naga sejati, protagonis kita Xiao Li memulai perjalanan untuk mewujudkan seribu harapan bagi orang-orang. Begitu dia meninggalkan gunung, dia bertemu Qiushui, seorang pembunuh iblis yang tidak akan pernah menyerah sampai dia menangkapnya. Untuk menghilangkan air musim gugur, Xiao Li menghindari semua jalan, berkelahi, belajar dari guru, belajar seni, dan menyebabkan masalah. Saya telah mendapat banyak teman baru, mengalami banyak krisis, dan mendapatkan banyak kebijaksanaan. Tampaknya saya juga telah mengembangkan beberapa persahabatan halus dengan Qiushui secara tidak sadar. Nasib adalah hal seperti itu, siapa yang tahu? Sama seperti ketika Permaisuri Nuwa menciptakan manusia dan monster, mengapa memasukkan kebaikan dan kejahatan ke dalam jiwa mereka? Mungkin itu semua ujian, mungkin itu semua panduan untuk kepolosan","studio":"Da Yu","score":"7.00","status":"Completed","rilis":"Jul 09, 2022","total_episode":12},{"id":"153885","url":"young-black-jack","judul":"Young Black Jack","cover":"https://myanimelist.net/images/anime/3/76125l.jpg","lastch":"","lastup":"","genre":["Drama"],"sinopsis":"Pada tahun 1960-an, seorang mahasiswa kedokteran muda yang berbakat berusaha untuk meraih namanya sendiri. Kuroo Hazama adalah seorang pemuda pendiam dengan rambut hitam-putih yang tidak biasa, tubuh yang dipenuhi bekas luka, dan masa lalu yang kelam. Meskipun hanya seorang mahasiswa kedokteran, kehebatan bedahnya mulai menarik perhatian setelah ia menyelesaikan operasi yang tampaknya mustahil. Bersama dengan Maiko Okamoto, seorang dokter magang yang bersemangat dan jujur, dan Yabu, seorang teman dekat dengan kehidupan yang penuh masalah, Hazama mengabdikan dirinya pada dunia kedokteran.\r\n\r\nNamun, jalannya untuk menjadi seorang ahli bedah yang terhormat penuh dengan kesulitan karena kerusuhan mahasiswa, perang, dan korupsi melanda Jepang. Hazama dengan cepat mendapati dirinya terjebak dalam serangkaian keadaan jahat yang menantang integritasnya sebagai pribadi dan jalannya menuju menjadi seorang ahli bedah. Young Black Jack mengisahkan kisah seorang pria yang mampu melakukan prestasi luar biasa dalam bidang kedokteran, dan perjalanan yang membawanya menjadi legenda yang dikenal sebagai Black Jack.","studio":"Tezuka Productions","score":"7.22","status":"Completed","rilis":"02 Oktober 2015","total_episode":12},{"id":"150714","url":"jingai-kyoushitsu-ningengirai-kyoushi-sub-indo","judul":"Jingai Kyoushitsu no Ningengirai Kyoushi","cover":"https://cdn.myanimelist.net/images/anime/1387/154934l.jpg","lastch":"","lastup":"","genre":["Drama","Supernatural"],"sinopsis":"Saya Rei Hitoma, seorang misantropis yang mengaku diri sendiri karena trauma masa lalu. Tepat ketika saya mengira pekerjaan mengajar baru saya di pegunungan akan memberikan lingkungan yang tenang dan menyegarkan, ternyata sekolah ini sebenarnya untuk makhluk setengah manusia yang ingin menjadi manusia seutuhnya! Ada putri duyung, manusia serigala, kelinci, dan burung... semuanya sekarang menjadi murid saya. Sudah menjadi tugas saya untuk mengajari mereka tentang umat manusia dan mungkin dalam prosesnya, saya akan belajar beberapa hal sendiri. Ini bukan dunia alternatif atau kasus reinkarnasi. Ini hanyalah kisah seorang guru di sekolah yang agak aneh, dan murid-muridnya yang berjuang untuk menjadi manusia.","studio":"asread.","score":"6.23","status":"Ongoing","rilis":"11 Januari 2026","total_episode":13},{"id":"153303","url":"mao-sub-indo","judul":"Mao","cover":"https://assets.animekita.org/cover/2026/04/10/series-153303-anilist-196012-224737-59a10e2d.jpg","lastch":"","lastup":"","genre":["Historical","Mystery","Mythology","Shounen","Supernatural","Time Travel"],"sinopsis":"Kutukan yang mengikat masa lalu dan masa kini.\n\nDi Jepang era Taisho awal 1900-an, Mao, seorang onmyoji muda yang misterius, telah hidup selama sembilan ratus tahun akibat kutukan yang mengubah hidupnya. Dunianya semakin ganjil ketika ia bertemu Nanoka Kiba, siswi SMP yang seolah datang dari masa depan. Meski masih belia, Nanoka menyimpan luka mendalam sejak kecil, setelah kehilangan kedua orang tuanya dalam kecelakaan mengerikan.\n\nSaat Nanoka nekat kembali ke pusat perbelanjaan tempat tragedi itu terjadi, ia justru terlempar ke waktu dan tempat lain, ke sebuah era jauh sebelum zamannya, di mana ayakashi berkeliaran. Di sanalah ia bertemu Mao, dan sebuah pertanyaan aneh darinya membuat Nanoka mulai memandang dirinya serta hidupnya yang janggal dengan cara baru. Dua jiwa dari dunia berbeda pun berjalan bersama, menantang kekuatan gelap yang mencengkeram kehidupan mereka.","studio":"Sunrise","score":"6.6","status":"Ongoing","rilis":"Apr 04, 2026","total_episode":22},{"id":"152395","url":"ping-pong-the-animation","judul":"Ping Pong the Animation","cover":"https://cdn.myanimelist.net/images/anime/1586/146565l.jpg","lastch":"","lastup":"","genre":["Award Winning","Drama","Sports"],"sinopsis":"Meski bertolak belakang, Makoto \"Smile\" Tsukimoto dan Yutaka \"Peco\" Hoshino telah berteman baik sejak kecil. Meskipun Peco yang terlalu percaya diri berusaha menjadi pemain ping-pong terbaik di dunia, dia sering melewatkan latihan, sehingga menimbulkan kemarahan rekan satu timnya di tim ping-pong SMA Katase. Sementara itu,\r\nSmile—terlepas dari bakat bawaannya dalam olahraga ini—mau tidak mau menahan kekuatan penuhnya saat bermain melawan orang lain. Melalui kecintaan mereka pada ping-pong, keduanya telah mengembangkan ikatan yang tampaknya tidak dapat dipatahkan.\r\n\r\nSaat Peco mendengar mantan pemain timnas asal Tiongkok akan datang ke Jepang,\r\ndia menyeret Smile ke SMA saingan Tsujido untuk mengamati mereka. Perjalanan berikutnya menyebabkan bentrokan antara Peco dan Kong Wenge, yang mengalahkan Peco dalam satu pertandingan. Terkejut dengan kekalahan yang begitu besar, Peco bertanya-tanya mengapa dia bermain. Melihat potensinya sebagai pemain,\r\nPelatih Katase mulai melatih Smile untuk mengatasi keraguannya, namun dia enggan bermain jika bukan untuk kesenangan.\r\n\r\nSaat keduanya berjuang untuk menemukan makna dalam olahraga ini, sejumlah besar pemain yang lebih kuat—masing-masing memiliki perselisihan internalnya sendiri—menunggu mereka di turnamen antar-tingkat tinggi, di mana hanya yang terbaik yang bisa bertahan.\r\nNamun ketika para atlet muda ini membiarkan ambisi mereka yang tak terkendali, kesulitan yang mereka hadapi menjadi kenyataan suram saat mereka mengejar kejayaan.","studio":"Tatsunoko Production","score":"8.63","status":"Completed","rilis":"11 April 2014","total_episode":11},{"id":"152939","url":"tokyo-mew-mew-new","judul":"Tokyo Mew Mew New ♡","cover":"https://myanimelist.net/images/anime/1001/116687l.jpg","lastch":"","lastup":"","genre":["Romance","Sci-Fi"],"sinopsis":"Ichigo Momomiya sangat bersemangat untuk memulai sekolah menengah atas dan jatuh cinta. Ia beruntung bertemu dengan Masaya Aoyama yang populer dan tampan, dan ia langsung jatuh cinta padanya. Ketika Ichigo mengetahui bahwa Aoyama sangat peduli dengan lingkungan, ia memanfaatkan kesempatan untuk mengajaknya berkencan berkat beberapa tiket ke pameran tentang hewan-hewan yang terancam punah.\r\n\r\nSelama kencan mereka, Ichigo disambar cahaya misterius dan pingsan. Setelah sadar dan melihat Aoyama, ia tetap tidak terluka—tetapi mereka berdua harus melarikan diri dari makhluk raksasa mirip tikus setelah makhluk itu melukai Aoyama. Untuk menyelamatkan orang yang disukainya, Ichigo membangkitkan kekuatannya dan berubah menjadi pahlawan wanita dengan kemampuan seekor kucing.\r\n\r\nSetelah ia mengalahkan monster tersebut, para peneliti Ryou Shirogane dan Keiichiro Akasaka menjelaskan bahwa Ichigo dipilih untuk menjadi bagian dari Proyek Mew: sebuah kelompok yang terdiri dari lima gadis penyihir yang DNA-nya telah dicampur dengan DNA spesies-spesies yang terancam punah. Sekarang, Ichigo harus menemukan anggota timnya yang lain untuk mengalahkan Chimera Anima—makhluk yang terinfeksi alien yang ingin menguasai dunia—sebelum terlambat.","studio":"Yumeta Company","score":"6.62","status":"Completed","rilis":"06 Juli 2022","total_episode":12},{"id":"52830","url":"minami-ke-okaeri","judul":"Minami-ke Okaeri","cover":"https://cdn.myanimelist.net/images/anime/10/11458l.jpg","lastch":"","lastup":"","genre":["Comedy"],"sinopsis":"Meski satu tahun lagi telah berlalu, keadaan keluarga Minami tetap sama seperti biasanya. Terlepas dari situasi rumah tangga mereka yang tidak biasa, ketiga bersaudara—Haruka, Kana, dan Chiaki—menjalani keseharian mereka dengan bahagia sembari menjalani rutinitas antara rumah dan sekolah. Dikelilingi oleh wajah-wajah yang akrab setiap harinya, mereka terus menikmati masa muda mereka sepenuhnya.","studio":"asread.","score":"7.55","status":"Completed","rilis":"05 Januari 2009","total_episode":13}]
+
+4. api on going
+req https://apps.animekita.org/api/v1.2.5/home/ongoing.php?page=1&type=all
+GET /api/v1.2.5/home/ongoing.php?page=1&type=all HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept: application/json
+access-control-allow-origin: *
+accept-encoding: gzip
+host: apps.animekita.org
+
+respon
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:37:17 GMT
+Content-Type: application/json
+Content-Length: 678
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Methods: GET, POST
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Access-Control-Allow-Origin, Accept, Content-Type
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=T%2FAs132gCddEC8lfiY9zYMixuj2rrsfdJV7VEGz1gSprPSmSUpnl3zbUuNe0r76P3lSpuIXRm%2BRd7GQ%2BDKv79WrTOsxjs31mwfWuxBQgTxlsALU12N67eOT7WMDe8wyNBohi900%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c15ef9bb2e2df-HKG
+alt-svc: h3=":443"; ma=86400
+
+[{"id":1,"url":"sayonara-lara-sub-indo","judul":"Sayonara Lara","cover":"https:\/\/cdn.myanimelist.net\/images\/anime\/1411\/156343l.jpg","lastch":"Ep 9","lastup":"Baru di Upload","type":"all"},{"id":2,"url":"1piece-sub-indo","judul":"One Piece","cover":"https:\/\/myanimelist.net\/images\/anime\/1244\/138851.jpg","lastch":"Ep 1176","lastup":"Baru di Upload","type":"all"},{"id":3,"url":"sekai-saikyou-kouei-sub-indo","judul":"Sekai Saikyou no Kouei: Meikyuukoku no Shinjin Tansakusha","cover":"https:\/\/cdn.myanimelist.net\/images\/anime\/1380\/157378l.jpg","lastch":"Ep 9","lastup":"Baru di Upload","type":"all"},{"id":4,"url":"seihantai-kimi-boku-s2-sub-indo","judul":"Seihantai na Kimi to Boku 2nd Season","cover":"https:\/\/cdn.myanimelist.net\/images\/anime\/1143\/158409l.jpg","lastch":"Ep 9","lastup":"Baru di Upload","type":"all"},{"id":5,"url":"kuroneko-to-majo-no-kyoushitsu-sub-indo","judul":"Kuroneko to Majo no Kyoushitsu","cover":"https:\/\/otakudesu.blog\/wp-content\/uploads\/2026\/04\/Kuroneko-to-Majo-no-Kyoushitsu.jpg","lastch":"Ep 21","lastup":"Baru di Upload","type":"all"},{"id":6,"url":"nijusseiki-denki-mokuroku-sub-indo","judul":"Nijusseiki Denki Mokuroku: Eureka Evrika","cover":"https:\/\/cdn.myanimelist.net\/images\/anime\/1068\/158475l.jpg","lastch":"Ep 9","lastup":"Baru di Upload","type":"all"},{"id":7,"url":"mushoku-ni-tensei-s3-sub-indo","judul":"Mushoku Tensei Season 3","cover":"https:\/\/cdn.myanimelist.net\/images\/anime\/1527\/158340l.jpg","lastch":"Ep 10","lastup":"Baru di Upload","type":"all"},{"id":8,"url":"oni-hanayome-sub-indo","judul":"Oni no Hanayome","cover":"https:\/\/cdn.myanimelist.net\/images\/anime\/1082\/158708l.jpg","lastch":"Ep 9","lastup":"Baru di Upload","type":"all"},{"id":9,"url":"hyakkano-s3-sub-ind","judul":"Kimi no Koto ga Daidaidaidaidaisuki na 100-nin no Kanojo Season 3","cover":"https:\/\/cdn.myanimelist.net\/images\/anime\/1106\/157174l.jpg","lastch":"Ep 9","lastup":"Baru di Upload","type":"all"},{"id":10,"url":"digimon-bb-sub-indo","judul":"Digimon Beatbreak","cover":"https:\/\/assets.animekita.org\/cover\/2026\/04\/10\/series-150544-anilist-188388-225558-38ed1e6f.jpg","lastch":"Ep 45","lastup":"Baru di Upload","type":"all"}]
+ 
+5.api gambar https://cdn.myanimelist.net/images/anime/1380/157378l.jpg tiap id beda njir
+ GET /images/anime/1380/157378l.jpg HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept-encoding: gzip
+host: cdn.myanimelist.net
+
+respon
+HTTP/1.1 200 OK
+Content-Type: image/jpeg
+Content-Length: 92781
+Server: Apache
+Last-Modified: Fri, 08 May 2026 13:48:43 GMT
+ETag: "16a6d-6514ea7bb1aa0"
+Accept-Ranges: bytes
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET,PUT,POST,PATCH,DELETE,HEAD
+Access-Control-Max-Age: 3000
+Cache-Control: max-age=374245
+Expires: Fri, 04 Sep 2026 20:34:43 GMT
+Date: Mon, 31 Aug 2026 12:37:18 GMT
+Alt-Svc: h3=":443"; ma=93600,h3-29=":443"; ma=93600
+Connection: keep-alive
+Akamai-Cache-Status: Hit from child
+
+<binary body>
+
+6. api cover
+https://assets.animekita.org/cover/2026/02/7739c7883f351d34.jpg
+GET /cover/2026/02/7739c7883f351d34.jpg HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept-encoding: gzip
+host: assets.animekita.org
+
+respn
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:37:18 GMT
+Content-Type: image/jpeg
+Content-Length: 136681
+Connection: keep-alive
+Accept-Ranges: bytes
+etag: "b46e527a805970f364bcaf8934ef3ec1"
+Last-Modified: Fri, 13 Feb 2026 08:26:35 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Server: cloudflare
+Age: 1246
+Cache-Control: max-age=14400
+cf-cache-status: HIT
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=ed3YrrLB0O0nGprinrmwCO%2BrP4pKEbZ7z48gXBfueJv9zt6g3XsbenSeRrNzAcPX8FqXwhcSMVaYIiQpqBBmFu5A6IyBwo3RqxRQkfpjq%2B%2Flv7GYBUQSNQv5MVJP1W%2F3WFnA06IhZA%3D%3D"}]}
+CF-RAY: a33c15f8cc649b15-HKG
+alt-svc: h3=":443"; ma=86400
+
+<binary body>
+
+7. api jadwal
+https://assets.animekita.org/api/v1.2.5/jadwal.php
+POST /api/v1.2.5/jadwal.php HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept-encoding: gzip
+content-length: 0
+host: apps.animekita.org
+
+respon
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:37:35 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 4082
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Methods: GET, POST
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Access-Control-Allow-Origin, Accept
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=xTcN7kLHz7HhnreAEz6gr%2ByoTWd9Hoy7SUnwUaHfyf%2F%2B8HjqyhJzxljz2fDH7VM7pTup%2BDXIB7yJAQ14qBkKVPxM%2BTpC6KR3qz9Alxg7M1K%2FIp3UYbJnm%2Fq7362mbj2sfkRVLuI%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c165d4bd88a4c-HKG
+alt-svc: h3=":443"; ma=86400
+
+{
+    "generatedAt": 1788179831,
+    "data": [
+        {
+            "day": "Senin",
+            "date": "31",
+            "date_ts": 1788109200,
+            "animeList": [
+                {
+                    "anime_name": "Kuroneko to Majo no Kyoushitsu",
+                    "id": 153900,
+                    "link": "kuroneko-to-majo-no-kyoushitsu-sub-indo",
+                    "cover": "https://otakudesu.blog/wp-content/uploads/2026/04/Kuroneko-to-Majo-no-Kyoushitsu.jpg",
+                    "updated": 1788112264
+                },
+                {
+                    "anime_name": "World Is Dancing",
+                    "id": 154112,
+                    "link": "world-is-dancing",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1165/158709l.jpg",
+                    "updated": 1787584521
+                },
+                {
+                    "anime_name": "Nijusseiki Denki Mokuroku: Eureka Evrika",
+                    "id": 154195,
+                    "link": "nijusseiki-denki-mokuroku-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1068/158475l.jpg",
+                    "updated": 1788111145
+                },
+                {
+                    "anime_name": "Saikyou Degarashi Ouji no Anyaku Teii Arasoi",
+                    "id": 154198,
+                    "link": "saikyou-anyaku-arasoi-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1529/158522l.jpg",
+                    "updated": 1787591851
+                },
+                {
+                    "anime_name": "Oni no Hanayome",
+                    "id": 154199,
+                    "link": "oni-hanayome-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1082/158708l.jpg",
+                    "updated": 1788104885
+                },
+                {
+                    "anime_name": "Tenkou-saki no Seiso Karen na Bishoujo ga, Mukashi Danshi to Omotte Issho ni Asonda Osananajimi Datta Ken",
+                    "id": 154200,
+                    "link": "tenkouno-seiso-karen-bishoujo-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1352/158564l.jpg",
+                    "updated": 1787593325
+                },
+                {
+                    "anime_name": "Buchigire Reijou wa Houfuku wo Chikaimashita. Madousho no Chikara de Sokoku wo Tatakitsubushimasu",
+                    "id": 154202,
+                    "link": "buchigire-reijou-chikaimashita-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1551/157170l.jpg",
+                    "updated": 1787592425
+                },
+                {
+                    "anime_name": "Sayonara Lara",
+                    "id": 154204,
+                    "link": "sayonara-lara-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1411/156343l.jpg",
+                    "updated": 1788136026
+                },
+                {
+                    "anime_name": "Futsutsuka na Akujo dewa Gozaimasu ga: Suuguu Chouso Torikae Den",
+                    "id": 154217,
+                    "link": "futsutsuka-akujo-gozaimasu-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1958/158341l.jpg",
+                    "updated": 1788094100
+                },
+                {
+                    "anime_name": "Seihantai na Kimi to Boku 2nd Season",
+                    "id": 154223,
+                    "link": "seihantai-kimi-boku-s2-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1143/158409l.jpg",
+                    "updated": 1788115866
+                }
+            ]
+        },
+        {
+            "day": "Selasa",
+            "date": "01",
+            "date_ts": 1788195600,
+            "animeList": [
+                {
+                    "anime_name": "Liar Game",
+                    "id": 153610,
+                    "link": "liar-game-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153610-anilist-197754-230448-0638a611.png",
+                    "updated": 1787617118
+                },
+                {
+                    "anime_name": "Replica datte, Koi wo Suru.",
+                    "id": 153612,
+                    "link": "replica-datte-suru-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153612-anilist-186744-230412-c661f83b.jpg",
+                    "updated": 1782881498
+                },
+                {
+                    "anime_name": "Hidarikiki no Eren",
+                    "id": 153616,
+                    "link": "hidarikiki-eren-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153616-anilist-158036-230222-f1480367.jpg",
+                    "updated": 1782901191
+                },
+                {
+                    "anime_name": "Kimi ga Shinu made Koi wo Shitai",
+                    "id": 154017,
+                    "link": "kimi-shinu-shitai-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1850/158429l.jpg",
+                    "updated": 1787669298
+                },
+                {
+                    "anime_name": "Grand Blue Season 3",
+                    "id": 154201,
+                    "link": "grand-blue-s3-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1615/158194l.jpg",
+                    "updated": 1787598212
+                },
+                {
+                    "anime_name": "Toumei na Yoru ni Kakeru Kimi to, Me ni Mienai Koi wo Shita.",
+                    "id": 154203,
+                    "link": "toumei-yoru-kakeru-kimi-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1145/158339l.jpg",
+                    "updated": 1787590627
+                },
+                {
+                    "anime_name": "Tai-Ari deshita. Ojousama wa Kakutou Game nante Shinai",
+                    "id": 154206,
+                    "link": "tai-ari-deshita-ojousama-wa-kakutou-game-nante-shinai",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1343/156268l.jpg",
+                    "updated": 1787674868
+                }
+            ]
+        },
+        {
+            "day": "Rabu",
+            "date": "02",
+            "date_ts": 1788282000,
+            "animeList": [
+                {
+                    "anime_name": "Tadaima, Ojamasaremasu!",
+                    "id": 153618,
+                    "link": "tadaima-ojamasaremasu-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153618-anilist-202985-231112-04b4aac5.jpg",
+                    "updated": 1782881638
+                },
+                {
+                    "anime_name": "Re:Zero kara Hajimeru Isekai Seikatsu Season 4",
+                    "id": 153654,
+                    "link": "re-zero-kara-s4-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153654-anilist-189046-230940-fc0bf0fb.jpg",
+                    "updated": 1787758572
+                },
+                {
+                    "anime_name": "Mujikaku Seijo wa Kyou mo Muishiki ni Chikara wo Tare Nagasu",
+                    "id": 154114,
+                    "link": "mujikaku-seijo-nagasu-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1612/158373l.jpg",
+                    "updated": 1787679048
+                },
+                {
+                    "anime_name": "Sora wa Akai Kawa no Hotori",
+                    "id": 154207,
+                    "link": "sora-akai-kawa-hotori-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1158/158138l.jpg",
+                    "updated": 1787691358
+                },
+                {
+                    "anime_name": "Clevatess II: Majuu no Ou to Itsuwari no Yuusha Denshou",
+                    "id": 154209,
+                    "link": "clevatess-s2-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1741/157105l.jpg",
+                    "updated": 1787751920
+                },
+                {
+                    "anime_name": "Youjo Senki II",
+                    "id": 154210,
+                    "link": "youjo-senki-s2-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1917/158371l.jpg",
+                    "updated": 1787761453
+                }
+            ]
+        },
+        {
+            "day": "Kamis",
+            "date": "03",
+            "date_ts": 1788368400,
+            "animeList": [
+                {
+                    "anime_name": "Dr. Stone: New World Part 2",
+                    "id": 148968,
+                    "link": "dr.-stone:-new-world-part-2",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-148968-anilist-162670-231628-0448c978.jpg",
+                    "updated": 1782883176
+                },
+                {
+                    "anime_name": "Megami \"Isekai Tensei Nani ni Naritai desu ka\" Ore \"Yuusha no Rokkotsu de\"",
+                    "id": 153619,
+                    "link": "my-ribdiculous-reincarnation-sub-indo",
+                    "cover": "https://myanimelist.net/images/anime/1228/156696l.jpg",
+                    "updated": 1783149137
+                },
+                {
+                    "anime_name": "Heroine? Seijo? Iie, All Works Maid desu (Hokori)!",
+                    "id": 154045,
+                    "link": "heroine-seijo-iie-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1498/158290l.jpg",
+                    "updated": 1787783287
+                },
+                {
+                    "anime_name": "Hanazakari no Kimitachi e Season 2",
+                    "id": 154120,
+                    "link": "hanazakari-kimitachi-s2-sub-indo",
+                    "cover": "https://i1.wp.com/kuronime.sbs/wp-content/uploads/2026/07/158523l.jpg?resize=157,223",
+                    "updated": 1787783764
+                },
+                {
+                    "anime_name": "Lv999 no Murabito",
+                    "id": 154122,
+                    "link": "lv999-murabito-sub-indo",
+                    "cover": "https://i3.wp.com/kuronime.sbs/wp-content/uploads/2026/07/155522l.jpg?resize=157,223",
+                    "updated": 1787783294
+                },
+                {
+                    "anime_name": "Katainaka no Ossan, Kensei ni Naru II",
+                    "id": 154211,
+                    "link": "katainaka-ossan-kensei-naru-s2-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1100/157173l.jpg",
+                    "updated": 1787766664
+                },
+                {
+                    "anime_name": "Otome Game Sekai wa Mob ni Kibishii Sekai desu 2",
+                    "id": 154212,
+                    "link": "otome-game-mob-s2-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1285/158337l.jpg",
+                    "updated": 1787781888
+                },
+                {
+                    "anime_name": "Dogulwang",
+                    "id": 154213,
+                    "link": "tomb-raider-king-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1910/158471l.jpg",
+                    "updated": 1787774945
+                },
+                {
+                    "anime_name": "BanG Dream! Yume∞Mita",
+                    "id": 154215,
+                    "link": "bang-dream-yume%e2%88%9emita-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1467/158693l.jpg",
+                    "updated": 1787844798
+                }
+            ]
+        },
+        {
+            "day": "Jumat",
+            "date": "04",
+            "date_ts": 1788454800,
+            "animeList": [
+                {
+                    "anime_name": "Tensei shitara Slime Datta Ken Season 4",
+                    "id": 153297,
+                    "link": "slime-s4-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/06/8fe3e78c675c2fd5.jpg",
+                    "updated": 1787936868
+                },
+                {
+                    "anime_name": "Rakudai Kenja no Gakuin Musou",
+                    "id": 154046,
+                    "link": "rakudai-kenja-gakuin-musou-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1319/158376l.jpg",
+                    "updated": 1787858411
+                },
+                {
+                    "anime_name": "Otome Kaijuu Caraméliser",
+                    "id": 154126,
+                    "link": "kaijuu-carameliser-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1981/156340l.jpg",
+                    "updated": 1787872689
+                },
+                {
+                    "anime_name": "Koko wa Ore ni Makasete Saki",
+                    "id": 154130,
+                    "link": "kokoore-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1371/154308l.jpg",
+                    "updated": 1787930478
+                },
+                {
+                    "anime_name": "Ryoumin 0-nin Start no Henkyou Ryoushu-sama",
+                    "id": 154131,
+                    "link": "ryoumin-0-nin-start-no-henkyou-ryoushu-sama",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1891/158566l.jpg",
+                    "updated": 1787938156
+                },
+                {
+                    "anime_name": "Yani Neko",
+                    "id": 154136,
+                    "link": "yani-neko-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1281/156496l.jpg",
+                    "updated": 1787301551
+                },
+                {
+                    "anime_name": "Tsuihou sareta Tensei",
+                    "id": 154137,
+                    "link": "tsuihou-game-chishiki-suru-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1322/158711l.jpg",
+                    "updated": 1787851805
+                },
+                {
+                    "anime_name": "Super no Ura de Yani Suu Futari",
+                    "id": 154216,
+                    "link": "super-yani-suu-futari-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1768/156339l.jpg",
+                    "updated": 1787852704
+                }
+            ]
+        },
+        {
+            "day": "Sabtu",
+            "date": "05",
+            "date_ts": 1788541200,
+            "animeList": [
+                {
+                    "anime_name": "Honzuki no Gekokujou Season 4",
+                    "id": 153300,
+                    "link": "honzoku-gekokujou-season-4-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153300-anilist-171110-232640-9a0fe251.jpg",
+                    "updated": 1787401374
+                },
+                {
+                    "anime_name": "Mairimashita! Iruma-kun Season 4",
+                    "id": 153301,
+                    "link": "iruma-kun-s4-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153301-anilist-184492-232544-d8154283.jpg",
+                    "updated": 1788018538
+                },
+                {
+                    "anime_name": "Yomi no Tsugai",
+                    "id": 153302,
+                    "link": "yomi-tsugai-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153302-anilist-195600-232434-b730a866.jpg",
+                    "updated": 1788024196
+                },
+                {
+                    "anime_name": "Kamiina Botan, Yoeru Sugata wa Yuri no Hana",
+                    "id": 153858,
+                    "link": "kamiina-botan-yoeru-sugata-wa-yuri-no-hana",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1026/155965l.jpg",
+                    "updated": 1782883318
+                },
+                {
+                    "anime_name": "Hell Mode Season 2",
+                    "id": 154129,
+                    "link": "hell-mode-s2-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1534/156314l.jpg",
+                    "updated": 1787948577
+                },
+                {
+                    "anime_name": "Koko wa Ore ni Makasete Saki",
+                    "id": 154130,
+                    "link": "kokoore-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1371/154308l.jpg",
+                    "updated": 1787930478
+                },
+                {
+                    "anime_name": "Mushoku Tensei Season 3",
+                    "id": 154132,
+                    "link": "mushoku-ni-tensei-s3-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1527/158340l.jpg",
+                    "updated": 1788107408
+                },
+                {
+                    "anime_name": "Black Torch",
+                    "id": 154133,
+                    "link": "black-torch-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1965/158363l.jpg",
+                    "updated": 1788022561
+                },
+                {
+                    "anime_name": "Gaikotsu Kishi-sama, Tadaima Isekai e Odekakechuu Season 2 Sub Indo",
+                    "id": 154134,
+                    "link": "gaikotsu-kishi-s2-sub-indo",
+                    "cover": "https://otakudesu.blog/wp-content/uploads/2026/07/Gaikotsu-Kishi-sama-Tadaima-Isekai-e-Odekakechuu-Season-2-Sub-Indo.jpg",
+                    "updated": 1787592352
+                },
+                {
+                    "anime_name": "Uchi no Otouto-domo ga Sumimasen",
+                    "id": 154135,
+                    "link": "uchi-otouto-sumimasen-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1902/156345l.jpg",
+                    "updated": 1787966104
+                },
+                {
+                    "anime_name": "Neko to Ryuu",
+                    "id": 154208,
+                    "link": "neko-ryuu-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1878/157796l.jpg",
+                    "updated": 1788044407
+                },
+                {
+                    "anime_name": "Nige Jouzu no Wakagimi Season 2 Subtitle Indonesia",
+                    "id": 154219,
+                    "link": "nige-wakagimi-s2-sub-indo",
+                    "cover": "https://otakudesu.blog/wp-content/uploads/2026/07/156329.jpg",
+                    "updated": 1787948285
+                },
+                {
+                    "anime_name": "Bleach: Sennen Kessen-hen - Kashin-tan",
+                    "id": 154222,
+                    "link": "bleach-kashin-tan-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1275/158595l.jpg",
+                    "updated": 1788020646
+                }
+            ]
+        },
+        {
+            "day": "Minggu",
+            "date": "06",
+            "date_ts": 1788627600,
+            "animeList": [
+                {
+                    "anime_name": "One Piece",
+                    "id": 150441,
+                    "link": "1piece-sub-indo",
+                    "cover": "https://myanimelist.net/images/anime/1244/138851.jpg",
+                    "updated": 1788132534
+                },
+                {
+                    "anime_name": "Digimon Beatbreak",
+                    "id": 150544,
+                    "link": "digimon-bb-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-150544-anilist-188388-225558-38ed1e6f.jpg",
+                    "updated": 1788072315
+                },
+                {
+                    "anime_name": "Mao",
+                    "id": 153303,
+                    "link": "mao-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153303-anilist-196012-224737-59a10e2d.jpg",
+                    "updated": 1788030763
+                },
+                {
+                    "anime_name": "Needy Girl Overdose",
+                    "id": 153306,
+                    "link": "needy-girl-overdose-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1755/154935.jpg",
+                    "updated": 1782881360
+                },
+                {
+                    "anime_name": "Nippon Sangoku",
+                    "id": 153380,
+                    "link": "nippon-sangoku-sub-indo",
+                    "cover": "https://assets.animekita.org/cover/2026/04/10/series-153380-anilist-206914-224544-32f3bac1.jpg",
+                    "updated": 1782881353
+                },
+                {
+                    "anime_name": "Ichijouma Mankitsugurashi!",
+                    "id": 153873,
+                    "link": "ichijouma-mankitsugurashi-sub-indo",
+                    "cover": "https://otakudesu.blog/wp-content/uploads/2026/04/Ichijouma-Mankitsugurashi-Sub.jpg",
+                    "updated": 1782881409
+                },
+                {
+                    "anime_name": "Niwatori Fighter",
+                    "id": 153897,
+                    "link": "niwatori-fight-sub-indo",
+                    "cover": "https://otakudesu.blog/wp-content/uploads/2026/03/150983.jpg",
+                    "updated": 1782715221
+                },
+                {
+                    "anime_name": "Saijo no Osewa",
+                    "id": 154138,
+                    "link": "saijo-osewa-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1116/157083l.jpg",
+                    "updated": 1788041648
+                },
+                {
+                    "anime_name": "Mahou Shoujo Lyrical Nanoha EXCEEDS",
+                    "id": 154139,
+                    "link": "mahou-shoujo-exceeds-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1685/158611l.jpg",
+                    "updated": 1788034509
+                },
+                {
+                    "anime_name": "Iwamoto-senpai no Suisen",
+                    "id": 154140,
+                    "link": "iwamoto-suisen-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1112/158450l.jpg",
+                    "updated": 1788025665
+                },
+                {
+                    "anime_name": "Tenmaku no Jaadugar",
+                    "id": 154141,
+                    "link": "tenmaku-jaadugar-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1368/158227l.jpg",
+                    "updated": 1788030008
+                },
+                {
+                    "anime_name": "Sekai Saikyou no Kouei: Meikyuukoku no Shinjin Tansakusha",
+                    "id": 154190,
+                    "link": "sekai-saikyou-kouei-sub-indo",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1380/157378l.jpg",
+                    "updated": 1788121036
+                },
+                {
+                    "anime_name": "Kimi no Koto ga Daidaidaidaidaisuki na 100-nin no Kanojo Season 3",
+                    "id": 154205,
+                    "link": "hyakkano-s3-sub-ind",
+                    "cover": "https://cdn.myanimelist.net/images/anime/1106/157174l.jpg",
+                    "updated": 1788103821
+                }
+            ]
+        }
+    ]
+}
+
+okee kita masuk ke thap cap nonton anime nya
+
+contoh anime hell mode
+
+1.api search 
+https://assets.animekita.org/api/v1.2.5/search.php?keyword=Hell%20Mode
+GET /api/v1.2.5/search.php?keyword=Hell%20Mode HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept-encoding: gzip
+host: apps.animekita.org
+
+respon
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:50:48 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 997
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, OPTIONS
+Access-Control-Allow-Headers: Content-Type, Accept, Authorization, X-Requested-With
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=jXJ7zD4UmSGwx1Xj9wWNhWkIY6YtHsR9oAoKIriZTzz400SX3Mm5hUqzMFe4IfNqV%2BwykwDpzzmfK5syS%2BHpbLN8pqVIO2N7G2zAP8AEko0J3mNs8EllmN2soJRjPA3gttN6uDw%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c29bdcca208dd-HKG
+alt-svc: h3=":443"; ma=86400
+
+{"data":[{"jumlah":2,"result":[{"id":"150704","url":"mode-hell-sub-indo","judul":"Hell Mode","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1151/152479l.jpg","lastch":"","genre":["Action","Adventure","Fantasy"],"sinopsis":"\"Naik level bahkan saat offline?! Itu bukan game 'mode mudah' itu cuma game AFK!\" Game online yang selama ini dimainkan Kenichi Yamada akan segera ditutup servernya, meninggalkan kekosongan di hatinya. Ia mencari game baru untuk mengisi kekosongan itu, tetapi semua game yang ia temukan terlalu mudah. ​​Jenis game yang disukainya jenis game yang cukup menantang hingga membuat pemain ingin menghabiskan ribuan jam untuk memainkannya sudah tidak ada lagi.\r\n\r\n\"Apa ini? 'Anda diundang ke game yang tidak akan pernah berakhir.'\" Kenichi menemukan sebuah game tanpa judul, yang menjanjikan tantangan tak tertandingi dengan potensi yang belum pernah terjadi sebelumnya. Tanpa ragu, ia memilih tingkat kesulitan \"Mode Neraka\". Dan lihatlah, ia mendapati dirinya bereinkarnasi di dunia lain sebagai seorang budak! Sekarang bernama Allen, ia mulai mengungkap rahasia kelas Summoner-nya yang penuh misteri; tanpa kemudahan panduan, petunjuk game, atau forum online, ia harus meraba-raba jalannya menuju puncak dunia barunya!","studio":"Yokohama Animation Lab","score":"6.83","status":"Ongoing","rilis":"10 Januari 2026","total_episode":12},{"id":"154129","url":"hell-mode-s2-sub-indo","judul":"Hell Mode Season 2","cover":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1534/156314l.jpg","lastch":"","genre":["Action","Adventure","Fantasy"],"sinopsis":"Musim Kedua Hell Mode: Seorang gamer hardcore mendominasi dunia isekai dengan pengaturan tingkat kesulitan tinggi.","studio":"Yokohama Animation Lab","score":"8.00","status":"Ongoing","rilis":"04 Juli 2026","total_episode":9}],"pagination":{"page":1,"per_page":20,"total":2,"total_pages":1,"has_next":false,"next_page":"","next_offset":""}}]}
+
+2.api data id mungkin? 
+https://apps.animekita.org/api/v1.2.5/series/episode/data.php?url=al-154129-1
+POST /api/v1.2.5/series/episode/data.php?url=al-154129-1 HTTP/1.1
+user-agent: Flutter/2.5.3
+accept: application/json
+access-control-allow-origin: *
+accept-encoding: gzip
+content-length: 339
+host: apps.animekita.org
+content-type: text/plain; charset=utf-8
+
+{"post_type":"2","post_id":"al-154129-1","series_id":"hell-mode-s2-sub-indo","series_url":"hell-mode-s2-sub-indo","episode":"1","token":"75504c37d8b97486a1211245f2fb21691ac11a791180d26ca2b0b2e85eaffb814185e2250e111b9abeee15ccb1eba55c2b880e335e124c02d517509ee377939d87053383ee0243354230a7a71eb88ffd71752be22f8f2d234884788f70c776ddf2beccfa"}
+
+respon
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:53:09 GMT
+Content-Type: application/json
+Content-Length: 428
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Methods: GET, POST
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Access-Control-Allow-Origin, Accept, Content-Type
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=dbn2Zi%2BHmhe3grzCjEUmviJZfFogzdPGgiYLCuSSEA2U667VvC6BSgaNtmabaS2Wl6V0OdQMwspqPp3x8L9Pg0ebzOOsZr35xtZLZGcXD4GxPYa78T7CUFozu3KDFVSonifCX0c%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c2d2f192fdd4d-HKG
+alt-svc: h3=":443"; ma=86400
+
+{"is_cache":true,"cache_key":"videoDataCacheV32c2c05732e21bcff4124930a009156c9","data":[{"episode_id":154080,"reso":["360p","480p","720p","1080p"],"streams":{"360p":[{"link":"https:\/\/storage.animekita.org\/ro\/bdd7-1783108513879.mp4","provide":871,"id":774635,"reso":"360p","size_kb":null},{"link":"https:\/\/assets.animekita.org\/drive\/Otakudesu.io_HMode.S2--01_360p.mp4?download","provide":99,"id":774631,"reso":"360p","size_kb":null}],"480p":[{"link":"https:\/\/storage.animekita.org\/ro\/b5e2-1783108524418.mp4","provide":871,"id":774638,"reso":"480p","size_kb":null},{"link":"https:\/\/assets.animekita.org\/drive\/Otakudesu.io_HMode.S2--01_480p.mp4?download","provide":99,"id":774633,"reso":"480p","size_kb":null}],"720p":[{"link":"https:\/\/storage.animekita.org\/ro\/4290-1783108538470.mp4","provide":871,"id":774641,"reso":"720p","size_kb":null},{"link":"https:\/\/assets.animekita.org\/drive\/Otakudesu.io_HMode.S2--01_720p.mp4?download","provide":99,"id":774636,"reso":"720p","size_kb":null}],"1080p":[{"link":"https:\/\/storage.animekita.org\/ro\/3aae-1783108562909.mp4","provide":871,"id":774642,"reso":"1080p","size_kb":null},{"link":"https:\/\/assets.animekita.org\/drive\/Otakudesu.io_HMode.S2--01_1080p.mp4?download","provide":99,"id":774639,"reso":"1080p","size_kb":null}]},"resoSizeKb":{"360p":null,"480p":null,"720p":null,"1080p":null},"resoSize":{"360p":null,"480p":null,"720p":null,"1080p":null}}]}
+
+
+3. api storage id mungkin? gatau
+https://storage.animekita.org/ro/4290-1783108538470.mp4
+GET /ro/4290-1783108538470.mp4 HTTP/1.1
+Icy-MetaData: 1
+User-Agent: ExoPlayer
+Accept-Encoding: identity
+Host: storage.animekita.org
+Connection: Keep-Alive
+
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:53:11 GMT
+Content-Type: application/octet-stream
+Content-Length: 173657891
+Connection: keep-alive
+Accept-Ranges: bytes
+etag: "ba25a852bc8a461f2feeedc0fc6a6fc9-34"
+Last-Modified: Fri, 03 Jul 2026 19:56:02 GMT
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Server: cloudflare
+Age: 6052
+Cache-Control: max-age=14400
+cf-cache-status: HIT
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=WEyGOSXQl3%2BvwcbkHsMQtg8S01Ohgi%2Fjb1UMUV1pChV54OwweUrp%2Bo5aUypiwsnycnzOgVc9eayuvAkSNynsjXv9UvDnQZATUWKzDBCYawgbFgUgnLg5kM5qcf3Zy2LTh5gFQi8N%2FnI%3D"}]}
+CF-RAY: a33c2d396a27f4fc-HKG
+alt-svc: h3=":443"; ma=86400
+tapi itu mp4 njir
+stream nya itu keknya gw soalnya capture saat nonton anime itu yg s2 ama s1 
+
+-------
+tambahan
+1.api series 
+https://apps.animekita.org/api/v1.2.5/series.php?url=kizumonogatari-i
+POST /api/v1.2.5/series.php?url=kizumonogatari-i HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept: application/json
+access-control-allow-origin: *
+accept-encoding: gzip
+content-length: 69
+host: apps.animekita.org
+content-type: text/plain; charset=utf-8
+
+{"get":"top","post_type":"1","post_id":"kizumonogatari-i","token":""}
+
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 12:58:29 GMT
+Content-Type: application/json
+Content-Length: 904
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Methods: GET, POST
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Access-Control-Allow-Origin, Accept
+X-Exec-Time: 0.0006721019744873
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=z02b9PlsW66XfH9g121HdfZoZLqE%2B1cpueR%2FnD%2Bz0fFQHuzxUajjpqckGRJrYU5hYBqXTNP0Ry%2FOTu2EStCMgQdrc9Z7yOxOnxnzAyzr8bWXhyibaY5P95eXNoXuBxkC%2Ff86Tbc%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c34fd68875b71-HKG
+alt-svc: h3=":443"; ma=86400
+
+{"data":[{"id":154224,"series_id":"kizumonogatari-i","bookmark":null,"cover":"https:\/\/cdn.myanimelist.net\/images\/anime\/1783\/112810l.jpg","judul":"Kizumonogatari I","type":"Movie","countdown":null,"status":"Completed","rating":"8.36","published":"08 Januari 2016","author":"Shaft","genre":["Action","Mystery","Supernatural"],"genreurl":["Action","Mystery","Supernatural"],"sinopsis":"Saat menjalani tahun kedua di SMA Swasta Naoetsu, Koyomi Araragi secara tak sengaja bertemu dengan Tsubasa Hanekawa, siswi paling berprestasi di kelasnya. Dalam percakapan mereka, Hanekawa menyinggung sebuah rumor mengejutkan: sesosok vampir berambut pirang indah dan bermata sedingin es terlihat berkeliaran di sekitar kota.\r\n\r\nMerasa senang karena mendapat teman baru, Araragi menganggap remeh rumor tersebut dan melanjutkan sisa malamnya dengan santai. Namun, dalam perjalanan pulang, ia menemukan ceceran darah yang mengarah ke tangga menuju stasiun kereta bawah tanah. Rasa penasaran mendorongnya untuk menyelidiki lebih lanjut, sehingga ia mengikuti jejak genangan darah yang mengerikan itu hingga ke bagian dalam stasiun.\r\n\r\nSetibanya di sumber darah tersebut, ia dikejutkan oleh pemandangan yang mengerikan\u2014sosok vampir pirang yang dirumorkan itu sendiri, dalam kondisi tubuh yang terpotong-potong. Setelah mendengar permintaan tolong darinya, Araragi harus mengambil sebuah keputusan yang berpotensi mengubah hidupnya selamanya.","history":["1"],"historyDurasi":[1],"historyDurasiFull":[1],"chapter":[{"id":154502,"ch":"Movie","url":"al-154224-movie","date":"11 Agustus, 2026","history":"","views":2024,"lastDurasi":null,"fullDurasi":null}]}]}
+
+2.api genre
+https://users.animekita.org/api/v1.2.5/genreseries.php?page=1&url=action%2F
+GET /api/v1.2.5/genreseries.php?page=1&url=action%2F HTTP/1.1
+user-agent: Dart/3.9 (dart:io)
+accept: application/json
+access-control-allow-origin: *
+accept-encoding: gzip
+host: apps.animekita.org
+
+
+HTTP/1.1 200 OK
+Date: Mon, 31 Aug 2026 13:00:33 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 8591
+Connection: keep-alive
+Server: cloudflare
+Access-Control-Allow-Methods: GET, POST, OPTIONS
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Headers: Content-Type, Accept, Authorization, X-Requested-With
+Vary: Accept-Encoding
+Content-Encoding: gzip
+Nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+Report-To: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=vHTmBc05KvddBS%2BvilOF2bhrmxGAzWPpNd1iewUaScMW3CMyGbuG0WM%2FkZl%2F1FIA004d6Xe%2Bgo25Feobc1rMhVsr0DTMgoA9sYNfAcJgJ1aeSYSgnTeZ8hfk%2B3OqDCl6TMS6aS4%3D"}]}
+cf-cache-status: DYNAMIC
+CF-RAY: a33c38033d137558-HKG
+alt-svc: h3=":443"; ma=86400
+
+[{"id":"150437","link":"compass-20-sub-indo","anime_name":"#Compass 2.0: Sentou Setsuri Kaiseki System","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1678/148543.jpg","episode":"","genre":["Action"],"sinopsis":"Compas 2.0 merupakan sebuah tempat dimana para pahlawan yang ada di dunia saat ini berkumpul untuk bertarung bersama dengan partnernya. Compas 2.0 juga dikendalikan oleh sebuah menara berbentuk kubus.Di sini, segala alat tempur dan juga energi yang tercipta akan menjaga keseimbangan dunia yang membuat kehidupan manusia menjadi lebih nyaman. Selain pertarungan, seseorang bisa memilih menjalani berbagai aktivitas lain.","studio":"Lay-duce","score":"5.30","status":"Completed","rilis":"Apr 08, 2025","total_episode":12},{"id":"150577","link":"zteste","anime_name":"#ZTESTE","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1069/148148.jpg","episode":"","genre":["Action"],"sinopsis":"tessss","studio":"A-1 Pictures","score":"8.7","status":"Completed","rilis":"30 Dec, 2024","total_episode":11},{"id":"150582","link":"kimetsu-no-yaiba-movie-1-mugenjou-hen-akaza-sairai","anime_name":"(HD) Kimetsu no Yaiba: Infinity Castel Movie (Mugenjou-hen - Akaza Sairai)","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1681/148216.jpg","episode":"","genre":["Action","Supernatural"],"sinopsis":"Film ini membuka arc Infinity Castle, saat Muzan menjebak para Hashira dan pembasmi iblis ke dalam dimensi kastil tak berujung. Tanjiro kembali berhadapan dengan Akaza, Upper Rank Tiga yang membunuh Rengoku. Pertarungan ini bukan hanya soal kekuatan, tapi juga tekad, emosi, dan masa lalu Akaza. Bersamaan dengan itu, perang final melawan para Upper Moon pun dimulai.\r\nKimetsu no Yaiba Infinity Castel","studio":"ufotable","score":"8.7","status":"Ongoing","rilis":"Jul 18, 2025","total_episode":1},{"id":"148916","link":"(live-action)-zom-100:-zombie-ni-naru-made-ni-shitai-100-no-koto-","anime_name":"(Live Action) Zom 100: Zombie ni Naru made ni Shitai 100 no Koto","release_date":"","thumb":"https://i0.wp.com/animekita.org/cover/x4AEEj_4f.jpg","episode":"","genre":["Action","Comedy","Horror","Supernatural","Suspense"],"sinopsis":"Versi Live Actionnya","studio":"BUG FILMS","score":"8.27","status":"Completed","rilis":"Jul 9, 2023","total_episode":1},{"id":"149132","link":"hack-g-u-trilogy","anime_name":".hack//G.U. Trilogy","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/05/18/series-149132-anilist-3269-134846-bec2e658.jpg","episode":"","genre":["Action","Fantasy"],"sinopsis":".hack//G.U. Trilogy membawa kisah Haseo, pemain MMORPG The World:R2 yang dikenal sebagai PKK berjuluk “Terror of Death” dan mantan anggota guild Twilight Brigade. Saat memburu sosok misterius yang ia kira Tri-Edge, Haseo justru berhadapan dengan Azure Kite dan kalah telak. Ia terkena Data Drain yang menjatuhkan levelnya dari 133 ke 1, menghapus seluruh item, senjata, dan daftar kontak, meninggalkannya dengan pertanyaan besar tentang kemampuan mengerikan itu dan alasan Azure Kite memilikinya.\n\nDi tengah keterpurukan, Haseo memperoleh Avatar bernama Skeith, kekuatan yang memungkinkannya memanggil kemampuan luar biasa termasuk Data Drain. Dengan kekuatan baru ini, ia kembali melanjutkan pencarian Tri-Edge, PK yang konon membuat korbannya tak bisa kembali ke The World, demi menemukan jalan menyelamatkan Shino, sahabatnya yang sejak insiden enam bulan lalu membuat pemain aslinya, Shino Nanao, terbaring koma.","studio":"CyberConnect2","score":"6.6","status":"Completed","rilis":"Dec 22, 2007","total_episode":1},{"id":"149133","link":"hack-quantum","anime_name":".hack//Quantum","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/05/18/series-149133-anilist-9332-134908-2201f991.jpg","episode":"","genre":["Action","Adventure","Fantasy"],"sinopsis":"Tobias, Mary, dan Sakuya menantang “The One Sin” yang konon tak tertembus. Namun di tengah labirin yang rumit, mereka justru tersesat dan tanpa sengaja menjebak anggota guild lain ikut terperangkap dalam kekacauan yang mereka buat.\n\nDi saat situasi kian genting, seekor kucing misterius mengamati dari kejauhan. Apakah itu pemain lain yang bersembunyi di balik avatar, atau sekadar NPC yang menyimpan sesuatu?","studio":"Kinema Citrus","score":"6.8","status":"Completed","rilis":"Jan 28, 2011","total_episode":3},{"id":"151264","link":"hackthe-movie-sekai-no-mukou-ni","anime_name":".hack//The Movie: Sekai no Mukou ni","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/2/35633l.jpg","episode":"","genre":["Action","Adventure","Fantasy","Mystery","Sci-Fi"],"sinopsis":"Pada tahun 2024, jaringan komputer mendominasi kehidupan sehari-hari. Sora Yuuki adalah seorang gadis berusia 14 tahun. Suatu hari, ia diundang ke sebuah permainan daring \"The World\". Setelah sebuah kecelakaan dalam permainan tersebut, dunia nyata mulai berubah bentuk.","studio":"CyberConnect2","score":"7.04","status":"Completed","rilis":"21 Januari 2012","total_episode":1},{"id":"151265","link":"hackversus-the-thanatos-report","anime_name":".hack//Versus: The Thanatos Report","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/10/42325l.jpg","episode":"","genre":["Action","Sci-Fi"],"sinopsis":"Bersamaan dengan game gratis, .hack//Versus, pada cakram Blu-ray .hack//Sekai no Mukou ni, terdapat sebuah episode spesial berjudul \"The Thanatos Report\". Episode spesial ini menghubungkan peristiwa dalam game dengan peristiwa dalam film dan \"mengungkap kebenaran terakhir\". Tokoh utama dalam episode spesial ini adalah David; karakter yang juga muncul dalam film utama. Episode spesial ini berlatar tahun 2024 (tahun di mana film tersebut berlatar) dan 2025 (tahun di mana game .hack//Versus berlatar).","studio":"Anima","score":"6.29","status":"Completed","rilis":"28 Juni 2012","total_episode":1},{"id":"150670","link":"07-ghost","anime_name":"07-Ghost","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/3/22605.jpg","episode":"","genre":["Action","Fantasy"],"sinopsis":"Akademi Militer Kekaisaran Barsburg terkenal karena melatih para elit yang membawa kemenangan bagi kekaisaran. Para siswa akademi bebas menggunakan kemampuan yang disebut \"Zaiphon\" untuk bertarung, sementara jenis Zaiphon yang dapat digunakan bergantung pada sifat prajurit tersebut.\r\n\r\nTeito Klein, seorang siswa di akademi, adalah salah satu prajurit paling menjanjikan yang dihasilkan. Meskipun diejek oleh semua orang karena menjadi seorang sklave (bahasa Jerman untuk budak) tanpa ingatan tentang masa lalunya, ia berteman dengan seorang siswa lain bernama Mikage. Saat mempersiapkan ujian akhir, Teito mengungkap rahasia gelap yang terkait dengan masa lalunya. Ketika upaya untuk membunuh Ayanami, seorang pejabat tinggi yang membunuh ayahnya, gagal, Teito dikurung menunggu hukuman.\r\n\r\nHanya menginginkan yang terbaik untuk Teito, Mikage membantunya melarikan diri. Teito akhirnya sampai di Gereja Distrik ke-7 di mana ia diterima oleh para uskup. Di sinilah Teito berusaha menghindari cengkeraman Ayanami dan Militer, agar ia dapat menemukan kembali ingatannya dan mempelajari mengapa ia adalah orang yang dapat mengubah nasib dunia.\r\n\r\n[Ditulis oleh MAL Rewrite] Akademi Militer Kekaisaran Barsburg dikenal karena melatih para elit yang membawa kemenangan bagi kekaisaran. Para siswa akademi bebas menggunakan kemampuan yang disebut \"Zaiphon\" untuk bertarung, sementara jenis Zaiphon yang dapat digunakan bergantung pada sifat prajurit tersebut.\r\n\r\nTeito Klein, seorang siswa di akademi, adalah salah satu prajurit paling menjanjikan yang dihasilkan. Meskipun diejek oleh semua orang karena menjadi seorang sklave (bahasa Jerman untuk budak) tanpa ingatan tentang masa lalunya, ia berteman dengan seorang siswa lain bernama Mikage. Saat mempersiapkan ujian akhir, Teito mengungkap rahasia gelap yang terkait dengan masa lalunya. Ketika upaya untuk membunuh Ayanami, seorang pejabat tinggi yang membunuh ayahnya, gagal, Teito dikurung menunggu hukuman.\r\n\r\nHanya menginginkan yang terbaik untuk Teito, Mikage membantunya melarikan diri. Teito akhirnya sampai di Gereja Distrik ke-7 tempat ia diterima oleh para uskup. Di sinilah Teito berusaha menghindari cengkeraman Ayanami dan Militer, agar ia dapat menemukan kembali ingatannya dan mempelajari mengapa ia adalah orang yang dapat mengubah nasib dunia.","studio":"Studio Deen","score":"7.18","status":"Completed","rilis":"Apr 7, 2009","total_episode":25},{"id":"1157","link":"100-man-no-inochi-sub-indo/","anime_name":"100-man no Inochi no Ue ni Ore wa Tatteiru","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/04/05/series-1157-anilist-116242-113300-cf22bcf9.jpg","episode":"","genre":["Action","Drama","Fantasy","Game","Shounen"],"sinopsis":"Yuusuke Yotsuya, siswa SMP kelas tiga yang dingin dan sangat logis, tiba-tiba terlempar ke dunia lain yang berjalan layaknya sebuah game. Di sana ia menjadi pemain ketiga dan dipaksa menjalani misi berbahaya bersama dua teman sekelasnya, Iu Shindo dan Kusue Hakozaki, yang lebih dulu terseret ke dunia tersebut.\n\nBerbeda dari kebanyakan orang, Yuusuke menyingkirkan emosi dan menilai segala sesuatu dengan kepala dingin, bahkan terkadang memperlakukan nyawa rekan setimnya seolah hanya bagian dari perhitungan. Di tengah serangan monster, insiden tak terduga, dan musuh kuat yang bergerak dalam bayang-bayang, mampukah ia menjaga party-nya tetap hidup dan menuntaskan permainan ini?","studio":"Maho Film","score":"6.3","status":"Completed","rilis":"Oct 2, 2020","total_episode":12},{"id":"1264","link":"100-man-no-inochi-s2-sub-indo/","anime_name":"100-man no Inochi no Ue ni Ore wa Tatteiru Season 2","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/04/06/series-1264-anilist-127366-132130-d5161fb3.jpg","episode":"","genre":["Action","Drama","Fantasy","Game","Shounen"],"sinopsis":"Musim kedua dari 100-man no Inochi no Ue ni Ore wa Tatteiru kembali melanjutkan petualangan yang menegangkan, saat para karakter harus menghadapi misi-misi baru dengan risiko yang semakin besar. Dengan tantangan yang kian tak terduga, setiap keputusan bisa menjadi penentu hidup dan mati.","studio":"Maho Film","score":"6.6","status":"Completed","rilis":"Jul 10, 2021","total_episode":12},{"id":"757","link":"1eye-subtitle-indonesia/","anime_name":"11eyes","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/03/29/series-757-anilist-6682-111732-bba7c2d5.jpg","episode":"","genre":["Action"," ","Super Power","Supernatural"],"sinopsis":"Saat langit mendadak memerah, bulan menghitam, dan monster berkeliaran di jalanan, Satsuki Kakeru terseret ke dalam situasi berbahaya dan terlempar ke dunia lain yang asing. Di sana, ia bertemu empat orang yang bernasib sama, dan mereka pun terpaksa bekerja sama demi bertahan hidup sambil mencari jalan keluar dari misteri yang menyelimuti tempat itu.\n\nNamun, upaya mereka segera diuji ketika enam sosok bayangan muncul dengan satu tujuan: memburu Kakeru dan teman-temannya. Di tengah teror yang semakin mendekat, setiap keputusan bisa menjadi penentu antara selamat atau lenyap.","studio":"Doga Kobo","score":"5.4","status":"Completed","rilis":"Oct 7, 2009","total_episode":13},{"id":"1154","link":"86-sub-indo/","anime_name":"86","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/04/05/series-1154-anilist-116589-113031-2145f82e.jpg","episode":"","genre":["Action","Drama","Mecha","Military","Sci-Fi"],"sinopsis":"Demi menghadapi serangan drone otonom milik Kekaisaran Giad yang dikenal sebagai Legion, Republik San Magnolia menciptakan drone tempur bernama Juggernaut. Namun sebutan “tanpa awak” hanyalah kedok. Di balik kokpitnya, para pilot sebenarnya adalah kaum Eighty-six, kelompok yang dianggap bukan manusia dan diperlakukan tak lebih dari sekadar alat perang.\n\nDi garis depan, Shin, kapten Spearhead Squadron yang semuanya berasal dari Eighty-six, terus bertarung dalam perang yang nyaris tanpa harapan. Dengan tujuan pribadinya yang tak terungkap, ia melangkah maju di medan tempur yang seakan hanya menjanjikan satu akhir.","studio":"A-1 Pictures","score":"8.3","status":"Completed","rilis":"Apr 11, 2021","total_episode":12},{"id":"109","link":"86-season-2-sub-indo/","anime_name":"86 Season 2","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/03/10/series-109-anilist-131586-115948-4b35a64e.jpg","episode":"","genre":["Action","Drama","Sci-Fi"],"sinopsis":"Setelah berpamitan dengan Lena, Shin dan para penyintas skuadron Spearhead terus melaju menembus jantung wilayah Legion. Di tengah rangkaian cobaan yang seolah tak berujung, mereka akhirnya diselamatkan oleh Federasi Giad, negara yang telah berubah dan menawarkan kesempatan kedua untuk menjalani hidup yang lebih damai.\n\nNamun ketenangan itu tak bertahan lama. Rasa tanggung jawab kembali memanggil para Eighty Six ke medan perang, dan mereka pun memilih mendaftar sebagai prajurit sekali lagi, melangkah kembali ke gerbang neraka. Kali ini, perjalanan mereka ditemani sekutu baru yang tak biasa, Frederica Rosenfort, gadis muda angkuh dengan kemampuan langka serta kebijaksanaan yang jauh melampaui usianya.","studio":"A-1 Pictures","score":"8.7","status":"Completed","rilis":"Okt 3, 2021","total_episode":12},{"id":"588","link":"91-days-subtitle-indonesia/","anime_name":"91 Days","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/03/24/series-588-anilist-21711-134925-27351eef.png","episode":"","genre":["Action","Drama","Historical"],"sinopsis":"Berlatar era pelarangan alkohol, 91 Days menyuguhkan drama mafia klasik di distrik Lawless, tempat hukum tak berarti, jalanan dikuasai keluarga-keluarga kriminal, dan minuman ilegal mengalir tanpa henti. Di lingkungan keras inilah Avilio pernah hidup, hingga sebuah konflik mafia merenggut keluarganya dan memaksanya menghilang.\n\nBertahun-tahun kemudian, sebuah surat misterius tiba dan membangkitkan tekad balas dendam yang selama ini dipendam. Avilio pun kembali ke Lawless, menyusup ke keluarga Vanetti, dan perlahan mendekati Nero, langkah berbahaya yang bisa mengubah segalanya.","studio":"Shuka","score":"7.6","status":"Completed","rilis":"Jul 9, 2016","total_episode":13},{"id":"151860","link":"a-portrait-of-jianghu-bu-liang-ren-season-3","anime_name":"A Portrait of Jianghu: Bu Liang Ren Season 3","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/02/9747f6344126f7b5.webp","episode":"","genre":["Action"],"sinopsis":"Musim Ketiga Donghua Bu Liang Ren (Hua Jianghu: Bu Liang Ren III) – Di bawah koordinasi Zongshuai, Paviliun Yulongbao dan Mingfeng akan menjadi kerabat dari anak-anak mereka. Untuk alasan ini, Wen Taiji, pemilik Paviliun Mingfeng, membawa seorang pria untuk menunggu Yulongbao. Zong Sheng mengetahui bahwa ayahnya akan mendistribusikan Wen Jingxu ke Wan Yanzheng dan tidak senang, dan dia diceramahi dengan teori ayahnya. Baozhu Wanyanzang ingin mengambil kesempatan membunuh Wen Taiji untuk menguasai Paviliun Mingfeng, dan Wen Taiji juga berencana membunuh Yanzang untuk merebut kastil naga.","studio":"Rocen","score":"8.60","status":"Completed","rilis":"Oct 25, 2018","total_episode":40},{"id":"151863","link":"a-portrait-of-jianghu-bu-liang-ren-season-6","anime_name":"A Portrait of Jianghu: Bu Liang Ren Season 6","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/02/ce16a7ccb31264a5.jpg","episode":"","genre":["Action","Drama","Fantasy","Historical","Martial Arts","Romance"],"sinopsis":"Musim Keenam dari Donghua Bu Liang Ren (Hua Jianghu: Bu Liang Ren VI) – Kerajaan Qi diasingkan saat Bupati mengambil alih pemerintahan kekaisaran dan tentara Gurun Utara datang dengan kekuatan yang tak terbendung. Li Xingyun akan menunjukkan kepada kita bagaimana memimpin Bu Liang Ren untuk melawan dalam situasi putus asa.","studio":"Rocen","score":"8.30","status":"Completed","rilis":"Mar 02, 2023","total_episode":12},{"id":"151867","link":"a-portrait-of-jianghu-spirit-master","anime_name":"A Portrait of Jianghu: Spirit Master","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/02/ae781900c77bf8d3.jpg","episode":"","genre":["Action","Drama","Fantasy","Historical","Martial Arts"],"sinopsis":"Manusia dapat dibedakan menjadi dua jenis: manusia biasa yang bekerja untuk yang hidup, dan undead yang bekerja untuk yang mati. Untuk undead, hidup mereka didedikasikan untuk memenuhi keinginan terakhir para hantu yang mati dengan penyesalan. Adapun Baili Dengfeng, dia memiliki satu dan hanya satu takdir di dunia ini: menemukan istrinya yang telah lama hilang, Ruyan.\r\n\r\nSelama pencariannya, Dengfeng berkenalan dengan Jia Xuan, yang keluarganya dibunuh dan belum dibalas, Liang You yang manis, nakal dan sangat memujanya, dan Liang Yuan, yang meragukan semuanya secara neurotik. Setelah serangkaian acara, dia juga mempelajari keberadaan Spirit Masters dan Spirit Slaves, dan berhubungan dengan organisasi mistik bernama Spirits Expelling Order. Dengan semakin banyaknya misteri yang terungkap, kebenaran semakin dekat dan semakin dekat dengan Dengfeng, yang mungkin lebih suka tidak menghadapi keseluruhannya.","studio":"Rocen","score":"6.81","status":"Completed","rilis":"2015","total_episode":0},{"id":"150353","link":"a-rank-party-sub-indo","anime_name":"A-Rank Party wo Ridatsu shita Ore wa","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/1897/149800.jpg","episode":"","genre":["Action","Adventure","Fantasy"],"sinopsis":"\"Aku tidak bisa melakukan ini lagi!\" Yuke Feldio, penyihir merah yang baru saja meninggalkan kelompok petualang A-Rank-nya setelah lima tahun diperlakukan buruk dan diejek, merasa putus asa. Hidupnya yang menyedihkan dan menganggur pun dimulai... atau setidaknya begitu yang dia kira!\r\n\r\nBeruntung, Yuke diterima dalam kelompok petualang yang seluruh anggotanya perempuan—mantan murid-muridnya sendiri! Saat mereka menaklukkan ruang bawah tanah satu demi satu, kekuatan sejati Yuke mulai terungkap: ternyata penyihir merah ini memiliki sihir dan keterampilan luar biasa?!","studio":"Bandai Namco Pictures","score":"6.58","status":"Ongoing","rilis":"Jan 12, 2025","total_episode":24},{"id":"149235","link":"a-d-police-tv","anime_name":"A.D. Police (TV)","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/2/15440.jpg","episode":"","genre":["Action","Sci-Fi"],"sinopsis":"Ditetapkan beberapa tahun sebelum Bubblegum Crisis Tokyo 2040, A.D. Police menceritakan kisah divisi polisi khusus Mega-Tokyo yang dirancang untuk mengendalikan Boomer nakal di kota. Petugas Polisi A.D. Kenji Sasaki menghadapi dilema besar: dia kehilangan pasangan lain karena generasi boomer fanatik. Sehari setelah dia dibebastugaskan, dia menerima rekan baru berupa polisi Jerman Hans Kleif. Lucunya, Kenji memukul Hans di bar malam sebelumnya. Kenji tidak hanya menghadapi tugas sehari-hari untuk mengendalikan Boomer, dia juga harus belajar menyesuaikan diri dengan pasangan barunya.","studio":"Plum","score":"5.92","status":"Completed","rilis":"Apr 8, 1999","total_episode":12},{"id":"824","link":"absol-duo-subtitle-indonesia/","anime_name":"Absolute Duo","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/03/29/series-824-anilist-20785-115651-659ec60f.jpg","episode":"","genre":["Action"," ","Harem","Romance","School","Supernatural"],"sinopsis":"Di dunia tempat Blaze, manifestasi jiwa manusia, dapat berubah menjadi senjata, Tooru Kokonoe ternyata memiliki bakat istimewa. Namun ada satu hal yang janggal: Blaze miliknya bukanlah senjata, melainkan sebuah perisai, membuatnya menonjol sekaligus dipertanyakan di antara para petarung lain.\n\nTooru pun masuk ke akademi yang melatih kemampuan bertarung, di mana setiap murid harus berpasangan dalam sistem Duo. Tak disangka, aturan itu membawanya tinggal serumah dengan seorang gadis cantik berambut perak, dan sejak saat itu, hari-harinya dipenuhi latihan keras, kerja sama, serta rahasia yang perlahan terkuak.","studio":"8bit","score":"6.0","status":"Completed","rilis":"Jan 4, 2015","total_episode":12},{"id":"512","link":"acl-world-sub-indo/","anime_name":"Accel World","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/03/23/series-512-anilist-11759-235118-f777b43e.jpg","episode":"","genre":["Action","Game","Romance","School","Sci-Fi"],"sinopsis":"Tahun 2046, Haruyuki Arita menjalani hari-hari sebagai siswa yang berada di titik terbawah dalam hierarki sosial sekolahnya. Tertekan dan malu dengan hidupnya, ia hanya bisa melarikan diri dengan menenggelamkan diri dalam permainan virtual.\n\nNamun segalanya berubah ketika Kuroyukihime, gadis paling populer di sekolah, mendekatinya dan memperkenalkan sebuah program misterius bernama Brain Burst. Dari sana, Haruyuki terseret ke sebuah realitas virtual yang dikenal sebagai Accel World, tempat yang akan menguji dirinya dengan cara yang tak pernah ia bayangkan.","studio":"Sunrise","score":"6.7","status":"Completed","rilis":"Apr 07, 2012","total_episode":24},{"id":"150687","link":"accel-world-infinite-burst","anime_name":"Accel World: Infinite∞Burst","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/5/87145.jpg","episode":"","genre":["Action","Romance","Sci-Fi"],"sinopsis":"Beberapa waktu setelah peristiwa yang melibatkan Burst Linker Dusk Taker, Kuroyukihime mengingat kembali perekrutan Haruyuki Arita ke program \"Brain Burst\"—sebuah aplikasi yang memungkinkan pemain untuk mempercepat fungsi kognitif mereka hingga waktu seolah berhenti. Sejak kedatangannya, Haruyuki telah menjadi terkenal di antara Burst Linker lainnya dan telah membantu Kuroyukihime mencapai tujuannya untuk mencapai level tertinggi dalam permainan.\r\n\r\nSelama pertempuran wilayah dengan legiun mereka, Nega Nebulus, Haruyuki dan teman-temannya dikeluarkan dari program setelah badai dahsyat dalam permainan. Di seluruh Tokyo, kamera keamanan mengalami kerusakan, yang menurut Kuroyukihime terkait dengan kesalahan Brain Burst. Bertekad untuk memperbaiki masalah tersebut, Nega Nebulus harus merekrut legiun lain untuk menemukan sumber masalah dan mengembalikan kemampuan akselerasi.","studio":"Sunrise","score":"6.62","status":"Completed","rilis":"Jul 23, 2016","total_episode":1},{"id":"151870","link":"adventures-in-subduing-the-demons","anime_name":"Adventures in Subduing the Demons","release_date":"","thumb":"https://i0.wp.com/assets.animekita.org/cover/2026/02/1b9f4dee2a69f9ec.webp","episode":"","genre":["Action","Adventure","Fantasy"],"sinopsis":"Dalam peradaban hilang yang diselimuti debu, raksasa kuno mencari jalan mereka untuk menjadi kaisar. Jiang Hao, seorang pemuda modern yang dulunya hanyalah pion, menginjakkan kaki di padang belantara prasejarah untuk mencari keberadaan ayahnya. Dibekali dengan “Power Bank” totemnya yang belum lengkap, dia bertarung melawan manusia, membangun jalannya dari suku-suku primitif hingga kota-kota kuno yang misterius; dia bertarung melawan alam, melintasi padang belantara, berburu dan membunuh binatang buas purba, mempelajari sihir totem kuno dan mistis dari tubuh mereka; dia bertarung melawan langit, saat cahaya iblis asing tiba-tiba muncul, mengancam untuk menelan tanah megah dari Enam Daerah Terbengkalai. Dia menentang takdir, menyalakan dirinya sendiri, berubah menjadi matahari, dan melawan iblis-iblis langit! Tanpa disadari, saat dia mengguncang langit dan menggerakkan bumi, belenggu takdir telah menjebaknya, sementara senyum ayahnya terus mengambang.","studio":"Kunjing Culture","score":"8.83","status":"Ongoing","rilis":"Nov 11, 2024","total_episode":7},{"id":"150690","link":"afro-samurai","anime_name":"Afro Samurai","release_date":"","thumb":"https://i0.wp.com/cdn.myanimelist.net/images/anime/3/15874.jpg","episode":"","genre":["Action","Adventure"],"sinopsis":"Saat masih kecil, Afro menyaksikan ayahnya terbunuh dalam duel oleh seorang pria yang hanya dikenal sebagai Justice. Setelah mengambil nyawa ayah Afro, Justice membuang ikat kepala Nomor Dua miliknya dan mengambil Nomor Satu untuk mengklaim kekuatan ilahinya sebagai miliknya.\r\n\r\nBertahun-tahun kemudian, setelah mendapatkan ikat kepala Nomor Dua yang memberinya hak untuk menantang Nomor Satu, Afro melanjutkan perburuannya untuk membalas dendam kepada pria yang membunuh ayahnya. Hanya ada satu hal yang menghalangi jalannya—semua orang di dunia! Meskipun Nomor Satu hanya dapat ditantang oleh Nomor Dua, Nomor Dua dapat ditantang oleh siapa pun. Saat musuh-musuhnya berkumpul untuk mencoba merebut gelar Nomor Dua, Afro harus berjuang melewati berbagai musuh dan rintangan jika ia ingin mencapai Nomor Satu dan membalas dendam untuk selamanya.","studio":"Gonzo","score":"7.37","status":"Completed","rilis":"May 3, 2007","total_episode":5}]
+
+OH IYA AJGG ADA ID NYAA WKWKW
+contoh yang ini{"id":"150437","link":"compass-20-sub-indo",
+id nya 150437
+stream nya ini
+https://users.animekita.org/mp4/series_150437/720p/ep_100131/_Kusonime_%20_Compass%202.0%20-%2001.mp4
+SAMA AJGG HAHAHA
+Segini cukup? atau kurang?? kalo kurang chat gw aja ntar gw perbanyak lagi

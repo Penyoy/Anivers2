@@ -332,7 +332,7 @@ fun WatchScreen(
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                 Text("${formatTime(position/1000)} / ${formatTime(duration/1000)}", color = Color.White, fontSize = 11.sp)
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Text(quality, color = Color(0xFFA5B4FC), fontSize = 11.sp, modifier = Modifier.clip(RoundedCornerShape(4.dp)).background(Color(0x33000000)).padding(horizontal = 6.dp, vertical = 2.dp))
+                                    Text(quality, color = Color(0xFF030303), fontSize = 11.sp, modifier = Modifier.clip(RoundedCornerShape(4.dp)).background(Color(0x33000000)).padding(horizontal = 6.dp, vertical = 2.dp))
                                     Text("Server ${currentServer+1}", color = Color.White, fontSize = 11.sp)
                                 }
                             }
@@ -408,7 +408,7 @@ fun WatchScreen(
                         Spacer(Modifier.height(6.dp))
                         Text(
                             text = if (expanded) "Ciutkan" else "Selengkapnya",
-                            color = Color(0xFF6366F1),
+                            color = Color(0xFFFFDB89),
                             fontSize = 12.sp,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier.clickable { expanded = !expanded; sinopsisExpanded = expanded }

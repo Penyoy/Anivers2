@@ -12,7 +12,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/ic_launcher"
         android:roundIcon="@drawable/ic_launcher"
-        android:label="AniVerse"
+        android:label="ANIVERS ANIME"
         android:supportsRtl="true"
         android:theme="@style/Theme.AniVerse"
         tools:targetApi="31">

@@ -9,16 +9,20 @@ import androidx.navigation.navArgument
 import com.anivers.anime.ui.screens.*
 
 object Routes {
+    const val SPLASH = "splash"
+    const val WELCOME = "welcome"
     const val HOME = "home"
     const val EXPLORE = "explore?type={type}"
     const val SEARCH = "search?q={q}"
     const val GENRE = "genre/{slug}"
     const val DETAIL = "anime/{slug}"
     const val WATCH = "watch/{seriesUrl}/{episode}"
-    const val RECENT = "recent"
+    const val HISTORY = "history"
+    const val RECENT = "history" // alias for backward compat
     const val BOOKMARK = "bookmark"
     const val PROFILE = "profile"
     const val JADWAL = "jadwal"
+    const val AUTH = "auth"
 
     fun explore(type: String? = null) = if (type != null) "explore?type=$type" else "explore"
     fun search(q: String) = "search?q=${java.net.URLEncoder.encode(q, "UTF-8")}"
@@ -29,7 +33,41 @@ object Routes {
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Routes.HOME) {
+    NavHost(navController = navController, startDestination = Routes.SPLASH) {
+        composable(Routes.SPLASH) {
+            SplashScreen(
+                onLoggedIn = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.SPLASH) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onNotLoggedIn = {
+                    navController.navigate(Routes.WELCOME) {
+                        popUpTo(Routes.SPLASH) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+        composable(Routes.WELCOME) {
+            WelcomeScreen(
+                onLoginClick = { navController.navigate(Routes.AUTH) },
+                onGuestClick = {
+                    navController.navigate(Routes.HOME) {
+                        popUpTo(Routes.WELCOME) { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable(Routes.AUTH) {
+            // Reuse ProfileScreen auth part as full screen
+            ProfileScreen(onAuthSuccess = {
+                navController.navigate(Routes.HOME) {
+                    popUpTo(Routes.WELCOME) { inclusive = true }
+                }
+            })
+        }
         composable(Routes.HOME) {
             HomeScreen(
                 onNavigateSearch = { navController.navigate(Routes.SEARCH.replace("{q}", "")) },
@@ -89,7 +127,8 @@ fun AppNavGraph(navController: NavHostController) {
             val episode = backStack.arguments?.getString("episode") ?: ""
             WatchScreen(seriesUrl = seriesUrl, episode = episode)
         }
-        composable(Routes.RECENT) { RecentScreen(onWatchClick = { s, e -> navController.navigate(Routes.watch(s, e)) }) }
+        composable(Routes.HISTORY) { HistoryScreen(onWatchClick = { s, e -> navController.navigate(Routes.watch(s, e)) }) }
+        composable(Routes.RECENT) { HistoryScreen(onWatchClick = { s, e -> navController.navigate(Routes.watch(s, e)) }) }
         composable(Routes.BOOKMARK) { BookmarkScreen(onAnimeClick = { slug -> navController.navigate(Routes.detail(slug)) }) }
         composable(Routes.PROFILE) { ProfileScreen() }
         composable(Routes.JADWAL) { JadwalScreen(onAnimeClick = { slug -> navController.navigate(Routes.detail(slug)) }) }

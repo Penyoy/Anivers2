@@ -33,10 +33,10 @@ fun BottomBar(navController: NavController) {
 
     val items = listOf(
         BottomItem("home", "Home", Icons.Filled.Home),
-        BottomItem("jadwal", "Jadwal", Icons.Filled.CalendarToday),
-        BottomItem("recent", "Recent", Icons.Filled.History),
+        BottomItem("search", "Search", Icons.Filled.Search),
         BottomItem("bookmark", "Bookmark", Icons.Filled.Bookmark, if (bookmarks.isNotEmpty()) bookmarks.size else null),
-        BottomItem("profile", "Profil", Icons.Filled.Person)
+        BottomItem("history", "History", Icons.Filled.History),
+        BottomItem("profile", "Profile", Icons.Filled.Person)
     )
     val navBackStack by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStack?.destination?.route ?: "home"
@@ -60,7 +60,8 @@ fun BottomBar(navController: NavController) {
         ) {
             for (item in items) {
                 val selected = when {
-                    item.route == "home" && (currentRoute.startsWith("home") || currentRoute.startsWith("anime") || currentRoute.startsWith("watch") || currentRoute.startsWith("genre") || currentRoute.startsWith("explore") || currentRoute.startsWith("search")) -> true
+                    item.route == "home" && (currentRoute.startsWith("home") || currentRoute.startsWith("anime") || currentRoute.startsWith("watch") || currentRoute.startsWith("genre") || currentRoute.startsWith("explore")) -> true
+                    item.route == "search" && currentRoute.startsWith("search") -> true
                     currentRoute.startsWith(item.route) -> true
                     else -> false
                 }

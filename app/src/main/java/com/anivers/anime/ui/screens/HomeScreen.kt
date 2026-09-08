@@ -172,8 +172,8 @@ fun HomeScreen(
                                 modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xAA000000))))
                             )
                             Box(
-                                modifier = Modifier.align(Alignment.TopStart).padding(6.dp).clip(RoundedCornerShape(50)).background(Color(0xFF242457)).padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) { Text("#${idx+1}", color = Color(0xFFA5B4FC), fontSize = 10.sp) }
+                                modifier = Modifier.align(Alignment.TopStart).padding(6.dp).clip(RoundedCornerShape(50)).background(Color(0xFFFFDB89)).padding(horizontal = 6.dp, vertical = 2.dp)
+                            ) { Text("#${idx+1}", color = Color(0xFF030303), fontSize = 10.sp) }
                             Text(
                                 a.judul, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier.align(Alignment.BottomStart).padding(8.dp)
@@ -243,7 +243,7 @@ fun HomeScreen(
                         AsyncImage(model = a.cover, contentDescription = a.judul, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
                         Box(modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xAA000000)))))
                         Column(modifier = Modifier.align(Alignment.BottomStart).padding(8.dp)) {
-                            Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0xFF242457)).padding(horizontal = 6.dp, vertical = 2.dp)) { Text("#${idx+1}", color = Color(0xFFA5B4FC), fontSize = 10.sp) }
+                            Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0xFFFFDB89)).padding(horizontal = 6.dp, vertical = 2.dp)) { Text("#${idx+1}", color = Color(0xFF030303), fontSize = 10.sp) }
                             Text(a.judul, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
                         }
                     }
@@ -267,10 +267,10 @@ fun HomeScreen(
                     val selected = i == activeDay
                     Box(
                         modifier = Modifier.clip(RoundedCornerShape(50))
-                            .background(if (selected) Color(0xFF242457) else Color.Transparent)
+                            .background(if (selected) Color(0xFFFFDB89) else Color.Transparent)
                             .clickable { activeDay = i }
                             .padding(horizontal = 14.dp, vertical = 6.dp)
-                    ) { Text(day.day?.take(3) ?: "", color = if (selected) Color(0xFFA5B4FC) else Color(0xFF8A8FA3), fontSize = 12.sp) }
+                    ) { Text(day.day?.take(3) ?: "", color = if (selected) Color(0xFF030303) else Color(0xFF8A8FA3), fontSize = 12.sp) }
                 }
             }
             Spacer(Modifier.height(8.dp))

@@ -13,11 +13,11 @@ local.properties
 *.iml
 .idea
 .DS_Store
-google-services.json
 /bahan.zip
 /ss.zip
 /log*.zip
 /logs.zip
+google-services.json
 # proxy
 proxy/node_modules/
 proxy/dist/

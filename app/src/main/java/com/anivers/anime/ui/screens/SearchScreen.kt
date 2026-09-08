@@ -3,6 +3,7 @@ package com.anivers.anime.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -36,6 +37,7 @@ fun SearchScreen(
     val loading by vm.loading.collectAsState()
     val preview by vm.preview.collectAsState()
     var hasSearched by remember { mutableStateOf(initialQuery.isNotEmpty()) }
+    var sort by remember { mutableStateOf("Terbaru") }
 
     LaunchedEffect(initialQuery) {
         if (initialQuery.isNotEmpty()) {
@@ -159,14 +161,43 @@ fun SearchScreen(
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFFFFDB89)) }
             }
             results.isNotEmpty() -> {
+                val sorted = remember(results, sort) {
+                    when (sort) {
+                        "Score" -> results.sortedByDescending { it.score.toDoubleOrNull() ?: 0.0 }
+                        "A-Z" -> results.sortedBy { it.judul.lowercase() }
+                        else -> results
+                    }
+                }
                 Column(modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("${results.size} hasil ditemukan", color = Color(0xFFF8FAFC), fontSize = 14.sp)
-                        Text("untuk \"${vm.query.collectAsState().value}\"", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+                        Text("${sorted.size} hasil", color = Color.White, fontSize = 13.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+                        // sort chip group - beda Wibuku bottom_sheet_filter, ANIVERS pakai dropdown pill di atas
+                        var expanded by remember { mutableStateOf(false) }
+                        Box {
+                            OutlinedButton(onClick = { expanded = true }, shape = RoundedCornerShape(50.dp), contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) {
+                                Text(sort, color = Color(0xFFFFDB89), fontSize = 12.sp)
+                            }
+                            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                for (s in listOf("Terbaru","Score","A-Z")) DropdownMenuItem(text = { Text(s) }, onClick = { sort = s; expanded = false })
+                            }
+                        }
+                    }
+                    Spacer(Modifier.height(6.dp))
+                    // filter chips horizontal
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        item {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                for (chip in listOf("Semua","Ongoing","Completed","Movie")) {
+                                    Box(Modifier.clip(RoundedCornerShape(50)).background(if (chip=="Semua") Color(0xFFFFDB89) else Color(0xFF1C1C1E)).padding(horizontal = 12.dp, vertical = 6.dp)) {
+                                        Text(chip, color = if (chip=="Semua") Color(0xFF030303) else Color(0xFFB8B8B8), fontSize = 11.sp)
+                                    }
+                                }
+                            }
+                        }
                     }
                     Spacer(Modifier.height(10.dp))
                     LazyVerticalGrid(columns = GridCells.Fixed(3), horizontalArrangement = Arrangement.spacedBy(10.dp), verticalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxSize()) {
-                        items(results) { a -> AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }) }
+                        items(sorted) { a -> AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }) }
                     }
                 }
             }

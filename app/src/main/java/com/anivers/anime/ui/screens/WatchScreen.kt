@@ -1,7 +1,10 @@
 package com.anivers.anime.ui.screens
 
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.pm.ActivityInfo
+import android.os.Build
+import android.util.Rational
 import android.view.ViewGroup
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -175,6 +178,16 @@ fun WatchScreen(
         }
     }
 
+    fun enterPip() {
+        if (activity == null) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val params = PictureInPictureParams.Builder()
+                .setAspectRatio(Rational(16, 9))
+                .build()
+            try { activity.enterPictureInPictureMode(params) } catch (_: Exception) {}
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -268,12 +281,12 @@ fun WatchScreen(
                             ) { Icon(Icons.Filled.Replay10, contentDescription = "-10s", tint = Color.White, modifier = Modifier.size(28.dp)) }
                             IconButton(
                                 onClick = { exoPlayer?.let { if (it.isPlaying) it.pause() else it.play() } },
-                                modifier = Modifier.size(64.dp).clip(CircleShape).background(Color(0xCC5B5BD6))
+                                modifier = Modifier.size(64.dp).clip(CircleShape).background(Color(0xFFFFDB89))
                             ) {
                                 Icon(
                                     imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
                                     contentDescription = null,
-                                    tint = Color.White,
+                                    tint = Color(0xFF030303),
                                     modifier = Modifier.size(36.dp)
                                 )
                             }
@@ -301,6 +314,9 @@ fun WatchScreen(
                                 }
                             }
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                IconButton(onClick = { enterPip() }, modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000))) {
+                                    Icon(Icons.Filled.PictureInPictureAlt, contentDescription = "pip", tint = Color.White, modifier = Modifier.size(18.dp))
+                                }
                                 IconButton(onClick = { showQualitySheet = true }, modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000))) {
                                     Icon(Icons.Filled.Settings, contentDescription = "quality", tint = Color.White, modifier = Modifier.size(18.dp))
                                 }
@@ -332,7 +348,7 @@ fun WatchScreen(
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                 Text("${formatTime(position/1000)} / ${formatTime(duration/1000)}", color = Color.White, fontSize = 11.sp)
                                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Text(quality, color = Color(0xFF030303), fontSize = 11.sp, modifier = Modifier.clip(RoundedCornerShape(4.dp)).background(Color(0x33000000)).padding(horizontal = 6.dp, vertical = 2.dp))
+                                    Text(quality, color = Color(0xFFFFDB89), fontSize = 11.sp, modifier = Modifier.clip(RoundedCornerShape(4.dp)).background(Color(0x33000000)).padding(horizontal = 6.dp, vertical = 2.dp))
                                     Text("Server ${currentServer+1}", color = Color.White, fontSize = 11.sp)
                                 }
                             }

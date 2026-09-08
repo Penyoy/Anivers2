@@ -126,7 +126,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null) {
                                             com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(uid).set(
                                                 mapOf(
                                                     "uid" to uid,
-                                                    "email" to (u.email ?: email),
+                                                    "email" to (u?.email ?: email),
                                                     "displayName" to name,
                                                     "photoUrl" to "",
                                                     "createdAt" to com.google.firebase.firestore.FieldValue.serverTimestamp(),

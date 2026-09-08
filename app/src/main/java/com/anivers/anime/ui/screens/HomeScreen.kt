@@ -100,19 +100,17 @@ fun HomeScreen(
             }
         }
 
-        // TabRow ala Wibuku ViewPager2 tapi beda: 3 tab pill, indicator gold, tidak pakai icon
+        // TabRow terinspirasi Wibuku ViewPager2 5 tab tapi beda: 3 tab gold, indicator tipis
         TabRow(
             selectedTabIndex = selectedTab,
             containerColor = Color(0xFF030303),
             contentColor = Color(0xFFFFDB89),
             indicator = { tabPositions ->
-                if (selectedTab < tabPositions.size) {
-                    TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                        height = 2.dp,
-                        color = Color(0xFFFFDB89)
-                    )
-                }
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier,
+                    height = 2.dp,
+                    color = Color(0xFFFFDB89)
+                )
             },
             divider = { Box(Modifier.fillMaxWidth().height(1.dp).background(Color(0xFF2C2C2E))) }
         ) {

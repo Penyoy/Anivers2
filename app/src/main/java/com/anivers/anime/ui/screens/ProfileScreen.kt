@@ -301,7 +301,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                     android.widget.Toast.makeText(context, if (!settings.notifEnabled) "Notifikasi diaktifkan" else "Notifikasi dinonaktifkan", android.widget.Toast.LENGTH_SHORT).show()
                 }
                 ProfileMenuItem(icon = Icons.Filled.Info, title = "Tentang Aplikasi", subtitle = "Versi & lisensi") {
-                    android.widget.Toast.makeText(context, "ANIVERS ANIME v1.0.0 • Premium Glass UI • Firebase Connected", android.widget.Toast.LENGTH_LONG).show()
+                    android.widget.Toast.makeText(context, "Anivers v1.0.0 • Premium Glass UI • Firebase Connected", android.widget.Toast.LENGTH_LONG).show()
                 }
                 ProfileMenuItem(icon = Icons.Filled.PrivacyTip, title = "Kebijakan Privasi", subtitle = "Baca kebijakan kami") {
                     android.widget.Toast.makeText(context, "Kebijakan Privasi: Data hanya disimpan lokal & Firebase aman", android.widget.Toast.LENGTH_LONG).show()
@@ -312,7 +312,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                 if (email.isNotBlank()) auth.sendPasswordResetEmail(email).addOnCompleteListener { t -> error = if (t.isSuccessful) "Link reset dikirim ke $email" else mapAuthError(t.exception?.message ?: "Gagal") } else error = "Isi email dulu untuk reset password"
             }) { Text("Lupa Password?", color = GoldPrimary, fontSize = 12.sp) }
 
-            Text("ANIVERS ANIME • v1.0.0 • Firebase ${if (user != null) "Connected" else "Offline"}", color = Color(0xFF3A3A3C), fontSize = 11.sp, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+            Text("Anivers • v1.0.0 • Firebase ${if (user != null) "Connected" else "Offline"}", color = Color(0xFF3A3A3C), fontSize = 11.sp, modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
             Spacer(Modifier.height(8.dp))
         }
     }

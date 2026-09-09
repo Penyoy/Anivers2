@@ -434,7 +434,7 @@ private fun TerpopulerTabGlass(
 
 @Composable
 private fun AnimeGridSectionGlass(animes: List<Anime>, onAnimeClick: (String) -> Unit) {
-    // Fix: hindari tumpuk dengan FlowRow-like chunked + fixed height + weight fillMaxWidth
+    // Opsi A: revert ke pattern sehat seperti ExploreScreen - tanpa IntrinsicSize.Min
     Column(
         modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -442,16 +442,17 @@ private fun AnimeGridSectionGlass(animes: List<Anime>, onAnimeClick: (String) ->
         val rows = animes.chunked(3)
         for (row in rows) {
             Row(
-                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 for (a in row) {
-                    AnimeCard(
-                        anime = a,
-                        onClick = { onAnimeClick(a.url) },
-                        showBookmark = false,
-                        modifier = Modifier.weight(1f)
-                    )
+                    Box(modifier = Modifier.weight(1f)) {
+                        AnimeCard(
+                            anime = a,
+                            onClick = { onAnimeClick(a.url) },
+                            showBookmark = false
+                        )
+                    }
                 }
                 repeat(3 - row.size) { Spacer(modifier = Modifier.weight(1f)) }
             }

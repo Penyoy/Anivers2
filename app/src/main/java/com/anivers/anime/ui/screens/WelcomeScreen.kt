@@ -1,10 +1,12 @@
 package com.anivers.anime.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,12 +41,14 @@ fun WelcomeScreen(
                 ) {
                     Box(modifier = Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0x14FFDB89), Color.Transparent))))
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Box(modifier = Modifier.size(72.dp).clip(RoundedCornerShape(20.dp)).background(Color(0xFFFFDB89)), contentAlignment = Alignment.Center) {
-                            Text("A", color = Color(0xFF030303), fontSize = 32.sp, fontWeight = FontWeight.Black)
-                        }
+                        Image(
+                            painter = painterResource(id = com.anivers.anime.R.drawable.ic_launcher),
+                            contentDescription = "Anivers Logo",
+                            modifier = Modifier.size(72.dp).clip(RoundedCornerShape(20.dp)).border(1.dp, GlassBorder, RoundedCornerShape(20.dp)),
+                            contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                        )
                         Spacer(Modifier.height(12.dp))
-                        Text("ANIVERS", color = Color(0xFFFFDB89), fontSize = 26.sp, fontWeight = FontWeight.Black, letterSpacing = 3.sp)
-                        Text("ANIME", color = Color(0xFFFFDB89), fontSize = 26.sp, fontWeight = FontWeight.Light, letterSpacing = 6.sp)
+                        Text("Anivers", color = Color(0xFFFFDB89), fontSize = 26.sp, fontWeight = FontWeight.Black, letterSpacing = 3.sp)
                         Spacer(Modifier.height(8.dp))
                         Box(modifier = Modifier.width(32.dp).height(2.dp).clip(RoundedCornerShape(50)).background(Color(0xFFFFDB89)))
                     }

@@ -1,12 +1,14 @@
 package com.anivers.anime.ui.screens
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,15 +50,14 @@ fun SplashScreen(
         Box(modifier = Modifier.size(360.dp).align(Alignment.BottomCenter).offset(y = 80.dp).background(Brush.radialGradient(listOf(Color(0x1A7C3AED), Color.Transparent), radius = 380f)).blur(30.dp))
 
         Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.scale(scale).alpha(alpha)) {
-            Box(
-                modifier = Modifier.size(96.dp).clip(RoundedCornerShape(24.dp)).background(Color(0x14FFDB89)).border(1.dp, GlassBorder, RoundedCornerShape(24.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("A", color = Color(0xFFFFDB89), fontSize = 42.sp, fontWeight = FontWeight.Black)
-            }
+            Image(
+                painter = painterResource(id = com.anivers.anime.R.drawable.ic_launcher),
+                contentDescription = "Anivers Logo",
+                modifier = Modifier.size(96.dp).clip(RoundedCornerShape(24.dp)).border(1.dp, GlassBorder, RoundedCornerShape(24.dp)),
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+            )
             Spacer(Modifier.height(16.dp))
-            Text(text = "ANIVERS", color = Color(0xFFFFDB89), fontSize = 30.sp, fontWeight = FontWeight.Black, letterSpacing = 4.sp)
-            Text(text = "ANIME", color = Color(0xFFFFDB89), fontSize = 30.sp, fontWeight = FontWeight.Light, letterSpacing = 8.sp)
+            Text(text = "Anivers", color = Color(0xFFFFDB89), fontSize = 30.sp, fontWeight = FontWeight.Black, letterSpacing = 4.sp)
             Spacer(Modifier.height(12.dp))
             Box(modifier = Modifier.width(48.dp).height(3.dp).clip(RoundedCornerShape(50)).background(Color(0xFFFFDB89).copy(alpha = 0.7f)))
             Spacer(Modifier.height(16.dp))

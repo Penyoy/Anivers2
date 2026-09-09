@@ -1,3 +1,6 @@
+![icon](icon-anivers)
+
+
 # ANIVERS ANIME — Android Native Streaming Anime
 
 Aplikasi Android native streaming anime premium dengan package `com.anivers.anime`. Source lengkap siap push ke GitHub dan build via GitHub Actions tanpa Android Studio.

@@ -21,7 +21,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import coil.compose.AsyncImage
+import com.anivers.anime.R
 import com.anivers.anime.data.local.AppDatabase
 import com.anivers.anime.data.local.SettingsStore
 import com.anivers.anime.ui.components.GlassBackground
@@ -29,8 +32,13 @@ import com.anivers.anime.ui.components.GlassTopBar
 import com.anivers.anime.ui.theme.GlassBg
 import com.anivers.anime.ui.theme.GlassBorder
 import com.anivers.anime.ui.theme.GoldPrimary
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,6 +60,89 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
     val historyCount = remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) { historyCount.value = db.historyDao().getAll().size }
+
+    // Google Sign-In launcher - butuh SHA-1 terdaftar di Firebase (debug + release)
+    val googleLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        try {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            val account = task.getResult(ApiException::class.java)
+            val idToken = account.idToken
+            if (idToken.isNullOrEmpty()) {
+                error = "Google Sign-In gagal: idToken null. Pastikan SHA-1 debug sudah ditambahkan di Firebase Console → Project Settings → Your apps → SHA certificate fingerprints, lalu download google-services.json baru."
+                loading = false
+                return@rememberLauncherForActivityResult
+            }
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            // Firebase sign-in dengan Google credential (await untuk coroutine)
+            scope.launch {
+                try {
+                    auth.signInWithCredential(credential).await()
+                    user = auth.currentUser
+                    // Buat/update Firestore users/{uid}
+                    try {
+                        val uid = user?.uid ?: ""
+                        if (uid.isNotEmpty()) {
+                            com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(uid).set(
+                                mapOf(
+                                    "uid" to uid,
+                                    "email" to (user?.email ?: ""),
+                                    "displayName" to (user?.displayName ?: ""),
+                                    "photoUrl" to (user?.photoUrl?.toString() ?: ""),
+                                    "provider" to "google",
+                                    "createdAt" to com.google.firebase.firestore.FieldValue.serverTimestamp(),
+                                    "lastLoginAt" to com.google.firebase.firestore.FieldValue.serverTimestamp()
+                                ), com.google.firebase.firestore.SetOptions.merge()
+                            ).await()
+                        }
+                    } catch (_: Exception) {}
+                    loading = false
+                    error = ""
+                    onAuthSuccess?.invoke()
+                    android.widget.Toast.makeText(context, "Login Google berhasil!", android.widget.Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    loading = false
+                    error = mapAuthError(e.message ?: "Gagal login Google")
+                }
+            }
+        } catch (e: ApiException) {
+            loading = false
+            // 12500 = SIGN_IN_CANCELLED, 10 = DEVELOPER_ERROR (SHA-1 belum terdaftar)
+            error = when (e.statusCode) {
+                10 -> "Google Sign-In error 10 (DEVELOPER_ERROR): SHA-1 belum terpasang di Firebase. Jalankan: ./gradlew signingReport → copy SHA1 debug → Firebase Console → Add fingerprint → download google-services.json baru."
+                12501 -> "Login Google dibatalkan"
+                else -> "Google Sign-In gagal (${e.statusCode}): ${e.message?.take(100)}"
+            }
+        } catch (e: Exception) {
+            loading = false
+            error = "Google Sign-In error: ${e.message?.take(120)}"
+        }
+    }
+
+    fun launchGoogleSignIn() {
+        loading = true
+        error = ""
+        try {
+            val webClientId = try { context.getString(R.string.default_web_client_id) } catch (_: Exception) { "" }
+            if (webClientId.isBlank() || webClientId == "placeholder") {
+                loading = false
+                error = "google-services.json placeholder terdeteksi. Set Firebase SHA-1 dulu: Firebase Console → Project Settings → Add SHA-1 (debug & release) → download google-services.json → masukkan ke app/google-services.json → rebuild."
+                android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
+                return
+            }
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(webClientId)
+                .requestEmail()
+                .build()
+            val client = GoogleSignIn.getClient(context, gso)
+            // signOut dulu agar picker selalu muncul
+            client.signOut().addOnCompleteListener {
+                googleLauncher.launch(client.signInIntent)
+            }
+        } catch (e: Exception) {
+            loading = false
+            error = "Gagal init Google Sign-In: ${e.message?.take(120)} — pastikan SHA-1 sudah ditambahkan."
+        }
+    }
 
     GlassBackground {
         Column(
@@ -107,15 +198,33 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                     }
                     Spacer(Modifier.height(16.dp))
                     OutlinedButton(
-                        onClick = { error = "Google Sign-In butuh SHA-1 di Firebase. Gunakan email untuk sekarang." },
+                        onClick = { launchGoogleSignIn() },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(50.dp),
                         border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                        enabled = !loading
                     ) {
-                        Icon(Icons.Filled.AccountCircle, contentDescription = null, modifier = Modifier.size(18.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text(if (isLogin) "Lanjutkan dengan Google" else "Daftar dengan Google", fontSize = 13.sp)
+                        if (loading) {
+                            CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp, color = Color.White)
+                            Spacer(Modifier.width(8.dp))
+                            Text("Menghubungkan...", fontSize = 13.sp)
+                        } else {
+                            Icon(Icons.Filled.AccountCircle, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text(if (isLogin) "Lanjutkan dengan Google" else "Daftar dengan Google", fontSize = 13.sp)
+                        }
+                    }
+                    // Bantuan SHA-1
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(top = 6.dp).clip(RoundedCornerShape(8.dp)).background(Color(0x0DFFFFFF)).border(1.dp, GlassBorder, RoundedCornerShape(8.dp)).padding(8.dp)
+                    ) {
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            Text("Butuh SHA-1 untuk Google Sign-In:", color = GoldPrimary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            Text("1. Jalankan: ./gradlew signingReport", color = Color(0xFF8A8FA3), fontSize = 10.sp)
+                            Text("2. Copy SHA1 debug → Firebase Console → Project Settings → Your apps → SHA certificate fingerprints → Add", color = Color(0xFF8A8FA3), fontSize = 10.sp)
+                            Text("3. Download google-services.json baru → ganti app/google-services.json → rebuild", color = Color(0xFF8A8FA3), fontSize = 10.sp)
+                        }
                     }
                     Spacer(Modifier.height(12.dp))
                     Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(GlassBorder))

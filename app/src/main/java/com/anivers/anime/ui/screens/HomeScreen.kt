@@ -120,29 +120,7 @@ fun HomeScreen(
                 }
             }
 
-            // === SEARCH PILL GLASS ===
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .clip(RoundedCornerShape(50))
-                    .background(Color(0x14000000))
-                    .border(1.dp, GlassBorder, RoundedCornerShape(50))
-                    .clickable { onNavigateSearch() }
-                    .padding(horizontal = 16.dp, vertical = 13.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Box(modifier = Modifier.size(32.dp).clip(CircleShape).background(Color(0x1AFFDB89)), contentAlignment = Alignment.Center) {
-                        Icon(Icons.Filled.Search, contentDescription = null, tint = GoldPrimary, modifier = Modifier.size(16.dp))
-                    }
-                    Text("Cari anime, genre, studio...", color = Color(0xFF8A8FA3), fontSize = 13.sp, modifier = Modifier.weight(1f))
-                    Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0x14FFDB89)).padding(horizontal = 10.dp, vertical = 6.dp)) {
-                        Text("Cari", color = GoldPrimary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(14.dp))
+            Spacer(Modifier.height(8.dp))
 
             // === TAB PILLS GLASS ===
             Row(
@@ -182,14 +160,15 @@ fun HomeScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            // Tab content with fade slide
+            // Tab content with fade slide - fix tumpuk dengan SizeTransform clip
             AnimatedContent(
                 targetState = selectedTab,
                 transitionSpec = {
-                    fadeIn(animationSpec = tween(280)) + slideInVertically(animationSpec = tween(280)) { it / 8 } togetherWith
-                            fadeOut(animationSpec = tween(220))
+                    (fadeIn(animationSpec = tween(280)) + slideInVertically(animationSpec = tween(280)) { it / 8 } togetherWith
+                            fadeOut(animationSpec = tween(220))).using(SizeTransform(clip = true))
                 },
-                label = "homeTab"
+                label = "homeTab",
+                modifier = Modifier.fillMaxWidth()
             ) { tab ->
                 when (tab) {
                     0 -> UntukmuTabGlass(state, history, onAnimeClick, onMoreClick, onGenreClick)
@@ -455,14 +434,26 @@ private fun TerpopulerTabGlass(
 
 @Composable
 private fun AnimeGridSectionGlass(animes: List<Anime>, onAnimeClick: (String) -> Unit) {
-    Column(Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+    // Fix: hindari tumpuk dengan FlowRow-like chunked + fixed height + weight fillMaxWidth
+    Column(
+        modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         val rows = animes.chunked(3)
         for (row in rows) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
                 for (a in row) {
-                    Box(Modifier.weight(1f)) { AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }, showBookmark = false) }
+                    AnimeCard(
+                        anime = a,
+                        onClick = { onAnimeClick(a.url) },
+                        showBookmark = false,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
-                repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
+                repeat(3 - row.size) { Spacer(modifier = Modifier.weight(1f)) }
             }
         }
     }

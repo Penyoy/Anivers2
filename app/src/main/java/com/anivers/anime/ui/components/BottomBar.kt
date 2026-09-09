@@ -92,13 +92,22 @@ fun BottomBar(navController: NavController) {
                     selected = isSelected,
                     badgeCount = if (item.route == "bookmark" && bookmarks.isNotEmpty()) bookmarks.size else null,
                     onClick = {
-                        // Don't re-navigate if already selected and at root
-                        if (currentRoute == item.route) return@BottomGlassItem
+                        // Force navigation even from Detail/Watch/Explore/Search - always pop to tab root
+                        // Jika sudah di tab yang sama, pop ke home juga untuk reset stack
+                        val isSameTab = currentRoute == item.route
                         navController.navigate(item.route) {
-                            popUpTo("home") { saveState = true }
+                            // popUpTo home agar stack Detail/Watch/Genre/Search ter-clear
+                            popUpTo("home") {
+                                saveState = true
+                                // jika klik tab yang sama (misal Home saat di Home), inclusive false untuk tidak hapus Home
+                                // tapi jika dari Detail (anime/*) tetap clear Detail karena Detail bukan home
+                                inclusive = isSameTab
+                            }
                             launchSingleTop = true
-                            restoreState = true
+                            restoreState = !isSameTab
                         }
+                        // Force: jika tap bottom nav dari halaman lain (anime/watch/genre/search/explore), selalu kembali ke tab root
+                        // Tanpa early return, ensure tap selalu responsif
                     }
                 )
             }

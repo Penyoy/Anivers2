@@ -118,6 +118,9 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
 
+    // Google Sign-In (untuk Profile login Google) - butuh SHA-1 di Firebase
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
     // Accompanist / utils
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
     implementation("com.google.accompanist:accompanist-placeholder-material:0.34.0")

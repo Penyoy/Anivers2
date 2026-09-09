@@ -58,8 +58,18 @@ jobs:
             echo "google-services.json already exists"
           fi
 
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace --no-daemon
+      - name: Setup Debug Keystore (deterministic if secret provided)
+        env:
+          ANDROID_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$ANDROID_DEBUG_KEYSTORE_BASE64" ]; then
+            echo "Using deterministic debug keystore from secret ANDROID_DEBUG_KEYSTORE_BASE64"
+            echo "$ANDROID_DEBUG_KEYSTORE_BASE64" | base64 --decode > app/debug.keystore
+            echo "Debug keystore decoded to app/debug.keystore (SHA-1 will be stable)"
+          else
+            echo "No ANDROID_DEBUG_KEYSTORE_BASE64 secret - using ephemeral debug keystore (~/.android/debug.keystore, SHA-1 will change each run)"
+            echo "Tip: generate once locally: keytool -genkey -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -dname 'CN=Android Debug,O=Android,C=US' && base64 -w0 debug.keystore | pbcopy && set as secret"
+          fi
 
       - name: Setup Release Keystore (if secrets available)
         if: env.ANDROID_KEYSTORE_BASE64 != ''
@@ -70,8 +80,51 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > app/release.keystore
-          echo "Keystore decoded"
-          ./gradlew assembleRelease --stacktrace --no-daemon || echo "Release build failed - check keystore secrets"
+          echo "Keystore decoded to app/release.keystore"
+          ls -lh app/release.keystore
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
+
+      - name: Get SHA-1 / SHA-256 (debug + release) - COPY THIS TO FIREBASE
+        if: always()
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "## SHA-1 Fingerprints — COPY TO FIREBASE" | tee -a $GITHUB_STEP_SUMMARY
+          echo "" | tee -a $GITHUB_STEP_SUMMARY
+          echo "Firebase Console → Project Settings → Your apps (com.anivers.anime) → SHA certificate fingerprints → Add fingerprint → paste SHA-1 below → Save → Download new google-services.json → replace app/google-services.json" | tee -a $GITHUB_STEP_SUMMARY
+          echo "" | tee -a $GITHUB_STEP_SUMMARY
+          echo "### Debug Keystore" | tee -a $GITHUB_STEP_SUMMARY
+          echo '```' | tee -a $GITHUB_STEP_SUMMARY
+          # Try app/debug.keystore first (deterministic), else ~/.android/debug.keystore (ephemeral)
+          DEBUG_KS=""
+          if [ -f app/debug.keystore ]; then DEBUG_KS="app/debug.keystore"; echo "Using app/debug.keystore (deterministic)" | tee -a $GITHUB_STEP_SUMMARY; else DEBUG_KS="$HOME/.android/debug.keystore"; echo "Using ~/.android/debug.keystore (ephemeral, will change next run)" | tee -a $GITHUB_STEP_SUMMARY; fi
+          if [ -f "$DEBUG_KS" ]; then
+            keytool -list -v -keystore "$DEBUG_KS" -alias androiddebugkey -storepass android -keypass android 2>/dev/null | grep -E "SHA1|SHA-256|Valid" | tee -a $GITHUB_STEP_SUMMARY || echo "keytool debug failed" | tee -a $GITHUB_STEP_SUMMARY
+            echo "" | tee -a $GITHUB_STEP_SUMMARY
+            echo "signingReport (debug):" | tee -a $GITHUB_STEP_SUMMARY
+            ./gradlew signingReport --console=plain 2>/dev/null | grep -A2 "Variant: debug" | head -n 20 | tee -a $GITHUB_STEP_SUMMARY || true
+          else
+            echo "Debug keystore not found at $DEBUG_KS" | tee -a $GITHUB_STEP_SUMMARY
+          fi
+          echo '```' | tee -a $GITHUB_STEP_SUMMARY
+          echo "" | tee -a $GITHUB_STEP_SUMMARY
+          if [ -f app/release.keystore ]; then
+            echo "### Release Keystore" | tee -a $GITHUB_STEP_SUMMARY
+            echo '```' | tee -a $GITHUB_STEP_SUMMARY
+            keytool -list -v -keystore app/release.keystore -alias "${ANDROID_KEY_ALIAS:-key0}" -storepass "${ANDROID_KEYSTORE_PASSWORD:-}" -keypass "${ANDROID_KEY_PASSWORD:-}" 2>/dev/null | grep -E "SHA1|SHA-256|Valid|Alias" | tee -a $GITHUB_STEP_SUMMARY || echo "keytool release failed - check alias/pass" | tee -a $GITHUB_STEP_SUMMARY
+            echo '```' | tee -a $GITHUB_STEP_SUMMARY
+          else
+            echo "### Release: no app/release.keystore (skip)" | tee -a $GITHUB_STEP_SUMMARY
+          fi
+          echo "" | tee -a $GITHUB_STEP_SUMMARY
+          echo "---" | tee -a $GITHUB_STEP_SUMMARY
+          echo "After copying SHA-1 to Firebase, download new google-services.json and set secret GOOGLE_SERVICES_JSON = base64 -w0 app/google-services.json" | tee -a $GITHUB_STEP_SUMMARY
+          # Also log to console for raw logs
+          cat $GITHUB_STEP_SUMMARY 2>/dev/null | tail -n 60 || true
 
       - name: Cleanup Gradle dist
         if: always()

@@ -26,6 +26,30 @@ android {
         buildConfigField("String", "PROXY_FALLBACKS", "\"\"")
     }
 
+    signingConfigs {
+        // Debug: pakai default ~/.android/debug.keystore jika tidak ada custom.
+        // Jika secret ANDROID_DEBUG_KEYSTORE_BASE64 ada di CI, workflow akan decode ke app/debug.keystore dan pakai ini agar SHA-1 deterministik.
+        create("debug") {
+            val debugKeystoreFile = file("debug.keystore")
+            if (debugKeystoreFile.exists()) {
+                storeFile = debugKeystoreFile
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
+            }
+            // else fallback ke default debug keystore AGP (~/.android/debug.keystore)
+        }
+        create("release") {
+            // Dibuat hanya jika file app/release.keystore ada (di-decode dari secret ANDROID_KEYSTORE_BASE64 di CI)
+            val releaseKeystoreFile = file("release.keystore")
+            if (releaseKeystoreFile.exists()) {
+                storeFile = releaseKeystoreFile
+                storePassword = (findProperty("RELEASE_STORE_PASSWORD") as String?) ?: System.getenv("ANDROID_KEYSTORE_PASSWORD") ?: ""
+                keyAlias = (findProperty("RELEASE_KEY_ALIAS") as String?) ?: System.getenv("ANDROID_KEY_ALIAS") ?: ""
+                keyPassword = (findProperty("RELEASE_KEY_PASSWORD") as String?) ?: System.getenv("ANDROID_KEY_PASSWORD") ?: ""
+            }
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -33,9 +57,14 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Pakai release keystore jika ada, else unsigned (debug)
+            signingConfig = signingConfigs.getByName("release").let { cfg ->
+                if ((cfg.storeFile?.exists() == true)) cfg else signingConfigs.getByName("debug")
+            }
         }
         debug {
             isDebuggable = true
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 

@@ -190,9 +190,10 @@ private fun UntukmuTabGlass(
     onMoreClick: (String) -> Unit,
     onGenreClick: (String) -> Unit
 ) {
-    val featured = (state.topAnime + state.ongoing).distinctBy { it.url }.take(5)
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(0.dp)) {
+        val featured = (state.topAnime + state.ongoing).distinctBy { it.url }.take(5)
 
-    if (featured.isNotEmpty()) {
+        if (featured.isNotEmpty()) {
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(14.dp)) {
             items(featured.size) { idx ->
                 val a = featured[idx]
@@ -317,6 +318,7 @@ private fun UntukmuTabGlass(
             }
         }
     }
+    }
 }
 
 @Composable
@@ -324,13 +326,14 @@ private fun JadwalTabGlass(
     state: com.anivers.anime.viewmodel.HomeUiState,
     onAnimeClick: (String) -> Unit
 ) {
-    if (state.jadwal.isEmpty()) {
-        Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
-            EmptyState(title = "Jadwal belum tersedia", subtitle = "Coba refresh halaman")
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(0.dp)) {
+        if (state.jadwal.isEmpty()) {
+            Box(Modifier.fillMaxWidth().padding(32.dp), contentAlignment = Alignment.Center) {
+                EmptyState(title = "Jadwal belum tersedia", subtitle = "Coba refresh halaman")
+            }
+            return@Column
         }
-        return
-    }
-    var activeDay by remember { mutableIntStateOf(0) }
+        var activeDay by remember { mutableIntStateOf(0) }
     LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         items(state.jadwal.take(7).size) { i ->
             val day = state.jadwal[i]
@@ -381,6 +384,7 @@ private fun JadwalTabGlass(
             }
         }
     }
+    }
 }
 
 @Composable
@@ -389,7 +393,8 @@ private fun TerpopulerTabGlass(
     onAnimeClick: (String) -> Unit,
     onMoreClick: (String) -> Unit
 ) {
-    if (state.topAnime.isNotEmpty()) {
+    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(0.dp)) {
+        if (state.topAnime.isNotEmpty()) {
         SectionHeaderGlass(title = "Top 10 Anime", subtitle = "Rating tertinggi", onMore = { onMoreClick("rekomendasi") })
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             items(minOf(state.topAnime.size, 10)) { idx ->
@@ -429,6 +434,7 @@ private fun TerpopulerTabGlass(
     if (state.rekomendasi.isNotEmpty()) {
         SectionHeaderGlass(title = "Rekomendasi Untukmu", onMore = { onMoreClick("rekomendasi") })
         AnimeGridSectionGlass(animes = state.rekomendasi.take(6), onAnimeClick = onAnimeClick)
+    }
     }
 }
 

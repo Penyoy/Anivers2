@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -35,22 +36,42 @@ class MainActivity : ComponentActivity() {
                 val backStack by navController.currentBackStackEntryAsState()
                 val route = backStack?.destination?.route ?: ""
                 val hideBottom = route in listOf("splash", "welcome", "auth") || route.startsWith("watch/")
-                Scaffold(
-                    topBar = { },
-                    bottomBar = { if (!hideBottom) BottomBar(navController) },
-                    containerColor = Color(0xFF030303),
-                    contentWindowInsets = WindowInsets(0, 0, 0, 0)
-                ) { padding ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color(0xFF030303))
-                            .padding(bottom = if (hideBottom) 0.dp else padding.calculateBottomPadding())
-                    ) {
-                        AppNavGraph(navController = navController)
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.verticalGradient(
+                                listOf(Color(0xFF080A14), Color(0xFF030303))
+                            )
+                        )
+                ) {
+                    Scaffold(
+                        bottomBar = { if (!hideBottom) BottomBar(navController) },
+                        containerColor = Color.Transparent,
+                        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+                    ) { padding ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                // don't double-pad for floating bottom bar; only statusBars top handled per-screen
+                                .padding(bottom = if (hideBottom) 0.dp else 0.dp)
+                        ) {
+                            AppNavGraph(navController = navController)
+                        }
                     }
                 }
             }
         }
+    }
+
+    // PIP handling: keep player running, don't restart activity
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: android.content.res.Configuration) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+    }
+
+    override fun onUserLeaveHint() {
+        // let WatchScreen handle PIP via button; not auto-enter to avoid unexpected behavior
+        super.onUserLeaveHint()
     }
 }

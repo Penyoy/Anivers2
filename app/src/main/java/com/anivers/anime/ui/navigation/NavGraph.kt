@@ -18,7 +18,7 @@ object Routes {
     const val DETAIL = "anime/{slug}"
     const val WATCH = "watch/{seriesUrl}/{episode}"
     const val HISTORY = "history"
-    const val RECENT = "history" // alias for backward compat
+    const val RECENT = "history" // alias
     const val BOOKMARK = "bookmark"
     const val PROFILE = "profile"
     const val JADWAL = "jadwal"
@@ -61,12 +61,11 @@ fun AppNavGraph(navController: NavHostController) {
             )
         }
         composable(Routes.AUTH) {
-            // Reuse ProfileScreen auth part as full screen
             ProfileScreen(onAuthSuccess = {
                 navController.navigate(Routes.HOME) {
                     popUpTo(Routes.WELCOME) { inclusive = true }
                 }
-            })
+            }, onNavigate = { route -> navController.navigate(route) })
         }
         composable(Routes.HOME) {
             HomeScreen(
@@ -95,7 +94,8 @@ fun AppNavGraph(navController: NavHostController) {
             val q = backStack.arguments?.getString("q") ?: ""
             SearchScreen(
                 initialQuery = q,
-                onAnimeClick = { slug -> navController.navigate(Routes.detail(slug)) }
+                onAnimeClick = { slug -> navController.navigate(Routes.detail(slug)) },
+                onBack = { navController.popBackStack() }
             )
         }
         composable(
@@ -103,7 +103,7 @@ fun AppNavGraph(navController: NavHostController) {
             arguments = listOf(navArgument("slug") { type = NavType.StringType })
         ) { backStack ->
             val slug = backStack.arguments?.getString("slug") ?: ""
-            GenreScreen(slug = slug, onAnimeClick = { s -> navController.navigate(Routes.detail(s)) })
+            GenreScreen(slug = slug, onAnimeClick = { s -> navController.navigate(Routes.detail(s)) }, onBack = { navController.popBackStack() })
         }
         composable(
             route = Routes.DETAIL,
@@ -113,7 +113,8 @@ fun AppNavGraph(navController: NavHostController) {
             DetailScreen(
                 slug = slug,
                 onEpisodeClick = { seriesUrl, epUrl -> navController.navigate(Routes.watch(seriesUrl, epUrl)) },
-                onGenreClick = { g -> navController.navigate(Routes.genre(g)) }
+                onGenreClick = { g -> navController.navigate(Routes.genre(g)) },
+                onBack = { navController.popBackStack() }
             )
         }
         composable(
@@ -125,12 +126,11 @@ fun AppNavGraph(navController: NavHostController) {
         ) { backStack ->
             val seriesUrl = backStack.arguments?.getString("seriesUrl") ?: ""
             val episode = backStack.arguments?.getString("episode") ?: ""
-            WatchScreen(seriesUrl = seriesUrl, episode = episode)
+            WatchScreen(seriesUrl = seriesUrl, episode = episode, onBack = { navController.popBackStack() })
         }
         composable(Routes.HISTORY) { HistoryScreen(onWatchClick = { s, e -> navController.navigate(Routes.watch(s, e)) }) }
-        composable(Routes.RECENT) { HistoryScreen(onWatchClick = { s, e -> navController.navigate(Routes.watch(s, e)) }) }
         composable(Routes.BOOKMARK) { BookmarkScreen(onAnimeClick = { slug -> navController.navigate(Routes.detail(slug)) }) }
-        composable(Routes.PROFILE) { ProfileScreen() }
+        composable(Routes.PROFILE) { ProfileScreen(onNavigate = { route -> navController.navigate(route) }) }
         composable(Routes.JADWAL) { JadwalScreen(onAnimeClick = { slug -> navController.navigate(Routes.detail(slug)) }) }
     }
 }

@@ -2,15 +2,15 @@ package com.anivers.anime.ui.screens
 
 import android.app.Activity
 import android.app.PictureInPictureParams
-import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Rational
 import android.view.ViewGroup
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -44,17 +44,20 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
-import com.anivers.anime.data.local.AppDatabase
 import com.anivers.anime.data.repository.BookmarkRepository
+import com.anivers.anime.ui.theme.GlassBg
+import com.anivers.anime.ui.theme.GlassBorder
+import com.anivers.anime.ui.theme.GoldPrimary
 import com.anivers.anime.viewmodel.WatchViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WatchScreen(
     seriesUrl: String,
     episode: String,
+    onBack: () -> Unit,
     vm: WatchViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -66,39 +69,35 @@ fun WatchScreen(
     val quality by vm.quality.collectAsState()
     val scope = rememberCoroutineScope()
     val repo = remember { BookmarkRepository(context) }
-    // grafik setting sinkron - baca dari SettingsStore agar setting di Profile ngaruh
     val settingsStore = remember { com.anivers.anime.data.local.SettingsStore(context) }
     val appSettings by settingsStore.flow.collectAsState(initial = com.anivers.anime.data.local.AppSettings())
+
     LaunchedEffect(appSettings.quality, stream) {
         val resos = stream?.data?.firstOrNull()?.reso ?: emptyList()
-        if (resos.isNotEmpty() && appSettings.quality in resos && appSettings.quality != quality) {
-            vm.setQuality(appSettings.quality)
-        }
+        if (resos.isNotEmpty() && appSettings.quality in resos && appSettings.quality != quality) vm.setQuality(appSettings.quality)
     }
 
     var exoPlayer by remember { mutableStateOf<ExoPlayer?>(null) }
     var currentLink by remember { mutableStateOf<String?>(null) }
-    var currentServer by remember { mutableStateOf(0) }
+    var currentServer by remember { mutableIntStateOf(0) }
     var showResume by remember { mutableStateOf(false) }
-    var savedTime by remember { mutableStateOf(0L) }
+    var savedTime by remember { mutableLongStateOf(0L) }
 
-    // player UI states — YouTube style
     var isPlaying by remember { mutableStateOf(false) }
     var showControls by remember { mutableStateOf(true) }
     var isFullscreen by remember { mutableStateOf(false) }
-    var position by remember { mutableStateOf(0L) }
-    var duration by remember { mutableStateOf(0L) }
+    var position by remember { mutableLongStateOf(0L) }
+    var duration by remember { mutableLongStateOf(0L) }
     var isUserSeeking by remember { mutableStateOf(false) }
-    var seekPos by remember { mutableStateOf(0f) }
+    var seekPos by remember { mutableFloatStateOf(0f) }
     var sinopsisExpanded by remember { mutableStateOf(false) }
     var showQualitySheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(seriesUrl, episode) { vm.load(seriesUrl, episode) }
 
-    // auto-hide controls like YouTube
     LaunchedEffect(showControls, isPlaying) {
         if (showControls && isPlaying) {
-            delay(3000)
+            delay(3200)
             showControls = false
         }
     }
@@ -115,7 +114,7 @@ fun WatchScreen(
                 prepare()
                 playWhenReady = true
                 addListener(object : Player.Listener {
-                    override fun onIsPlayingChanged(isPlay: Boolean) { isPlaying = isPlay; showControls = !isPlay || showControls }
+                    override fun onIsPlayingChanged(isPlay: Boolean) { isPlaying = isPlay; if (isPlay) showControls = false else showControls = true }
                     override fun onPlaybackStateChanged(state: Int) {
                         if (state == Player.STATE_READY) duration = this@apply.duration.coerceAtLeast(0L)
                     }
@@ -123,7 +122,6 @@ fun WatchScreen(
             }
             exoPlayer?.release()
             exoPlayer = p
-            // check saved progress
             scope.launch {
                 val prog = repo.getProgress(seriesUrl, episode)
                 if (prog != null && prog.currentTime > 5 && prog.progress in 4..94) {
@@ -137,7 +135,6 @@ fun WatchScreen(
     }
     DisposableEffect(Unit) { onDispose { exoPlayer?.release() } }
 
-    // position ticker
     LaunchedEffect(exoPlayer, isUserSeeking) {
         while (true) {
             delay(500)
@@ -149,7 +146,6 @@ fun WatchScreen(
         }
     }
 
-    // progress save loop (8s)
     LaunchedEffect(exoPlayer) {
         while (true) {
             delay(8000)
@@ -163,63 +159,66 @@ fun WatchScreen(
         }
     }
 
-    // fullscreen handling
     fun toggleFullscreen() {
         if (activity == null) return
         isFullscreen = !isFullscreen
-        activity.requestedOrientation = if (isFullscreen) ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        activity.requestedOrientation = if (isFullscreen) android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE else android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         val window = activity.window
         val controller = WindowCompat.getInsetsController(window, window.decorView)
         if (isFullscreen) {
             controller.hide(WindowInsetsCompat.Type.systemBars())
             controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        } else {
-            controller.show(WindowInsetsCompat.Type.systemBars())
-        }
+        } else controller.show(WindowInsetsCompat.Type.systemBars())
     }
 
     fun enterPip() {
         if (activity == null) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val params = PictureInPictureParams.Builder()
-                .setAspectRatio(Rational(16, 9))
-                .build()
+            if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) return
+            val params = PictureInPictureParams.Builder().setAspectRatio(Rational(16, 9)).build()
             try { activity.enterPictureInPictureMode(params) } catch (_: Exception) {}
         }
     }
 
+    val supportsPip = remember {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) context.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE) else false
+    }
+
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = if (isFullscreen) 0.dp else 100.dp)
+        modifier = Modifier.fillMaxSize().background(Color.Black).verticalScroll(rememberScrollState()).padding(bottom = if (isFullscreen) 0.dp else 96.dp)
     ) {
-        if (!isFullscreen) Spacer(Modifier.height(48.dp))
+        if (!isFullscreen) Spacer(Modifier.height(28.dp))
 
         when {
-            loading -> Box(Modifier.fillMaxWidth().height(if (isFullscreen) 240.dp else 240.dp).background(Color.Black), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = Color(0xFFFFDB89)) }
-            error != null -> Column(Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("Gagal memuat video", color = Color.White)
-                Text(error ?: "", color = Color(0xFF8A8FA3), fontSize = 12.sp)
-                Spacer(Modifier.height(12.dp))
-                Button(onClick = { vm.load(seriesUrl, episode) }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB89)), shape = RoundedCornerShape(50.dp)) { Text("Coba Lagi") }
+            loading -> Box(Modifier.fillMaxWidth().height(240.dp).background(Color.Black), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    CircularProgressIndicator(color = GoldPrimary)
+                    Text("Memuat video...", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+                }
+            }
+            error != null -> Column(Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Box(modifier = Modifier.size(56.dp).clip(CircleShape).background(Color(0x1AFF5F5F)), contentAlignment = Alignment.Center) {
+                    Icon(Icons.Filled.ErrorOutline, contentDescription = null, tint = Color(0xFFFF5F5F), modifier = Modifier.size(28.dp))
+                }
+                Text("Gagal memuat video", color = Color.White, fontWeight = FontWeight.Bold)
+                Text(error ?: "", color = Color(0xFF8A8FA3), fontSize = 12.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                Spacer(Modifier.height(6.dp))
+                Button(onClick = { vm.load(seriesUrl, episode) }, colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)), shape = RoundedCornerShape(50.dp)) {
+                    Icon(Icons.Filled.Refresh, contentDescription = null, modifier = Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Coba Lagi", fontWeight = FontWeight.Bold)
+                }
+                OutlinedButton(onClick = onBack, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder)) { Text("Kembali", color = Color.White) }
             }
             currentLink != null -> {
-                // YOUTUBE-STYLE PLAYER
+                // GLASS PLAYER
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(if (isFullscreen) 16f / 9f else 16f / 9f)
-                        .background(Color.Black)
+                    modifier = Modifier.fillMaxWidth().aspectRatio(if (isFullscreen) 16f / 9f else 16f / 9f).background(Color.Black)
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onTap = { showControls = !showControls },
                                 onDoubleTap = { offset ->
                                     val p = exoPlayer ?: return@detectTapGestures
                                     val w = size.width
-                                    if (offset.x < w / 2) p.seekTo((p.currentPosition - 10000).coerceAtLeast(0))
-                                    else p.seekTo((p.currentPosition + 10000).coerceAtMost(p.duration))
+                                    if (offset.x < w / 2) p.seekTo((p.currentPosition - 10000).coerceAtLeast(0)) else p.seekTo((p.currentPosition + 10000).coerceAtMost(p.duration))
                                 }
                             )
                         }
@@ -237,148 +236,119 @@ fun WatchScreen(
                         modifier = Modifier.fillMaxSize()
                     )
 
-                    // gradient top/bottom for readability
-                    Box(
-                        Modifier.fillMaxSize().background(
-                            Brush.verticalGradient(
-                                listOf(Color(0x66000000), Color.Transparent, Color(0x88000000))
-                            )
-                        )
-                    )
+                    Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0x66000000), Color.Transparent, Color(0x88000000)))))
 
-                    // resume toast
                     if (showResume) {
-                        Box(
-                            modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(12.dp)
-                                .clip(RoundedCornerShape(12.dp)).background(Color(0xE6050714)).padding(10.dp)
-                        ) {
+                        Box(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(12.dp).clip(RoundedCornerShape(14.dp)).background(Color(0xE6121214)).border(1.dp, GlassBorder, RoundedCornerShape(14.dp)).padding(12.dp)) {
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
                                 Column {
-                                    Text("Lanjutkan?", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
-                                    Text("Berhenti di ${formatTime(savedTime)}", color = Color(0xFFAEB2C7), fontSize = 11.sp)
+                                    Text("Lanjutkan menonton?", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                    Text("Terhenti di ${formatTime(savedTime)}", color = Color(0xFFAEB2C7), fontSize = 11.sp)
                                 }
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Button(onClick = {
-                                        exoPlayer?.seekTo(savedTime * 1000); exoPlayer?.play(); showResume = false
-                                    }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFDB89)), shape = RoundedCornerShape(50.dp)) { Text("Lanjutkan", fontSize = 12.sp) }
-                                    OutlinedButton(onClick = { showResume = false }, shape = RoundedCornerShape(50.dp)) { Text("Awal", fontSize = 12.sp, color = Color.White) }
+                                    Button(onClick = { exoPlayer?.seekTo(savedTime * 1000); exoPlayer?.play(); showResume = false }, colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary), shape = RoundedCornerShape(50.dp)) { Text("Lanjut", fontSize = 12.sp, color = Color(0xFF030303), fontWeight = FontWeight.Bold) }
+                                    OutlinedButton(onClick = { showResume = false }, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder)) { Text("Awal", fontSize = 12.sp, color = Color.White) }
                                 }
                             }
                         }
                     }
 
-                    // CENTER PLAY/PAUSE (big)
-                    androidx.compose.animation.AnimatedVisibility(
-                        visible = showControls,
-                        enter = fadeIn(),
-                        exit = fadeOut(),
-                        modifier = Modifier.align(Alignment.Center)
-                    ) {
-                        Row(horizontalArrangement = Arrangement.spacedBy(32.dp), verticalAlignment = Alignment.CenterVertically) {
-                            IconButton(
-                                onClick = { exoPlayer?.seekTo((exoPlayer!!.currentPosition - 10000).coerceAtLeast(0)) },
-                                modifier = Modifier.size(48.dp).clip(CircleShape).background(Color(0x66000000))
-                            ) { Icon(Icons.Filled.Replay10, contentDescription = "-10s", tint = Color.White, modifier = Modifier.size(28.dp)) }
-                            IconButton(
-                                onClick = { exoPlayer?.let { if (it.isPlaying) it.pause() else it.play() } },
-                                modifier = Modifier.size(64.dp).clip(CircleShape).background(Color(0xFFFFDB89))
-                            ) {
-                                Icon(
-                                    imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow,
-                                    contentDescription = null,
-                                    tint = Color(0xFF030303),
-                                    modifier = Modifier.size(36.dp)
-                                )
+                    AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.Center)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(24.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Box(modifier = Modifier.size(52.dp).clip(CircleShape).background(Color(0x66000000)).border(1.dp, Color(0x33FFFFFF), CircleShape).clickable { exoPlayer?.seekTo((exoPlayer!!.currentPosition - 10000).coerceAtLeast(0)) }, contentAlignment = Alignment.Center) {
+                                Icon(Icons.Filled.Replay10, contentDescription = "-10s", tint = Color.White, modifier = Modifier.size(28.dp))
                             }
-                            IconButton(
-                                onClick = { exoPlayer?.seekTo((exoPlayer!!.currentPosition + 10000).coerceAtMost(exoPlayer!!.duration)) },
-                                modifier = Modifier.size(48.dp).clip(CircleShape).background(Color(0x66000000))
-                            ) { Icon(Icons.Filled.Forward10, contentDescription = "+10s", tint = Color.White, modifier = Modifier.size(28.dp)) }
+                            Box(modifier = Modifier.size(68.dp).clip(CircleShape).background(GoldPrimary).clickable { exoPlayer?.let { if (it.isPlaying) it.pause() else it.play() } }, contentAlignment = Alignment.Center) {
+                                Icon(imageVector = if (isPlaying) Icons.Filled.Pause else Icons.Filled.PlayArrow, contentDescription = null, tint = Color(0xFF030303), modifier = Modifier.size(36.dp))
+                            }
+                            Box(modifier = Modifier.size(52.dp).clip(CircleShape).background(Color(0x66000000)).border(1.dp, Color(0x33FFFFFF), CircleShape).clickable { exoPlayer?.seekTo((exoPlayer!!.currentPosition + 10000).coerceAtMost(exoPlayer!!.duration)) }, contentAlignment = Alignment.Center) {
+                                Icon(Icons.Filled.Forward10, contentDescription = "+10s", tint = Color.White, modifier = Modifier.size(28.dp))
+                            }
                         }
                     }
 
-                    // TOP BAR (title + settings) - YouTube style
-                    androidx.compose.animation.AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.TopCenter)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                IconButton(onClick = { /* back handled by nav */ }, modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000))) {
-                                    Icon(Icons.Filled.ArrowBack, contentDescription = "back", tint = Color.White, modifier = Modifier.size(20.dp))
+                    AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.TopCenter)) {
+                        Row(modifier = Modifier.fillMaxWidth().background(Brush.verticalGradient(listOf(Color(0xAA000000), Color.Transparent))).padding(horizontal = 12.dp, vertical = 10.dp).statusBarsPadding(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.weight(1f)) {
+                                Box(modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000)).border(1.dp, Color(0x1AFFFFFF), CircleShape).clickable { if (isFullscreen) toggleFullscreen() else onBack() }, contentAlignment = Alignment.Center) {
+                                    Icon(Icons.Filled.ArrowBack, contentDescription = "back", tint = Color.White, modifier = Modifier.size(18.dp))
                                 }
-                                Column {
+                                Column(modifier = Modifier.weight(1f)) {
                                     Text(series?.judul ?: seriesUrl, color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                                    Text("Episode ${episode.takeLast(5)} • ${if (isPlaying) "Memutar" else "Dijeda"}", color = Color(0xFFAEB2C7), fontSize = 11.sp)
+                                    Text("Episode ${episode.takeLast(8)} • ${if (isPlaying) "Memutar" else "Jeda"}", color = Color(0xFFAEB2C7), fontSize = 11.sp)
                                 }
                             }
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                IconButton(onClick = { enterPip() }, modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000))) {
-                                    Icon(Icons.Filled.PictureInPictureAlt, contentDescription = "pip", tint = Color.White, modifier = Modifier.size(18.dp))
+                                if (supportsPip) {
+                                    Box(modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000)).border(1.dp, Color(0x1AFFFFFF), CircleShape).clickable { enterPip() }, contentAlignment = Alignment.Center) {
+                                        Icon(Icons.Filled.PictureInPictureAlt, contentDescription = "pip", tint = Color.White, modifier = Modifier.size(18.dp))
+                                    }
                                 }
-                                IconButton(onClick = { showQualitySheet = true }, modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000))) {
+                                Box(modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000)).border(1.dp, Color(0x1AFFFFFF), CircleShape).clickable { showQualitySheet = true }, contentAlignment = Alignment.Center) {
                                     Icon(Icons.Filled.Settings, contentDescription = "quality", tint = Color.White, modifier = Modifier.size(18.dp))
                                 }
-                                IconButton(onClick = { toggleFullscreen() }, modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000))) {
+                                Box(modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000)).border(1.dp, Color(0x1AFFFFFF), CircleShape).clickable { toggleFullscreen() }, contentAlignment = Alignment.Center) {
                                     Icon(if (isFullscreen) Icons.Filled.FullscreenExit else Icons.Filled.Fullscreen, contentDescription = "fullscreen", tint = Color.White, modifier = Modifier.size(18.dp))
                                 }
                             }
                         }
                     }
 
-                    // BOTTOM CONTROLS - progress + time + fullscreen
-                    androidx.compose.animation.AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.BottomCenter)) {
-                        Column(modifier = Modifier.fillMaxWidth().background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xAA000000)))).padding(horizontal = 12.dp, vertical = 8.dp)) {
-                            // slider youtube style
+                    AnimatedVisibility(visible = showControls, enter = fadeIn(), exit = fadeOut(), modifier = Modifier.align(Alignment.BottomCenter)) {
+                        Column(modifier = Modifier.fillMaxWidth().background(Brush.verticalGradient(listOf(Color.Transparent, Color(0xCC000000)))).padding(horizontal = 12.dp, vertical = 10.dp)) {
                             val prog = if (duration > 0) (if (isUserSeeking) seekPos else position.toFloat() / duration.toFloat()).coerceIn(0f, 1f) else 0f
                             Slider(
                                 value = prog,
                                 onValueChange = { v -> isUserSeeking = true; seekPos = v },
-                                onValueChangeFinished = {
-                                    exoPlayer?.seekTo((seekPos * duration).toLong()); isUserSeeking = false
-                                },
-                                colors = SliderDefaults.colors(
-                                    thumbColor = Color(0xFFFFDB89),
-                                    activeTrackColor = Color(0xFFFFDB89),
-                                    inactiveTrackColor = Color(0x44FFFFFF)
-                                ),
-                                modifier = Modifier.fillMaxWidth().height(20.dp)
+                                onValueChangeFinished = { exoPlayer?.seekTo((seekPos * duration).toLong()); isUserSeeking = false },
+                                colors = SliderDefaults.colors(thumbColor = GoldPrimary, activeTrackColor = GoldPrimary, inactiveTrackColor = Color(0x44FFFFFF)),
+                                modifier = Modifier.fillMaxWidth().height(22.dp)
                             )
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                Text("${formatTime(position/1000)} / ${formatTime(duration/1000)}", color = Color.White, fontSize = 11.sp)
-                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    Text(quality, color = Color(0xFFFFDB89), fontSize = 11.sp, modifier = Modifier.clip(RoundedCornerShape(4.dp)).background(Color(0x33000000)).padding(horizontal = 6.dp, vertical = 2.dp))
-                                    Text("Server ${currentServer+1}", color = Color.White, fontSize = 11.sp)
+                                Text("${formatTime(position / 1000)} / ${formatTime(duration / 1000)}", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Medium)
+                                Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color(0x33FFDB89)).border(1.dp, Color(0x1AFFDB89), RoundedCornerShape(6.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
+                                        Text(quality, color = GoldPrimary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                    }
+                                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color(0x33000000)).padding(horizontal = 6.dp, vertical = 2.dp)) {
+                                        Text("Server ${currentServer + 1}", color = Color.White, fontSize = 10.sp)
+                                    }
                                 }
                             }
                         }
                     }
                 }
 
-                // quality bottom sheet
                 if (showQualitySheet) {
-                    ModalBottomSheet(onDismissRequest = { showQualitySheet = false }, containerColor = Color(0xFF1A1A1A)) {
-                        Column(modifier = Modifier.fillMaxWidth().padding(16.dp).padding(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                            Text("Kualitas & Server", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                            Text("Kualitas", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+                    ModalBottomSheet(onDismissRequest = { showQualitySheet = false }, containerColor = Color(0xFF14141A), contentColor = Color.White, shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)) {
+                        Column(modifier = Modifier.fillMaxWidth().padding(20.dp).padding(bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Box(modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x14FFDB89)), contentAlignment = Alignment.Center) {
+                                    Icon(Icons.Filled.Tune, contentDescription = null, tint = GoldPrimary, modifier = Modifier.size(18.dp))
+                                }
+                                Column {
+                                    Text("Kualitas & Server", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                                    Text("Pilih sesuai koneksi", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+                                }
+                            }
+                            Text("Kualitas", color = Color(0xFF8A8FA3), fontSize = 12.sp, fontWeight = FontWeight.Medium)
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 val resos = stream?.data?.firstOrNull()?.reso ?: emptyList()
                                 for (r in resos) {
                                     val sel = r == quality
-                                    Box(
-                                        modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFFFFDB89) else Color(0x14FFFFFF)).clickable { vm.setQuality(r); showQualitySheet = false }.padding(horizontal = 14.dp, vertical = 8.dp)
-                                    ) { Text(r, color = if (sel) Color.White else Color(0xFFAEB2C7), fontSize = 13.sp, fontWeight = if (sel) FontWeight.Bold else FontWeight.Normal) }
+                                    Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) GoldPrimary else GlassBg).border(1.dp, if (sel) GoldPrimary else GlassBorder, RoundedCornerShape(50)).clickable { vm.setQuality(r); showQualitySheet = false }.padding(horizontal = 16.dp, vertical = 10.dp)) {
+                                        Text(r, color = if (sel) Color(0xFF030303) else Color(0xFFAEB2C7), fontSize = 13.sp, fontWeight = if (sel) FontWeight.Bold else FontWeight.Normal)
+                                    }
                                 }
                             }
-                            Text("Server", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+                            Text("Server", color = Color(0xFF8A8FA3), fontSize = 12.sp, fontWeight = FontWeight.Medium)
                             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 val servers = stream?.data?.firstOrNull()?.streams?.get(quality) ?: emptyList()
                                 for ((idx, _) in servers.withIndex()) {
                                     val sel = idx == currentServer
-                                    Box(
-                                        modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) Color(0xFFFFDB89) else Color(0x14FFFFFF)).clickable { currentServer = idx; showQualitySheet = false }.padding(horizontal = 14.dp, vertical = 8.dp)
-                                    ) { Text("Server ${idx+1}", color = if (sel) Color.White else Color(0xFFAEB2C7), fontSize = 13.sp) }
+                                    Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(if (sel) GoldPrimary else GlassBg).border(1.dp, if (sel) GoldPrimary else GlassBorder, RoundedCornerShape(50)).clickable { currentServer = idx; showQualitySheet = false }.padding(horizontal = 14.dp, vertical = 8.dp)) {
+                                        Text("Server ${idx + 1}", color = if (sel) Color(0xFF030303) else Color(0xFFAEB2C7), fontSize = 13.sp, fontWeight = if (sel) FontWeight.Bold else FontWeight.Normal)
+                                    }
                                 }
                             }
                             Spacer(Modifier.height(8.dp))
@@ -386,78 +356,67 @@ fun WatchScreen(
                     }
                 }
             }
-            else -> Box(Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) { Text("Video tidak tersedia", color = Color(0xFF8A8FA3)) }
+            else -> Box(Modifier.fillMaxWidth().height(200.dp).background(Color(0xFF0A0A0A)), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Icon(Icons.Filled.VideocamOff, contentDescription = null, tint = Color(0xFF8A8FA3), modifier = Modifier.size(32.dp))
+                    Text("Video tidak tersedia", color = Color(0xFF8A8FA3), fontSize = 13.sp)
+                    OutlinedButton(onClick = { vm.load(seriesUrl, episode) }, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder)) { Text("Coba Lagi", color = Color.White, fontSize = 12.sp) }
+                }
+            }
         }
 
         if (!isFullscreen) {
-            // INFO + SINOPSIS (expandable 3 baris) + EPISODE NAV — polished
-            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                Text("${series?.judul ?: seriesUrl}", color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold, lineHeight = 18.sp)
-                Spacer(Modifier.height(4.dp))
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(series?.judul ?: seriesUrl, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold, lineHeight = 18.sp, maxLines = 2)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (!series?.rating.isNullOrEmpty()) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         Icon(Icons.Filled.Star, contentDescription = null, tint = Color(0xFFEAB308), modifier = Modifier.size(14.dp))
-                        Text(series!!.rating!!, color = Color(0xFFAEB2C7), fontSize = 12.sp)
+                        Text(series!!.rating!!, color = Color(0xFFAEB2C7), fontSize = 12.sp, fontWeight = FontWeight.Medium)
                     }
-                    if (!series?.type.isNullOrEmpty()) Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color(0x1AFFFFFF)).padding(horizontal = 6.dp, vertical = 2.dp)) { Text(series!!.type!!, color = Color(0xFFAEB2C7), fontSize = 11.sp) }
-                    if (!series?.status.isNullOrEmpty()) {
+                    if (!series?.type.isNullOrEmpty()) Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(GlassBg).border(1.dp, GlassBorder, RoundedCornerShape(6.dp)).padding(horizontal = 8.dp, vertical = 3.dp)) { Text(series!!.type!!, color = Color(0xFFAEB2C7), fontSize = 11.sp) }
+                    if (!series?.status.isNullOrEmpty()) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(if (series!!.status == "Ongoing") Color(0xFF22C55E) else Color(0xFFEF4444)))
                         Text(series!!.status!!, color = Color(0xFFAEB2C7), fontSize = 11.sp)
                     }
                 }
-                Spacer(Modifier.height(10.dp))
-
-                // SINOPSIS 3 baris expandable — YouTube style
-                if (!series?.sinopsis.isNullOrBlank()) {
-                    var expanded by remember { mutableStateOf(sinopsisExpanded) }
-                    Column(
-                        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x0DFFFFFF)).clickable { expanded = !expanded; sinopsisExpanded = expanded }.padding(12.dp)
-                    ) {
-                        Text(
-                            text = series!!.sinopsis!!,
-                            color = Color(0xFFAEB2C7),
-                            fontSize = 13.sp,
-                            lineHeight = 18.sp,
-                            maxLines = if (expanded) Int.MAX_VALUE else 3,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(Modifier.height(6.dp))
-                        Text(
-                            text = if (expanded) "Ciutkan" else "Selengkapnya",
-                            color = Color(0xFFFFDB89),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.clickable { expanded = !expanded; sinopsisExpanded = expanded }
-                        )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(GlassBg).border(1.dp, GlassBorder, RoundedCornerShape(50)).padding(horizontal = 12.dp, vertical = 6.dp)) {
+                        Text("${series?.chapter?.size ?: 0} Episode", color = GoldPrimary, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
-                    Spacer(Modifier.height(12.dp))
-                } else if (loading) {
-                    Box(modifier = Modifier.fillMaxWidth().height(60.dp).clip(RoundedCornerShape(12.dp)).background(Color(0x0DFFFFFF)))
+                    if (!series?.sinopsis.isNullOrEmpty()) Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(GlassBg).border(1.dp, GlassBorder, RoundedCornerShape(50)).padding(horizontal = 12.dp, vertical = 6.dp)) {
+                        Text("Sinopsis tersedia", color = Color(0xFF8A8FA3), fontSize = 11.sp)
+                    }
                 }
 
-                // genre chips
+                if (!series?.sinopsis.isNullOrBlank()) {
+                    var expanded by remember { mutableStateOf(sinopsisExpanded) }
+                    Column(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(GlassBg).border(1.dp, GlassBorder, RoundedCornerShape(16.dp)).clickable { expanded = !expanded; sinopsisExpanded = expanded }.padding(14.dp)) {
+                        Text(series!!.sinopsis!!, color = Color(0xFFC7CAD6), fontSize = 13.sp, lineHeight = 18.sp, maxLines = if (expanded) Int.MAX_VALUE else 3, overflow = TextOverflow.Ellipsis)
+                        Spacer(Modifier.height(6.dp))
+                        Text(if (expanded) "Ciutkan ▲" else "Selengkapnya ▼", color = GoldPrimary, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.clickable { expanded = !expanded; sinopsisExpanded = expanded })
+                    }
+                }
+
                 if (!series?.genre.isNullOrEmpty()) {
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.padding(bottom = 12.dp)) {
-                        for (g in series!!.genre!!) {
-                            Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(Color(0x1AFFFFFF)).padding(horizontal = 8.dp, vertical = 4.dp)) {
-                                Text(g, color = Color(0xFFDDDDDD), fontSize = 11.sp)
-                            }
+                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        for (g in series!!.genre!!) Box(modifier = Modifier.clip(RoundedCornerShape(8.dp)).background(GlassBg).border(1.dp, GlassBorder, RoundedCornerShape(8.dp)).padding(horizontal = 10.dp, vertical = 6.dp)) {
+                            Text(g, color = Color(0xFFDDDDDD), fontSize = 11.sp)
                         }
                     }
                 }
 
                 if (!series?.chapter.isNullOrEmpty()) {
-                    Text("Episode ${series!!.chapter!!.size}", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.height(8.dp))
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text("Daftar Episode", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                        Text("${series!!.chapter!!.size} eps", color = Color(0xFF8A8FA3), fontSize = 11.sp)
+                    }
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(series!!.chapter!!) { ep ->
                             val isActive = ep.url == episode
                             Box(
-                                modifier = Modifier.size(44.dp, 36.dp).clip(RoundedCornerShape(8.dp))
-                                    .background(if (isActive) Color(0xFFFFDB89) else Color(0x1AFFFFFF))
-                                    .clickable { /* nav to same screen with new ep */ },
+                                modifier = Modifier.size(48.dp, 40.dp).clip(RoundedCornerShape(10.dp)).background(if (isActive) GoldPrimary else GlassBg).border(1.dp, if (isActive) GoldPrimary else GlassBorder, RoundedCornerShape(10.dp)).clickable { /* keep in player, not navigate */ },
                                 contentAlignment = Alignment.Center
-                            ) { Text(ep.ch ?: "?", color = if (isActive) Color.White else Color(0xFF8A8FA3), fontSize = 12.sp, fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal) }
+                            ) { Text(ep.ch ?: "?", color = if (isActive) Color(0xFF030303) else Color(0xFF8A8FA3), fontSize = 12.sp, fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal) }
                         }
                     }
                 }

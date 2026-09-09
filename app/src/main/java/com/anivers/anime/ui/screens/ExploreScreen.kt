@@ -1,12 +1,11 @@
 package com.anivers.anime.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +19,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anivers.anime.data.model.Anime
 import com.anivers.anime.ui.components.AnimeCard
+import com.anivers.anime.ui.components.GlassBackground
+import com.anivers.anime.ui.components.GlassTopBar
+import com.anivers.anime.ui.theme.GlassBg
+import com.anivers.anime.ui.theme.GlassBorder
+import com.anivers.anime.ui.theme.GoldPrimary
 import com.anivers.anime.viewmodel.ExploreViewModel
 import com.anivers.anime.viewmodel.HomeViewModel
 
@@ -45,7 +49,7 @@ fun ExploreScreen(
             GenreDef("Adventure", "adventure", "Petualangan seru", Color(0xFF14532D), Brush.linearGradient(listOf(Color(0xFF14532D), Color(0xFF052E16)))),
             GenreDef("Comedy", "comedy", "Ngakak abis", Color(0xFF92400E), Brush.linearGradient(listOf(Color(0xFF92400E), Color(0xFF451A03)))),
             GenreDef("Drama", "drama", "Menguras emosi", Color(0xFF581C87), Brush.linearGradient(listOf(Color(0xFF581C87), Color(0xFF3B0764)))),
-            GenreDef("Fantasy", "fantasy", "Dunia sihir", Color(0xFF312E81), Brush.linearGradient(listOf(Color(0xFF312E81), Color(0xFFFFDB89)))),
+            GenreDef("Fantasy", "fantasy", "Dunia sihir", Color(0xFF312E81), Brush.linearGradient(listOf(Color(0xFF312E81), Color(0xFF7C3AED)))),
             GenreDef("Horror", "horror", "Mencekam", Color(0xFF111827), Brush.linearGradient(listOf(Color(0xFF1F2937), Color(0xFF020617)))),
             GenreDef("Isekai", "isekai", "Dunia lain", Color(0xFF164E63), Brush.linearGradient(listOf(Color(0xFF164E63), Color(0xFF083344)))),
             GenreDef("Mecha", "mecha", "Robot raksasa", Color(0xFF1E293B), Brush.linearGradient(listOf(Color(0xFF334155), Color(0xFF020617)))),
@@ -65,114 +69,56 @@ fun ExploreScreen(
             "baruupload" -> homeState.baruUpload
             "movie" -> homeState.movies
             "rekomendasi", "top" -> rekomendasi
-            "jadwal" -> emptyList()
             else -> rekomendasi
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF030303))
-            .padding(bottom = 100.dp)
-    ) {
-        // Header
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .padding(top = 48.dp)
-        ) {
-            Text(
-                "Jelajahi Genre",
-                color = Color(0xFFF8FAFC),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.ExtraBold
-            )
-            Text("Pilih mood kamu hari ini", color = Color(0xFF8A8FA3), fontSize = 13.sp)
-        }
+    GlassBackground {
+        Column(modifier = Modifier.fillMaxSize().statusBarsPadding().padding(bottom = 96.dp)) {
+            GlassTopBar(title = "Jelajahi Genre", subtitle = "Pilih mood kamu hari ini")
 
-        LazyColumn(
-            modifier = Modifier.weight(1f, fill = false),
-            contentPadding = PaddingValues(bottom = 100.dp)
-        ) {
-            item {
-                Column(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    // Genre grid - 2 columns
-                    for (row in genres.chunked(2)) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            for (g in row) {
-                                Box(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .clip(RoundedCornerShape(16.dp))
-                                        .background(g.gradient)
-                                        .clickable { onGenreClick(g.slug) }
-                                        .padding(14.dp)
-                                ) {
-                                    Column {
-                                        Text(
-                                            g.name,
-                                            color = Color.White,
-                                            fontSize = 15.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Text(
-                                            g.desc,
-                                            color = Color.White.copy(alpha = 0.7f),
-                                            fontSize = 11.sp
-                                        )
-                                    }
-                                }
-                            }
-                            if (row.size == 1) Spacer(Modifier.weight(1f))
-                        }
-                    }
-                    Spacer(Modifier.height(16.dp))
-
-                    // Rekomendasi
-                    Text(
-                        "Rekomendasi Lain",
-                        color = Color(0xFFF8FAFC),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
-                    )
-                    if (loading) {
-                        Box(
-                            Modifier.fillMaxWidth().height(180.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator(color = Color(0xFFFFDB89))
-                        }
-                    } else {
-                        val list = if (filteredList.isNotEmpty()) filteredList else rekomendasi
-                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            for (row in list.take(12).chunked(3)) {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    for (a in row) {
-                                        Box(Modifier.weight(1f)) {
-                                            AnimeCard(
-                                                anime = a,
-                                                onClick = { onAnimeClick(a.url) },
-                                                showBookmark = false
-                                            )
+            LazyColumn(modifier = Modifier.weight(1f, fill = false), contentPadding = PaddingValues(bottom = 16.dp)) {
+                item {
+                    Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        for (row in genres.chunked(2)) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                                for (g in row) {
+                                    Box(
+                                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(16.dp)).background(g.gradient).border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp)).clickable { onGenreClick(g.slug) }.padding(14.dp)
+                                    ) {
+                                        Column {
+                                            Text(g.name, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                                            Text(g.desc, color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp)
+                                            Spacer(Modifier.height(6.dp))
+                                            Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0x33000000)).padding(horizontal = 8.dp, vertical = 3.dp)) {
+                                                Text("Jelajahi →", color = Color.White, fontSize = 10.sp)
+                                            }
                                         }
                                     }
-                                    repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
+                                }
+                                if (row.size == 1) Spacer(Modifier.weight(1f))
+                            }
+                        }
+                        Spacer(Modifier.height(6.dp))
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Box(Modifier.width(3.dp).height(16.dp).clip(RoundedCornerShape(50)).background(GoldPrimary))
+                            Text("Rekomendasi Lain", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                        }
+                        if (loading) {
+                            Box(Modifier.fillMaxWidth().height(180.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = GoldPrimary) }
+                        } else {
+                            val list = if (filteredList.isNotEmpty()) filteredList else rekomendasi
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                for (row in list.take(12).chunked(3)) {
+                                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                                        for (a in row) Box(Modifier.weight(1f)) { AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }, showBookmark = false) }
+                                        repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
+                                    }
                                 }
                             }
                         }
+                        Spacer(Modifier.height(16.dp))
                     }
-                    Spacer(Modifier.height(24.dp))
                 }
             }
         }

@@ -1,4 +1,4 @@
-![icon](icon-anivers)
+![icon](icon-anivers.png)
 
 
 # ANIVERS ANIME — Android Native Streaming Anime

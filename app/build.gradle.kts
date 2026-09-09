@@ -29,7 +29,7 @@ android {
     signingConfigs {
         // Debug: pakai default ~/.android/debug.keystore jika tidak ada custom.
         // Jika secret ANDROID_DEBUG_KEYSTORE_BASE64 ada di CI, workflow akan decode ke app/debug.keystore dan pakai ini agar SHA-1 deterministik.
-        debug {
+        create("debug") {
             val debugKeystoreFile = file("debug.keystore")
             if (debugKeystoreFile.exists()) {
                 storeFile = debugKeystoreFile

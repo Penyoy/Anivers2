@@ -150,6 +150,8 @@ dependencies {
 
     // Google Sign-In (untuk Profile login Google) - butuh SHA-1 di Firebase
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    // AdMob Rewarded (1 kunci = 1 anime, 30s) - prod unit ca-app-pub-2178230808163908/2191704555
+    implementation("com.google.android.gms:play-services-ads:23.4.0")
 
     // Accompanist / utils
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")

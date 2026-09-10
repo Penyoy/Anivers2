@@ -102,33 +102,46 @@ jobs:
           # Try app/debug.keystore first (deterministic), else ~/.android/debug.keystore (ephemeral)
           DEBUG_KS=""
           if [ -f app/debug.keystore ]; then DEBUG_KS="app/debug.keystore"; echo "Using app/debug.keystore (deterministic)" | tee -a $GITHUB_STEP_SUMMARY; else DEBUG_KS="$HOME/.android/debug.keystore"; echo "Using ~/.android/debug.keystore (ephemeral, will change next run)" | tee -a $GITHUB_STEP_SUMMARY; fi
+          # Prepare downloadable sha1 file (bisa didownload tanpa login Summary)
+          echo "SHA-1 Fingerprints - Anivers $(date -Iseconds)" > sha1.txt
+          echo "Firebase -> Project Settings -> Your apps (com.anivers.anime) -> Add fingerprint" >> sha1.txt
+          echo "" >> sha1.txt
           if [ -f "$DEBUG_KS" ]; then
-            keytool -list -v -keystore "$DEBUG_KS" -alias androiddebugkey -storepass android -keypass android 2>/dev/null | grep -E "SHA1|SHA-256|Valid" | tee -a $GITHUB_STEP_SUMMARY || echo "keytool debug failed" | tee -a $GITHUB_STEP_SUMMARY
-            echo "" | tee -a $GITHUB_STEP_SUMMARY
-            echo "signingReport (debug):" | tee -a $GITHUB_STEP_SUMMARY
-            ./gradlew signingReport --console=plain 2>/dev/null | grep -A2 "Variant: debug" | head -n 20 | tee -a $GITHUB_STEP_SUMMARY || true
+            keytool -list -v -keystore "$DEBUG_KS" -alias androiddebugkey -storepass android -keypass android 2>/dev/null | grep -E "SHA1|SHA256|SHA-256|Valid" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt || echo "keytool debug failed" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
+            echo "" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
+            echo "signingReport (debug):" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
+            ./gradlew signingReport --console=plain 2>/dev/null | grep -A5 "Variant: debug" | head -n 30 | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt || true
           else
-            echo "Debug keystore not found at $DEBUG_KS" | tee -a $GITHUB_STEP_SUMMARY
+            echo "Debug keystore not found at $DEBUG_KS" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
           fi
           echo '```' | tee -a $GITHUB_STEP_SUMMARY
-          echo "" | tee -a $GITHUB_STEP_SUMMARY
+          echo "" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
           if [ -f app/release.keystore ]; then
-            echo "### Release Keystore" | tee -a $GITHUB_STEP_SUMMARY
-            echo '```' | tee -a $GITHUB_STEP_SUMMARY
-            keytool -list -v -keystore app/release.keystore -alias "${ANDROID_KEY_ALIAS:-key0}" -storepass "${ANDROID_KEYSTORE_PASSWORD:-}" -keypass "${ANDROID_KEY_PASSWORD:-}" 2>/dev/null | grep -E "SHA1|SHA-256|Valid|Alias" | tee -a $GITHUB_STEP_SUMMARY || echo "keytool release failed - check alias/pass" | tee -a $GITHUB_STEP_SUMMARY
-            echo '```' | tee -a $GITHUB_STEP_SUMMARY
+            echo "### Release Keystore" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
+            echo '```' | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
+            keytool -list -v -keystore app/release.keystore -alias "${ANDROID_KEY_ALIAS:-key0}" -storepass "${ANDROID_KEYSTORE_PASSWORD:-}" -keypass "${ANDROID_KEY_PASSWORD:-}" 2>/dev/null | grep -E "SHA1|SHA256|SHA-256|Valid|Alias" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt || echo "keytool release failed - check alias/pass" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
+            echo '```' | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
           else
-            echo "### Release: no app/release.keystore (skip)" | tee -a $GITHUB_STEP_SUMMARY
+            echo "### Release: no app/release.keystore (skip)" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
           fi
-          echo "" | tee -a $GITHUB_STEP_SUMMARY
-          echo "---" | tee -a $GITHUB_STEP_SUMMARY
-          echo "After copying SHA-1 to Firebase, download new google-services.json and set secret GOOGLE_SERVICES_JSON = base64 -w0 app/google-services.json" | tee -a $GITHUB_STEP_SUMMARY
+          echo "" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
+          echo "---" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
+          echo "After copying SHA-1 to Firebase, download new google-services.json and set secret GOOGLE_SERVICES_JSON = base64 -w0 app/google-services.json" | tee -a $GITHUB_STEP_SUMMARY | tee -a sha1.txt
           # Also log to console for raw logs
           cat $GITHUB_STEP_SUMMARY 2>/dev/null | tail -n 60 || true
+          cat sha1.txt 2>/dev/null | tail -n 40 || true
 
       - name: Cleanup Gradle dist
         if: always()
         run: rm -rf gradle-8.9 gradle-8.9-bin.zip || true
+
+      - name: Upload SHA-1 fingerprints (downloadable without login)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sha1-fingerprints
+          path: sha1.txt
+          if-no-files-found: warn
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4

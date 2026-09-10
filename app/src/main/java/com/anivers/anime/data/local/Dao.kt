@@ -37,3 +37,15 @@ interface HistoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsertProgress(p: ProgressEntity)
     @Query("DELETE FROM watch_progress WHERE `key` = :key") suspend fun deleteProgress(key: String)
 }
+
+@Dao
+interface UnlockedDao {
+    @Query("SELECT * FROM unlocked_anime ORDER BY unlockedAt DESC")
+    fun getAllFlow(): Flow<List<UnlockedAnimeEntity>>
+    @Query("SELECT * FROM unlocked_anime")
+    suspend fun getAll(): List<UnlockedAnimeEntity>
+    @Query("SELECT EXISTS(SELECT 1 FROM unlocked_anime WHERE slug = :slug)") suspend fun isUnlocked(slug: String): Boolean
+    @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun insert(e: UnlockedAnimeEntity)
+    @Query("DELETE FROM unlocked_anime WHERE slug = :slug") suspend fun remove(slug: String)
+    @Query("DELETE FROM unlocked_anime") suspend fun clearAll()
+}

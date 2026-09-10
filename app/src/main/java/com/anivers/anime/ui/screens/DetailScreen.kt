@@ -37,6 +37,12 @@ import coil.compose.AsyncImage
 import com.anivers.anime.data.local.AppDatabase
 import com.anivers.anime.data.repository.BookmarkRepository
 import com.anivers.anime.ui.components.*
+import android.app.Activity
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.VpnKey
+import com.anivers.anime.data.ads.AdsManager
+import com.anivers.anime.data.local.SettingsStore
+import com.anivers.anime.data.repository.KeysRepository
 import com.anivers.anime.ui.theme.GlassBg
 import com.anivers.anime.ui.theme.GlassBorder
 import com.anivers.anime.ui.theme.GoldPrimary
@@ -56,13 +62,21 @@ fun DetailScreen(
     val loading by vm.loading.collectAsState()
     val error by vm.error.collectAsState()
     val context = LocalContext.current
+    val activity = context as? Activity
     val scope = rememberCoroutineScope()
     var isBookmarked by remember { mutableStateOf(false) }
     val repo = remember { BookmarkRepository(context) }
+    val keysRepo = remember { KeysRepository(context) }
+    val settingsStore = remember { SettingsStore(context) }
+    val settings by settingsStore.flow.collectAsState(initial = com.anivers.anime.data.local.AppSettings())
+    var isUnlocked by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     var synopsisExpanded by remember { mutableStateOf(false) }
+    var showLockDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(slug) { vm.load(slug) }
+    LaunchedEffect(slug, settings.isPremium) { isUnlocked = keysRepo.isUnlocked(slug) }
+    LaunchedEffect(Unit) { AdsManager.preload(context) }
     LaunchedEffect(detail) {
         detail?.let {
             val id = it.id?.toString() ?: slug
@@ -200,19 +214,56 @@ fun DetailScreen(
                             Text("Sinopsis tidak tersedia.", color = Color(0xFF8A8FA3), fontSize = 12.sp)
                         }
                         Spacer(Modifier.height(14.dp))
+                        // Kunci status chip
+                        if (!isUnlocked && !settings.isPremium) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x1AFF5F5F)).border(1.dp, Color(0x33FF5F5F), RoundedCornerShape(12.dp)).padding(10.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(Icons.Filled.Lock, contentDescription = null, tint = Color(0xFFFF5F5F), modifier = Modifier.size(18.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("Terkunci — butuh 1 kunci (permanen)", color = Color(0xFFFF5F5F), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                    Text("Kunci: ${settings.keys}/6 • Premium buka semua", color = Color(0xFFB8B8B8), fontSize = 11.sp)
+                                }
+                            }
+                            Spacer(Modifier.height(10.dp))
+                        } else if (settings.isPremium) {
+                            Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x1422C55E)).border(1.dp, Color(0x3322C55E), RoundedCornerShape(12.dp)).padding(10.dp)) {
+                                Text("Premium aktif — semua episode terbuka", color = Color(0xFF22C55E), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            }
+                            Spacer(Modifier.height(10.dp))
+                        } else {
+                            Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x1422C55E)).border(1.dp, Color(0x3322C55E), RoundedCornerShape(12.dp)).padding(10.dp)) {
+                                Text("Terbuka — 1 kunci terpakai permanen", color = Color(0xFF22C55E), fontSize = 12.sp)
+                            }
+                            Spacer(Modifier.height(10.dp))
+                        }
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             Button(
                                 onClick = {
-                                    val first = d.chapter?.sortedWith(compareBy { if (it.ch == "Movie") -1 else it.ch?.toIntOrNull() ?: 9999 })?.firstOrNull()
-                                    if (first != null) onEpisodeClick(d.seriesId ?: slug, first.url ?: "")
+                                    scope.launch {
+                                        if (isUnlocked || settings.isPremium) {
+                                            val first = d.chapter?.sortedWith(compareBy { if (it.ch == "Movie") -1 else it.ch?.toIntOrNull() ?: 9999 })?.firstOrNull()
+                                            if (first != null) onEpisodeClick(d.seriesId ?: slug, first.url ?: "")
+                                        } else if (settings.keys > 0) {
+                                            val ok = keysRepo.unlock(slug, d.judul ?: slug, d.cover ?: "")
+                                            if (ok) { isUnlocked = true; android.widget.Toast.makeText(context, "Terbuka! 1 kunci terpakai", android.widget.Toast.LENGTH_SHORT).show()
+                                                val first = d.chapter?.sortedWith(compareBy { if (it.ch == "Movie") -1 else it.ch?.toIntOrNull() ?: 9999 })?.firstOrNull()
+                                                if (first != null) onEpisodeClick(d.seriesId ?: slug, first.url ?: "")
+                                            }
+                                        } else {
+                                            showLockDialog = true
+                                        }
+                                    }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)),
+                                colors = ButtonDefaults.buttonColors(containerColor = if (isUnlocked || settings.isPremium || settings.keys > 0) GoldPrimary else Color(0xFF3A3A3C), contentColor = if (isUnlocked || settings.isPremium || settings.keys > 0) Color(0xFF030303) else Color.White),
                                 shape = RoundedCornerShape(50.dp),
                                 modifier = Modifier.weight(1f).height(46.dp)
                             ) {
-                                Icon(Icons.Filled.PlayArrow, contentDescription = null, modifier = Modifier.size(20.dp))
+                                Icon(if (isUnlocked || settings.isPremium) Icons.Filled.PlayArrow else Icons.Filled.Lock, contentDescription = null, modifier = Modifier.size(20.dp))
                                 Spacer(Modifier.width(6.dp))
-                                Text("Mulai Nonton", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                Text(if (isUnlocked || settings.isPremium) "Mulai Nonton" else if (settings.keys > 0) "Buka (1 Kunci)" else "Terkunci", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                             }
                             OutlinedButton(
                                 onClick = {
@@ -276,7 +327,14 @@ fun DetailScreen(
                                     watched = prog != null && prog.progress > 5
                                 }
                                 Row(
-                                    Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(GlassBg).border(1.dp, if (watched) Color(0x33FFDB89) else GlassBorder, RoundedCornerShape(16.dp)).clickable { onEpisodeClick(d.seriesId ?: slug, ep.url ?: "") }.padding(12.dp),
+                                    Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(GlassBg).border(1.dp, if (watched) Color(0x33FFDB89) else if (!isUnlocked && !settings.isPremium) Color(0x33FF5F5F) else GlassBorder, RoundedCornerShape(16.dp)).clickable {
+                                        scope.launch {
+                                            if (isUnlocked || settings.isPremium) onEpisodeClick(d.seriesId ?: slug, ep.url ?: "")
+                                            else if (settings.keys > 0) {
+                                                if (keysRepo.unlock(slug, d.judul ?: slug, d.cover ?: "")) { isUnlocked = true; onEpisodeClick(d.seriesId ?: slug, ep.url ?: "") }
+                                            } else showLockDialog = true
+                                        }
+                                    }.padding(12.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                                 ) {
@@ -291,9 +349,10 @@ fun DetailScreen(
                                         Text(ep.date ?: "", color = Color(0xFF8A8FA3), fontSize = 11.sp)
                                         if (watched) Text("Sudah ditonton", color = GoldPrimary, fontSize = 10.sp)
                                     }
-                                    if (watched) Box(Modifier.size(8.dp).clip(CircleShape).background(GoldPrimary))
-                                    Box(Modifier.size(32.dp).clip(CircleShape).background(if (watched) GoldPrimary else Color(0x14FFFFFF)), contentAlignment = Alignment.Center) {
-                                        Icon(Icons.Filled.PlayArrow, contentDescription = null, tint = if (watched) Color(0xFF030303) else Color.White, modifier = Modifier.size(16.dp))
+                                    if (!isUnlocked && !settings.isPremium) Icon(Icons.Filled.Lock, contentDescription = null, tint = Color(0xFFFF5F5F), modifier = Modifier.size(16.dp))
+                                    else if (watched) Box(Modifier.size(8.dp).clip(CircleShape).background(GoldPrimary))
+                                    Box(Modifier.size(32.dp).clip(CircleShape).background(if (watched) GoldPrimary else if (!isUnlocked && !settings.isPremium) Color(0x33FF5F5F) else Color(0x14FFFFFF)), contentAlignment = Alignment.Center) {
+                                        Icon(if (!isUnlocked && !settings.isPremium) Icons.Filled.Lock else Icons.Filled.PlayArrow, contentDescription = null, tint = if (watched) Color(0xFF030303) else if (!isUnlocked && !settings.isPremium) Color(0xFFFF5F5F) else Color.White, modifier = Modifier.size(16.dp))
                                     }
                                 }
                             }
@@ -304,6 +363,66 @@ fun DetailScreen(
                         }
                     }
                     Spacer(Modifier.height(24.dp))
+                    if (showLockDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showLockDialog = false },
+                            containerColor = Color(0xFF1A1A1E),
+                            titleContentColor = Color.White,
+                            textContentColor = Color(0xFFB8B8B8),
+                            title = { Text("Terkunci", fontWeight = FontWeight.Bold) },
+                            text = {
+                                Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                    Text("Anime ini butuh 1 kunci (permanen) untuk dibuka. Kunci mu: ${settings.keys}/6", fontSize = 13.sp)
+                                    Text("Tonton iklan 30 detik untuk dapat +1 kunci (maks 6), atau beli Premium untuk buka semua tanpa kunci.", fontSize = 11.sp, color = Color(0xFF8A8FA3))
+                                }
+                            },
+                            confirmButton = {
+                                Button(
+                                    onClick = {
+                                        showLockDialog = false
+                                        if (settings.keys >= 6) {
+                                            android.widget.Toast.makeText(context, "Sudah maks 6 kunci", android.widget.Toast.LENGTH_SHORT).show()
+                                            return@Button
+                                        }
+                                        if (activity != null) {
+                                            AdsManager.show(activity,
+                                                onRewarded = {
+                                                    scope.launch {
+                                                        val ok = keysRepo.earnKey()
+                                                        if (ok) {
+                                                            android.widget.Toast.makeText(context, "Dapat 1 kunci!", android.widget.Toast.LENGTH_SHORT).show()
+                                                            // auto unlock if they wanted
+                                                            if (keysRepo.keys() > 0) {
+                                                                // keep dialog closed, let user tap Buka again
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                onFailed = { msg -> android.widget.Toast.makeText(context, "Iklan gagal: $msg", android.widget.Toast.LENGTH_SHORT).show() }
+                                            )
+                                        } else android.widget.Toast.makeText(context, "Activity tidak tersedia", android.widget.Toast.LENGTH_SHORT).show()
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)),
+                                    shape = RoundedCornerShape(50.dp)
+                                ) { Icon(Icons.Filled.PlayCircle, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Tonton Iklan 30s", fontSize = 12.sp) }
+                            },
+                            dismissButton = {
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    if (settings.keys > 0) {
+                                        OutlinedButton(onClick = {
+                                            scope.launch {
+                                                val ok = keysRepo.unlock(slug, detail?.judul ?: slug, detail?.cover ?: "")
+                                                if (ok) { isUnlocked = true; showLockDialog = false; android.widget.Toast.makeText(context, "Terbuka!", android.widget.Toast.LENGTH_SHORT).show() }
+                                            }
+                                        }, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GoldPrimary)) {
+                                            Icon(Icons.Filled.VpnKey, null, Modifier.size(14.dp), tint = GoldPrimary); Spacer(Modifier.width(4.dp)); Text("Pakai 1 Kunci", color = GoldPrimary, fontSize = 11.sp)
+                                        }
+                                    }
+                                    TextButton(onClick = { showLockDialog = false }) { Text("Tutup", color = Color.White) }
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }

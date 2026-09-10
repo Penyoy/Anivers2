@@ -23,10 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import android.app.Activity
 import coil.compose.AsyncImage
 import com.anivers.anime.R
+import com.anivers.anime.data.ads.AdsManager
 import com.anivers.anime.data.local.AppDatabase
 import com.anivers.anime.data.local.SettingsStore
+import com.anivers.anime.data.repository.KeysRepository
+import com.anivers.anime.data.repository.PremiumRepository
 import com.anivers.anime.ui.components.GlassBackground
 import com.anivers.anime.ui.components.GlassTopBar
 import com.anivers.anime.ui.theme.GlassBg
@@ -281,6 +285,103 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                         Text(if (isLogin) "Daftar" else "Masuk", color = GoldPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold, modifier = Modifier.clickable { isLogin = !isLogin; error = "" })
                     }
                 }
+            }
+
+            // Kunci & Premium glass - 1 kunci 1 anime permanen max 6, premium unlimited
+            val keysRepo = remember { KeysRepository(context) }
+            val premiumRepo = remember { PremiumRepository(context) }
+            val activity = context as? Activity
+            var adLoading by remember { mutableStateOf(false) }
+            LaunchedEffect(Unit) { AdsManager.preload(context) }
+            Column(
+                modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(GlassBg).border(1.dp, GlassBorder, RoundedCornerShape(20.dp)).padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Box(modifier = Modifier.size(32.dp).clip(CircleShape).background(Color(0x14FFDB89)), contentAlignment = Alignment.Center) {
+                        Icon(Icons.Filled.VpnKey, contentDescription = null, tint = GoldPrimary, modifier = Modifier.size(18.dp))
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Kunci Nonton", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                        Text("1 kunci = 1 anime permanen • Maks 6", color = Color(0xFF8A8FA3), fontSize = 11.sp)
+                    }
+                    Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(if (settings.isPremium) Color(0xFF22C55E) else GlassBg).border(1.dp, if (settings.isPremium) Color(0xFF22C55E) else GlassBorder, RoundedCornerShape(50)).padding(horizontal = 12.dp, vertical = 6.dp)) {
+                        Text(if (settings.isPremium) "Premium" else "${settings.keys}/6", color = if (settings.isPremium) Color.White else GoldPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
+                }
+                if (settings.isPremium) {
+                    Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x1422C55E)).border(1.dp, Color(0x3322C55E), RoundedCornerShape(12.dp)).padding(10.dp)) {
+                        Column {
+                            Text("Premium aktif hingga ${java.text.SimpleDateFormat("dd MMM yyyy", java.util.Locale("id")).format(java.util.Date(settings.premiumUntil))} (${settings.premiumPlan})", color = Color(0xFF22C55E), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Text("Semua anime terbuka tanpa kunci", color = Color(0xFFB8B8B8), fontSize = 11.sp)
+                        }
+                    }
+                } else {
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        repeat(6) { idx ->
+                            Box(
+                                modifier = Modifier.weight(1f).height(6.dp).clip(RoundedCornerShape(50)).background(if (idx < settings.keys) GoldPrimary else Color(0x33FFFFFF))
+                            )
+                        }
+                    }
+                    Button(
+                        onClick = {
+                            if (settings.keys >= 6) {
+                                android.widget.Toast.makeText(context, "Maks 6 kunci, pakai dulu untuk buka anime", android.widget.Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+                            if (activity == null) return@Button
+                            adLoading = true
+                            AdsManager.show(activity,
+                                onRewarded = {
+                                    scope.launch {
+                                        val ok = keysRepo.earnKey()
+                                        adLoading = false
+                                        if (ok) android.widget.Toast.makeText(context, "Dapat 1 kunci! Sekarang ${settings.keys + 1}/6", android.widget.Toast.LENGTH_SHORT).show()
+                                        else android.widget.Toast.makeText(context, "Gagal tambah kunci (maks 6)", android.widget.Toast.LENGTH_SHORT).show()
+                                    }
+                                },
+                                onFailed = { msg ->
+                                    adLoading = false
+                                    android.widget.Toast.makeText(context, "Iklan gagal: $msg", android.widget.Toast.LENGTH_SHORT).show()
+                                },
+                                onClosed = { adLoading = false }
+                            )
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)),
+                        shape = RoundedCornerShape(50.dp),
+                        enabled = !adLoading
+                    ) {
+                        if (adLoading) CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp, color = Color(0xFF030303))
+                        else Icon(Icons.Filled.PlayCircle, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(if (adLoading) "Memuat Iklan..." else "Tonton Iklan 30s (+1 Kunci)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                    }
+                    Text("Tonton iklan prod ${com.anivers.anime.utils.Constants.ADMOB_REWARDED_UNIT} — 30 detik = 1 kunci, tanpa batas harian, tumpuk maks 6", color = Color(0xFF5A5A6A), fontSize = 10.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                }
+                // Premium packages placeholder gateway
+                Text("Premium — Buka Semua Tanpa Kunci", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    for ((plan, price, label) in listOf(Triple("1m", "10rb", "1 Bulan"), Triple("3m", "25rb", "3 Bulan"), Triple("5m", "50rb", "5 Bulan"))) {
+                        val selected = settings.premiumPlan == plan && settings.isPremium
+                        Column(
+                            modifier = Modifier.weight(1f).clip(RoundedCornerShape(14.dp)).background(if (selected) Color(0xFFFFDB89) else GlassBg).border(1.dp, if (selected) GoldPrimary else GlassBorder, RoundedCornerShape(14.dp)).clickable {
+                                scope.launch {
+                                    val res = premiumRepo.purchase(plan)
+                                    if (res.isSuccess) android.widget.Toast.makeText(context, "Premium $label aktif!", android.widget.Toast.LENGTH_SHORT).show()
+                                    else android.widget.Toast.makeText(context, "Gagal premium: ${res.exceptionOrNull()?.message}", android.widget.Toast.LENGTH_SHORT).show()
+                                }
+                            }.padding(10.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(label, color = if (selected) Color(0xFF030303) else Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            Text("Rp$price", color = if (selected) Color(0xFF030303) else GoldPrimary, fontSize = 11.sp)
+                            Text(if (plan=="1m") "30 hari" else if (plan=="3m") "90 hari" else "150 hari", color = if (selected) Color(0xFF030303).copy(0.7f) else Color(0xFF8A8FA3), fontSize = 10.sp)
+                        }
+                    }
+                }
+                Text("Premium one-time via API gateway placeholder (${com.anivers.anime.utils.Constants.GATEWAY_BASE}) — tap paket untuk tes mock aktif langsung", color = Color(0xFF5A5A6A), fontSize = 10.sp)
             }
 
             // Settings glass

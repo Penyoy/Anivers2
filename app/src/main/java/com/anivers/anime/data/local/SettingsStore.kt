@@ -16,7 +16,9 @@ data class AppSettings(
     // Premium (via API gateway placeholder, in-app one-time 1/3/5 bulan)
     val premiumUntil: Long = 0L,
     val premiumPlan: String = "", // 1m / 3m / 5m
-    val isPremium: Boolean = false
+    val isPremium: Boolean = false,
+    // Kunci 1 anime permanen, max 6
+    val keys: Int = 0
 )
 
 class SettingsStore(private val context: Context) {
@@ -27,6 +29,7 @@ class SettingsStore(private val context: Context) {
 
     private val KEY_PREMIUM_UNTIL = longPreferencesKey("premiumUntil")
     private val KEY_PREMIUM_PLAN = stringPreferencesKey("premiumPlan")
+    private val KEY_KEYS = intPreferencesKey("keys")
 
     val flow: Flow<AppSettings> = context.ds.data.map { p ->
         val until = p[KEY_PREMIUM_UNTIL] ?: 0L
@@ -37,7 +40,8 @@ class SettingsStore(private val context: Context) {
             dataSaver = p[KEY_SAVER] ?: false,
             premiumUntil = until,
             premiumPlan = p[KEY_PREMIUM_PLAN] ?: "",
-            isPremium = until > System.currentTimeMillis()
+            isPremium = until > System.currentTimeMillis(),
+            keys = (p[KEY_KEYS] ?: 0).coerceIn(0, 6)
         )
     }
 
@@ -47,5 +51,17 @@ class SettingsStore(private val context: Context) {
     suspend fun updateSaver(v: Boolean) { context.ds.edit { it[KEY_SAVER] = v } }
     suspend fun updatePremium(until: Long, plan: String) { context.ds.edit { it[KEY_PREMIUM_UNTIL] = until; it[KEY_PREMIUM_PLAN] = plan } }
     suspend fun clearPremium() { context.ds.edit { it.remove(KEY_PREMIUM_UNTIL); it.remove(KEY_PREMIUM_PLAN) } }
+    suspend fun setKeys(v: Int) { context.ds.edit { it[KEY_KEYS] = v.coerceIn(0, 6) } }
+    suspend fun addKey(n: Int = 1) {
+        context.ds.edit { p -> val cur = (p[KEY_KEYS] ?: 0); p[KEY_KEYS] = (cur + n).coerceIn(0, 6) }
+    }
+    suspend fun consumeKey(): Boolean {
+        var ok = false
+        context.ds.edit { p ->
+            val cur = p[KEY_KEYS] ?: 0
+            if (cur > 0) { p[KEY_KEYS] = cur - 1; ok = true }
+        }
+        return ok
+    }
     suspend fun reset() { context.ds.edit { it.clear() } }
 }

@@ -36,3 +36,12 @@ data class ProgressEntity(
     val progress: Int,
     val updatedAt: Long = System.currentTimeMillis()
 )
+
+@Entity(tableName = "unlocked_anime")
+data class UnlockedAnimeEntity(
+    @PrimaryKey val slug: String,
+    val judul: String = "",
+    val cover: String = "",
+    val unlockedAt: Long = System.currentTimeMillis(),
+    val source: String = "ad" // ad / premium / key
+)

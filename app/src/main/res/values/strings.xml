@@ -22,4 +22,6 @@
     <string name="recent_title">Recent</string>
     <string name="bookmark_title">Koleksi Saya</string>
     <string name="profile_title">Profil</string>
+    <string name="admob_app_id">ca-app-pub-2178230808163908~5116416643</string>
+    <string name="admob_rewarded_unit">ca-app-pub-2178230808163908/2191704555</string>
 </resources>

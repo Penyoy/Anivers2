@@ -55,6 +55,21 @@ service cloud.firestore {
       allow read, create, update, delete: if isOwner(userId);
     }
 
+    // Unlocked anime (1 kunci = 1 anime permanen, max 6, premium bypass)
+    match /users/{userId}/unlockedAnime/{slug} {
+      allow read, create, update, delete: if isOwner(userId);
+    }
+
+    // Premium status (via API gateway) - simpan di users/{uid} premiumUntil/premiumPlan, atau subcollection premium
+    match /users/{userId}/premium/{docId} {
+      allow read, create, update, delete: if isOwner(userId);
+    }
+
+    // Keys counter (jika simpan di Firestore juga)
+    match /users/{userId}/keys/{docId} {
+      allow read, create, update, delete: if isOwner(userId);
+    }
+
     // Legacy fallback for old single-doc array model (optional deny)
     // deny everything else
     match /{document=**} {

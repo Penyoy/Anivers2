@@ -354,7 +354,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                         enabled = !adLoading
                     ) {
                         if (adLoading) CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp, color = Color(0xFF030303))
-                        else Icon(Icons.Filled.PlayCircle, contentDescription = null, modifier = Modifier.size(18.dp))
+                        else Icon(Icons.Filled.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
                         Text(if (adLoading) "Memuat Iklan..." else "Tonton Iklan 30s (+1 Kunci)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     }
@@ -394,7 +394,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                 }
                 ProfileMenuItem(icon = Icons.Filled.Bookmark, title = "Koleksi Saya", subtitle = "${bookmarks.size} bookmark") { onNavigate?.invoke("bookmark") }
                 ProfileMenuItem(icon = Icons.Filled.History, title = "Riwayat Tonton", subtitle = "${historyCount.value} riwayat") { onNavigate?.invoke("history") }
-                ProfileMenuItem(icon = Icons.Filled.PlayCircle, title = "Playback Settings", subtitle = "Kualitas & autoplay") {
+                ProfileMenuItem(icon = Icons.Filled.PlayArrow, title = "Playback Settings", subtitle = "Kualitas & autoplay") {
                     android.widget.Toast.makeText(context, "Pengaturan playback ada di kartu Pengaturan di atas", android.widget.Toast.LENGTH_SHORT).show()
                 }
                 ProfileMenuItem(icon = Icons.Filled.Notifications, title = "Notifikasi", subtitle = "Kelola pemberitahuan") {

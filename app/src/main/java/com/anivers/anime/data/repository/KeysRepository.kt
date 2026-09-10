@@ -6,13 +6,14 @@ import com.anivers.anime.data.local.SettingsStore
 import com.anivers.anime.data.local.UnlockedAnimeEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 
 class KeysRepository(private val context: Context) {
     private val db = AppDatabase.get(context)
     private val store = SettingsStore(context)
 
-    fun keysFlow(): Flow<Int> = kotlinx.coroutines.flow.map(store.flow) { it.keys }
-    fun premiumFlow(): Flow<Boolean> = kotlinx.coroutines.flow.map(store.flow) { it.isPremium }
+    fun keysFlow(): Flow<Int> = store.flow.map { it.keys }
+    fun premiumFlow(): Flow<Boolean> = store.flow.map { it.isPremium }
     suspend fun keys(): Int = store.flow.first().keys
     suspend fun isPremium(): Boolean = store.flow.first().isPremium
 

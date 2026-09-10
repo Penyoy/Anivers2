@@ -404,7 +404,7 @@ fun DetailScreen(
                                     },
                                     colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)),
                                     shape = RoundedCornerShape(50.dp)
-                                ) { Icon(Icons.Filled.PlayCircle, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Tonton Iklan 30s", fontSize = 12.sp) }
+                                ) { Icon(Icons.Filled.PlayArrow, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Tonton Iklan 30s", fontSize = 12.sp) }
                             },
                             dismissButton = {
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

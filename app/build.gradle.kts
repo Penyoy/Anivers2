@@ -27,7 +27,7 @@ android {
     }
 
     signingConfigs {
-        // Debug: pakai default ~/.android/debug.keystore jika tidak ada custom.
+        // Debug sudah auto-create oleh AGP, jadi pakai getByName bukan create (fix "cannot add debug already exist")
         // Jika secret ANDROID_DEBUG_KEYSTORE_BASE64 ada di CI, workflow akan decode ke app/debug.keystore dan pakai ini agar SHA-1 deterministik.
         getByName("debug") {
             val debugKeystoreFile = file("debug.keystore")
@@ -39,6 +39,7 @@ android {
             }
             // else fallback ke default debug keystore AGP (~/.android/debug.keystore)
         }
+        // Release belum ada, jadi create
         create("release") {
             // Dibuat hanya jika file app/release.keystore ada (di-decode dari secret ANDROID_KEYSTORE_BASE64 di CI)
             val releaseKeystoreFile = file("release.keystore")

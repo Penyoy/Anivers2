@@ -58,18 +58,34 @@ jobs:
             echo "google-services.json already exists"
           fi
 
-      - name: Setup Debug Keystore (deterministic if secret provided)
+      - name: Setup Debug Keystore (deterministic if secret provided, else auto-generate)
         env:
           ANDROID_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
         run: |
           if [ -n "$ANDROID_DEBUG_KEYSTORE_BASE64" ]; then
             echo "Using deterministic debug keystore from secret ANDROID_DEBUG_KEYSTORE_BASE64"
             echo "$ANDROID_DEBUG_KEYSTORE_BASE64" | base64 --decode > app/debug.keystore
-            echo "Debug keystore decoded to app/debug.keystore (SHA-1 will be stable)"
+            mkdir -p ~/.android && cp app/debug.keystore ~/.android/debug.keystore
+            echo "Debug keystore decoded to app/debug.keystore + ~/.android/debug.keystore (SHA-1 will be stable)"
           else
-            echo "No ANDROID_DEBUG_KEYSTORE_BASE64 secret - using ephemeral debug keystore (~/.android/debug.keystore, SHA-1 will change each run)"
-            echo "Tip: generate once locally: keytool -genkey -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -dname 'CN=Android Debug,O=Android,C=US' && base64 -w0 debug.keystore | pbcopy && set as secret"
+            echo "No ANDROID_DEBUG_KEYSTORE_BASE64 secret - generating ephemeral debug keystore deterministically via keytool (biar gak 'not found')"
+            mkdir -p ~/.android
+            if [ ! -f ~/.android/debug.keystore ]; then
+              keytool -genkeypair -v -keystore ~/.android/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US" 2>&1 | tail -n 5
+              echo "Generated ~/.android/debug.keystore"
+            else
+              echo "Using existing ~/.android/debug.keystore"
+            fi
+            # Copy to app/debug.keystore juga biar signingConfigs getByName debug yang cek file("debug.keystore") kepakai
+            cp ~/.android/debug.keystore app/debug.keystore 2>/dev/null || true
+            echo "Copied to app/debug.keystore for deterministic build"
+            echo "SHA1 ephemeral ini akan tetap untuk run ini, tapi ganti next run jika tidak set secret. Tip: base64 -w0 app/debug.keystore -> set ANDROID_DEBUG_KEYSTORE_BASE64 biar stabil"
+            # Also generate base64 for artifact biar user bisa set secret tanpa keytool lokal
+            base64 -w0 app/debug.keystore > debug.b64 2>/dev/null || base64 app/debug.keystore > debug.b64
+            echo "Generated debug.b64 for secret upload:"
+            head -c 100 debug.b64; echo "..."
           fi
+          ls -lh app/debug.keystore ~/.android/debug.keystore 2>&1 | head -n 5
 
       - name: Setup Release Keystore (if secrets available)
         if: env.ANDROID_KEYSTORE_BASE64 != ''
@@ -141,6 +157,14 @@ jobs:
         with:
           name: sha1-fingerprints
           path: sha1.txt
+          if-no-files-found: warn
+
+      - name: Upload Debug Keystore Base64 (deterministic setup)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-keystore-base64
+          path: debug.b64
           if-no-files-found: warn
 
       - name: Upload Debug APK

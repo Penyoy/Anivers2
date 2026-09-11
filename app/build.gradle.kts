@@ -36,8 +36,13 @@ android {
                 storePassword = "android"
                 keyAlias = "androiddebugkey"
                 keyPassword = "android"
+            } else {
+                // Fallback eksplisit ke default AGP agar auto-generate tidak ter-suppress
+                storeFile = File(System.getProperty("user.home"), ".android/debug.keystore")
+                storePassword = "android"
+                keyAlias = "androiddebugkey"
+                keyPassword = "android"
             }
-            // else fallback ke default debug keystore AGP (~/.android/debug.keystore)
         }
         // Release belum ada, jadi create
         create("release") {

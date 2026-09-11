@@ -19,9 +19,12 @@ class KeysRepository(private val context: Context) {
 
     suspend fun canEarn(): Boolean = keys() < com.anivers.anime.utils.Constants.MAX_KEYS
 
-    suspend fun earnKey(): Boolean {
-        if (!canEarn()) return false
-        store.addKey(1)
+    suspend fun earnKey(): Boolean = earnKeys(com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
+    suspend fun earnKeys(n: Int): Boolean {
+        if (keys() >= com.anivers.anime.utils.Constants.MAX_KEYS) return false
+        val toAdd = minOf(n, com.anivers.anime.utils.Constants.MAX_KEYS - keys())
+        if (toAdd <= 0) return false
+        store.addKey(toAdd)
         return true
     }
 

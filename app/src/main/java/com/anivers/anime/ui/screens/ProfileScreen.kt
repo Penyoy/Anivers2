@@ -178,11 +178,19 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         StatPill(value = "${bookmarks.size}", label = "Bookmark", icon = Icons.Filled.Bookmark)
                         StatPill(value = "${historyCount.value}", label = "Ditonton", icon = Icons.Filled.History)
-                        StatPill(value = "0", label = "Notifikasi", icon = Icons.Filled.Notifications)
+                        StatPill(value = "${settings.keys}/6", label = "Kunci", icon = Icons.Filled.VpnKey)
                     }
                     Spacer(Modifier.height(14.dp))
                     OutlinedButton(
-                        onClick = { auth.signOut(); user = null },
+                        onClick = {
+                            auth.signOut()
+                            user = null
+                            scope.launch {
+                                // premium akun-only: clear di apk saat logout
+                                try { premiumRepo.clearPremium() } catch (_: Exception) {}
+                                try { com.anivers.anime.data.local.SettingsStore(context).clearPremium() } catch (_: Exception) {}
+                            }
+                        },
                         shape = RoundedCornerShape(50.dp),
                         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0x33FF5F5F)),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFFCA5A5))
@@ -292,7 +300,24 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
             val premiumRepo = remember { PremiumRepository(context) }
             val activity = context as? Activity
             var adLoading by remember { mutableStateOf(false) }
+            var showCountdown by remember { mutableStateOf(false) }
+            var countdown by remember { mutableIntStateOf(40) }
             LaunchedEffect(Unit) { AdsManager.preload(context) }
+            LaunchedEffect(showCountdown) {
+                if (showCountdown) {
+                    countdown = com.anivers.anime.utils.Constants.COUNTDOWN_SEC.toInt()
+                    while (countdown > 0 && showCountdown) {
+                        kotlinx.coroutines.delay(1000)
+                        countdown--
+                    }
+                    if (showCountdown && countdown == 0) {
+                        showCountdown = false
+                        val before = settings.keys
+                        val ok = keysRepo.earnKeys(com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS)
+                        if (ok) android.widget.Toast.makeText(context, "Dapat ${com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS} kunci! ${before} -> ${minOf(6, before + 3)}/6", android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
             Column(
                 modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(20.dp)).background(GlassBg).border(1.dp, GlassBorder, RoundedCornerShape(20.dp)).padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -335,15 +360,19 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                             AdsManager.show(activity,
                                 onRewarded = {
                                     scope.launch {
-                                        val ok = keysRepo.earnKey()
+                                        val ok = keysRepo.earnKeys(com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
                                         adLoading = false
-                                        if (ok) android.widget.Toast.makeText(context, "Dapat 1 kunci! Sekarang ${settings.keys + 1}/6", android.widget.Toast.LENGTH_SHORT).show()
-                                        else android.widget.Toast.makeText(context, "Gagal tambah kunci (maks 6)", android.widget.Toast.LENGTH_SHORT).show()
+                                        if (ok) {
+                                            val after = minOf(6, settings.keys + com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
+                                            android.widget.Toast.makeText(context, "Dapat ${com.anivers.anime.utils.Constants.AD_REWARD_KEYS} kunci! Sekarang $after/6", android.widget.Toast.LENGTH_SHORT).show()
+                                        } else android.widget.Toast.makeText(context, "Gagal tambah kunci (maks 6)", android.widget.Toast.LENGTH_SHORT).show()
                                     }
                                 },
-                                onFailed = { msg ->
+                                onFailed = { _ ->
                                     adLoading = false
-                                    android.widget.Toast.makeText(context, "Iklan gagal: $msg", android.widget.Toast.LENGTH_SHORT).show()
+                                    // Fallback countdown 40 detik -> 3 kunci jika tidak ada iklan
+                                    showCountdown = true
+                                    android.widget.Toast.makeText(context, "Iklan tidak tersedia, countdown 40 detik untuk 3 kunci", android.widget.Toast.LENGTH_SHORT).show()
                                 },
                                 onClosed = { adLoading = false }
                             )
@@ -351,14 +380,25 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)),
                         shape = RoundedCornerShape(50.dp),
-                        enabled = !adLoading
+                        enabled = !adLoading && !showCountdown
                     ) {
                         if (adLoading) CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp, color = Color(0xFF030303))
                         else Icon(Icons.Filled.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
-                        Text(if (adLoading) "Memuat Iklan..." else "Tonton Iklan 30s (+1 Kunci)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                        Text(if (adLoading) "Memuat Iklan..." else if (showCountdown) "Countdown $countdown detik..." else "Tonton Iklan 30s (+3 Kunci)", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     }
-                    Text("Tonton iklan prod ${com.anivers.anime.utils.Constants.ADMOB_REWARDED_UNIT} — 30 detik = 1 kunci, tanpa batas harian, tumpuk maks 6", color = Color(0xFF5A5A6A), fontSize = 10.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                    if (showCountdown) {
+                        Column(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color(0x1AFFDB89)).border(1.dp, GoldPrimary, RoundedCornerShape(12.dp)).padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text("Menunggu $countdown detik...", color = GoldPrimary, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                            Spacer(Modifier.height(6.dp))
+                            LinearProgressIndicator(progress = { (40 - countdown) / 40f }, modifier = Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(50)), color = GoldPrimary, trackColor = Color(0x33FFFFFF))
+                            Spacer(Modifier.height(6.dp))
+                            Text("Tetap di halaman ini, ${com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS} kunci akan diberikan otomatis", color = Color(0xFFB8B8B8), fontSize = 11.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                            Spacer(Modifier.height(8.dp))
+                            OutlinedButton(onClick = { showCountdown = false }, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder)) { Text("Batal", color = Color.White, fontSize = 12.sp) }
+                        }
+                    }
+                    Text("Jika ada iklan: tonton 30 detik = 3 kunci. Jika tidak ada iklan: countdown 40 detik = 3 kunci. Maks tumpuk 6.", color = Color(0xFF5A5A6A), fontSize = 10.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.fillMaxWidth())
                 }
                 // Premium packages placeholder gateway
                 Text("Premium — Buka Semua Tanpa Kunci", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 13.sp)

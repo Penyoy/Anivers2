@@ -61,7 +61,7 @@ fun SplashScreen(
             Spacer(Modifier.height(12.dp))
             Box(modifier = Modifier.width(48.dp).height(3.dp).clip(RoundedCornerShape(50)).background(Color(0xFFFFDB89).copy(alpha = 0.7f)))
             Spacer(Modifier.height(16.dp))
-            Text("Premium Streaming", color = Color(0xFF8A8FA3), fontSize = 11.sp, letterSpacing = 2.sp)
+            Text("Anivers Streaming", color = Color(0xFF8A8FA3), fontSize = 11.sp, letterSpacing = 2.sp)
         }
 
         Box(modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 32.dp).clip(RoundedCornerShape(50)).background(Color(0x0DFFFFFF)).border(1.dp, GlassBorder, RoundedCornerShape(50)).padding(horizontal = 16.dp, vertical = 8.dp)) {

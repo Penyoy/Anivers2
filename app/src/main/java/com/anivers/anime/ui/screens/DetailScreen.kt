@@ -73,6 +73,23 @@ fun DetailScreen(
     val scrollState = rememberScrollState()
     var synopsisExpanded by remember { mutableStateOf(false) }
     var showLockDialog by remember { mutableStateOf(false) }
+    var showDetailCountdown by remember { mutableStateOf(false) }
+    var detailCountdown by remember { mutableIntStateOf(40) }
+    LaunchedEffect(showDetailCountdown) {
+        if (showDetailCountdown) {
+            detailCountdown = com.anivers.anime.utils.Constants.COUNTDOWN_SEC.toInt()
+            while (detailCountdown > 0 && showDetailCountdown) {
+                kotlinx.coroutines.delay(1000)
+                detailCountdown--
+            }
+            if (showDetailCountdown && detailCountdown == 0) {
+                showDetailCountdown = false
+                val before = settings.keys
+                val ok = keysRepo.earnKeys(com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS)
+                if (ok) android.widget.Toast.makeText(context, "Dapat ${com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS} kunci! ${before} -> ${minOf(6, before + 3)}/6", android.widget.Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 
     LaunchedEffect(slug) { vm.load(slug) }
     LaunchedEffect(slug, settings.isPremium) { isUnlocked = keysRepo.isUnlocked(slug) }
@@ -373,13 +390,21 @@ fun DetailScreen(
                             text = {
                                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     Text("Anime ini butuh 1 kunci (permanen) untuk dibuka. Kunci mu: ${settings.keys}/6", fontSize = 13.sp)
-                                    Text("Tonton iklan 30 detik untuk dapat +1 kunci (maks 6), atau beli Premium untuk buka semua tanpa kunci.", fontSize = 11.sp, color = Color(0xFF8A8FA3))
+                                    if (showDetailCountdown) {
+                                        Column(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color(0x1AFFDB89)).border(1.dp, GoldPrimary, RoundedCornerShape(10.dp)).padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Text("Menunggu $detailCountdown detik...", color = GoldPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                            Spacer(Modifier.height(4.dp))
+                                            LinearProgressIndicator(progress = { (40 - detailCountdown) / 40f }, modifier = Modifier.fillMaxWidth().height(5.dp).clip(RoundedCornerShape(50)), color = GoldPrimary, trackColor = Color(0x33FFFFFF))
+                                            Text("Jika ada iklan: 30s = 3 kunci. Jika tidak: 40s = 3 kunci. Maks 6.", color = Color(0xFFB8B8B8), fontSize = 10.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                                        }
+                                    } else {
+                                        Text("Jika ada iklan: tonton 30 detik = 3 kunci. Jika tidak ada iklan: countdown 40 detik = 3 kunci. Maks tumpuk 6.", fontSize = 11.sp, color = Color(0xFF8A8FA3))
+                                    }
                                 }
                             },
                             confirmButton = {
                                 Button(
                                     onClick = {
-                                        showLockDialog = false
                                         if (settings.keys >= 6) {
                                             android.widget.Toast.makeText(context, "Sudah maks 6 kunci", android.widget.Toast.LENGTH_SHORT).show()
                                             return@Button
@@ -388,23 +413,24 @@ fun DetailScreen(
                                             AdsManager.show(activity,
                                                 onRewarded = {
                                                     scope.launch {
-                                                        val ok = keysRepo.earnKey()
+                                                        val ok = keysRepo.earnKeys(com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
                                                         if (ok) {
-                                                            android.widget.Toast.makeText(context, "Dapat 1 kunci!", android.widget.Toast.LENGTH_SHORT).show()
-                                                            // auto unlock if they wanted
-                                                            if (keysRepo.keys() > 0) {
-                                                                // keep dialog closed, let user tap Buka again
-                                                            }
+                                                            val after = minOf(6, settings.keys + com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
+                                                            android.widget.Toast.makeText(context, "Dapat ${com.anivers.anime.utils.Constants.AD_REWARD_KEYS} kunci! Sekarang $after/6", android.widget.Toast.LENGTH_SHORT).show()
+                                                            showLockDialog = false
                                                         }
                                                     }
                                                 },
-                                                onFailed = { msg -> android.widget.Toast.makeText(context, "Iklan gagal: $msg", android.widget.Toast.LENGTH_SHORT).show() }
+                                                onFailed = { _ ->
+                                                    showDetailCountdown = true
+                                                    android.widget.Toast.makeText(context, "Iklan tidak tersedia, countdown 40 detik untuk 3 kunci", android.widget.Toast.LENGTH_SHORT).show()
+                                                }
                                             )
                                         } else android.widget.Toast.makeText(context, "Activity tidak tersedia", android.widget.Toast.LENGTH_SHORT).show()
                                     },
                                     colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)),
                                     shape = RoundedCornerShape(50.dp)
-                                ) { Icon(Icons.Filled.PlayArrow, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Tonton Iklan 30s", fontSize = 12.sp) }
+                                ) { Icon(Icons.Filled.PlayArrow, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text(if (showDetailCountdown) "Menunggu $detailCountdown" else "Tonton Iklan 30s (+3)", fontSize = 12.sp) }
                             },
                             dismissButton = {
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

@@ -18,10 +18,12 @@ object Constants {
     const val PREMIUM_3M_DAYS = 90L
     const val PREMIUM_5M_DAYS = 150L
 
-    // Keys: 1 kunci = 1 anime permanen, tumpuk max 6
+    // Keys: 1 kunci = 1 anime permanen, tumpuk max 6, reward 3 keys
     const val MAX_KEYS = 6
-    const val AD_REWARD_KEYS = 1
+    const val AD_REWARD_KEYS = 3
     const val AD_DURATION_SEC = 30L
+    const val COUNTDOWN_REWARD_KEYS = 3
+    const val COUNTDOWN_SEC = 40L
 
     // AdMob IDs (dari user)
     const val ADMOB_APP_ID = "ca-app-pub-2178230808163908~5116416643"

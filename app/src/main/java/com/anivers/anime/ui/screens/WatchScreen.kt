@@ -256,7 +256,7 @@ fun WatchScreen(
                         modifier = Modifier.fillMaxSize()
                     )
 
-                    Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0x66000000), Color.Transparent, Color(0x88000000)))))
+                    if (showControls) Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0x66000000), Color.Transparent, Color(0x88000000)))))
 
                     if (showResume) {
                         Box(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(12.dp).clip(RoundedCornerShape(14.dp)).background(Color(0xE6121214)).border(1.dp, GlassBorder, RoundedCornerShape(14.dp)).padding(12.dp)) {

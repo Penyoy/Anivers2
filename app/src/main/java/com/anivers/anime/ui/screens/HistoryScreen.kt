@@ -50,41 +50,55 @@ fun HistoryScreen(onWatchClick: (String, String) -> Unit) {
 
     fun refresh() {
         scope.launch {
-            // Jika login, pull Firestore dulu biar recent dari cloud ke local (tapi pakai progress dedup, bukan history duplikat)
+            // Jika login, pull Firestore dulu biar recent dari cloud ke local
             try {
                 val uid = FirebaseAuth.getInstance().currentUser?.uid
                 if (uid != null) {
-                    // Pull watchProgress (dedup per episode) bukan history duplikat
-                    val snap = FirebaseFirestore.getInstance().collection("users").document(uid).collection("watchProgress").get().await()
-                    for (doc in snap.documents) {
-                        val data = doc.data ?: continue
-                        val seriesUrl = (data["seriesUrl"] ?: data["animeId"] ?: "").toString()
-                        val episode = (data["episode"] ?: data["episodeId"] ?: "").toString()
-                        val pos = (data["position"] as? Number)?.toLong() ?: 0L
-                        val dur = (data["duration"] as? Number)?.toLong() ?: 0L
-                        val prog = (data["progress"] as? Number)?.toInt() ?: if (dur>0) ((pos.toDouble()/dur)*100).toInt() else 0
-                        if (seriesUrl.isNotBlank() && episode.isNotBlank()) {
-                            dao.upsertProgress(com.anivers.anime.data.local.ProgressEntity(key="$seriesUrl|$episode", seriesUrl=seriesUrl, episode=episode, currentTime=pos, duration=dur, progress=prog, updatedAt = System.currentTimeMillis()))
+                    // Pull watchProgress (dedup)
+                    try {
+                        val snap = FirebaseFirestore.getInstance().collection("users").document(uid).collection("watchProgress").get().await()
+                        for (doc in snap.documents) {
+                            val data = doc.data ?: continue
+                            val seriesUrl = (data["seriesUrl"] ?: data["animeId"] ?: "").toString()
+                            val episode = (data["episode"] ?: data["episodeId"] ?: "").toString()
+                            val pos = (data["position"] as? Number)?.toLong() ?: 0L
+                            val dur = (data["duration"] as? Number)?.toLong() ?: 0L
+                            val prog = (data["progress"] as? Number)?.toInt() ?: if (dur>0) ((pos.toDouble()/dur)*100).toInt() else 0
+                            if (seriesUrl.isNotBlank() && episode.isNotBlank()) {
+                                dao.upsertProgress(com.anivers.anime.data.local.ProgressEntity(key="$seriesUrl|$episode", seriesUrl=seriesUrl, episode=episode, currentTime=pos, duration=dur, progress=prog, updatedAt = (data["updatedAt"] as? com.google.firebase.Timestamp)?.toDate()?.time ?: System.currentTimeMillis()))
+                            }
                         }
-                    }
-                    // Juga pull history tapi jangan insert mentah 50 duplikat; biar history tetap ada tapi recent pakai progress
+                    } catch (_: Exception) {}
+                    // Pull history juga untuk cover/judul (tapi akan di-group jadi tidak 50 duplikat tampil)
+                    try {
+                        val hSnap = FirebaseFirestore.getInstance().collection("users").document(uid).collection("history").orderBy("watchedAt", com.google.firebase.firestore.Query.Direction.DESCENDING).limit(50).get().await()
+                        for (doc in hSnap.documents) {
+                            val data = doc.data ?: continue
+                            val seriesUrl = (data["seriesUrl"] ?: data["animeId"] ?: "").toString()
+                            val episode = (data["episode"] ?: data["episodeId"] ?: "").toString()
+                            val judul = (data["judul"] ?: data["title"] ?: seriesUrl).toString()
+                            val cover = (data["cover"] ?: data["poster"] ?: "").toString()
+                            val pos = (data["position"] as? Number)?.toLong() ?: (data["currentTime"] as? Number)?.toLong() ?: 0L
+                            val dur = (data["duration"] as? Number)?.toLong() ?: 0L
+                            val prog = if (dur>0) ((pos.toDouble()/dur)*100).toInt().coerceIn(0,100) else 0
+                            val ts = (data["watchedAt"] as? com.google.firebase.Timestamp)?.toDate()?.time ?: System.currentTimeMillis()
+                            if (seriesUrl.isNotBlank() && episode.isNotBlank()) {
+                                // Cek existing biar tidak duplikat autoId terus
+                                val existing = dao.getAll().find { it.seriesUrl==seriesUrl && it.episode==episode && kotlin.math.abs(it.timestamp - ts) < 60000 }
+                                if (existing == null) dao.insert(com.anivers.anime.data.local.HistoryEntity(seriesUrl=seriesUrl, episode=episode, judul=judul, cover=cover, currentTime=pos, duration=dur, progress=prog, timestamp=ts))
+                            }
+                        }
+                    } catch (_: Exception) {}
                 }
             } catch (_: Exception) {}
-            // Recent pakai watch_progress grouped (1 row per episode) + fallback history grouped
-            val progresses = dao.getAllProgress().sortedByDescending { it.updatedAt }
-            if (progresses.isNotEmpty()) {
-                progressList = progresses
-                // Untuk UI yang masih pakai HistoryEntity, map dari progress
-                history = progresses.map {
-                    com.anivers.anime.data.local.HistoryEntity(seriesUrl=it.seriesUrl, episode=it.episode, judul=it.seriesUrl, cover="", currentTime=it.currentTime, duration=it.duration, progress=it.progress, timestamp=it.updatedAt)
-                }
-            } else {
-                // Fallback: group history by slug biar tidak 50 duplikat untuk 1 anime
-                val all = dao.getAll()
-                val grouped = all.groupBy { it.seriesUrl to it.episode }.map { (_, list) -> list.maxByOrNull { it.timestamp }!! }.sortedByDescending { it.timestamp }
-                history = grouped
-                progressList = emptyList()
-            }
+            // Recent fix: pakai history grouped 1 per slug (series+episode) dengan cover, bukan progress tanpa cover
+            // Cover hilang sebelumnya karena map progress -> HistoryEntity cover=""
+            // Sekarang: ambil history grouped, terbaru di atas (sortedDescending)
+            val allHistory = dao.getAll()
+            val grouped = allHistory.groupBy { it.seriesUrl to it.episode }.mapNotNull { (_, list) -> list.maxByOrNull { it.timestamp } }.sortedByDescending { it.timestamp }
+            history = grouped
+            // progressList tetap diisi untuk info tambahan tapi tidak untuk cover
+            try { progressList = dao.getAllProgress().sortedByDescending { it.updatedAt } } catch (_: Exception) { progressList = emptyList() }
         }
     }
 

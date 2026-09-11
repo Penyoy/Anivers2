@@ -62,6 +62,8 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
     val db = remember { AppDatabase.get(context) }
     val bookmarks by db.bookmarkDao().getAllFlow().collectAsState(initial = emptyList())
     val historyCount = remember { mutableStateOf(0) }
+    val keysRepo = remember { KeysRepository(context) }
+    val premiumRepo = remember { PremiumRepository(context) }
 
     LaunchedEffect(Unit) { historyCount.value = db.historyDao().getAll().size }
 
@@ -296,8 +298,6 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
             }
 
             // Kunci & Premium glass - 1 kunci 1 anime permanen max 6, premium unlimited
-            val keysRepo = remember { KeysRepository(context) }
-            val premiumRepo = remember { PremiumRepository(context) }
             val activity = context as? Activity
             var adLoading by remember { mutableStateOf(false) }
             var showCountdown by remember { mutableStateOf(false) }

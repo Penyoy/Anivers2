@@ -43,6 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.anivers.anime.data.repository.BookmarkRepository
 import com.anivers.anime.ui.components.CommentsSection
@@ -94,6 +95,13 @@ fun WatchScreen(
     var seekPos by remember { mutableFloatStateOf(0f) }
     var sinopsisExpanded by remember { mutableStateOf(false) }
     var showQualitySheet by remember { mutableStateOf(false) }
+    var resizeMode by remember { mutableIntStateOf(AspectRatioFrameLayout.RESIZE_MODE_FIT) }
+    val resizeLabel: String get() = when (resizeMode) {
+        AspectRatioFrameLayout.RESIZE_MODE_FIT -> "Original"
+        AspectRatioFrameLayout.RESIZE_MODE_FILL -> "Regang"
+        AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> "Full Crop"
+        else -> "Original"
+    }
 
     LaunchedEffect(seriesUrl, episode) { vm.load(seriesUrl, episode) }
 
@@ -211,9 +219,11 @@ fun WatchScreen(
                 OutlinedButton(onClick = onBack, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder)) { Text("Kembali", color = Color.White) }
             }
             currentLink != null -> {
-                // GLASS PLAYER
+                // GLASS PLAYER - pertahankan 16:9 / original, jangan full crop. User pilih via tombol AspectRatio.
+                val playerModifier = if (isFullscreen) Modifier.fillMaxSize().background(Color.Black)
+                else Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(RoundedCornerShape(if (isFullscreen) 0.dp else 12.dp)).background(Color.Black)
                 Box(
-                    modifier = Modifier.fillMaxWidth().aspectRatio(if (isFullscreen) 16f / 9f else 16f / 9f).background(Color.Black)
+                    modifier = playerModifier
                         .pointerInput(Unit) {
                             detectTapGestures(
                                 onTap = { showControls = !showControls },
@@ -232,9 +242,13 @@ fun WatchScreen(
                                 layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                                 useController = false
                                 setShowBuffering(PlayerView.SHOW_BUFFERING_ALWAYS)
+                                resizeMode = resizeMode
                             }
                         },
-                        update = { it.player = exoPlayer },
+                        update = {
+                            it.player = exoPlayer
+                            it.resizeMode = resizeMode
+                        },
                         modifier = Modifier.fillMaxSize()
                     )
 
@@ -281,6 +295,16 @@ fun WatchScreen(
                                 }
                             }
                             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                // Tombol pilih ukuran: Original (fit, tidak kepotong) vs Regang (fill) vs Full Crop (zoom) — user pilih sendiri
+                                Box(modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000)).border(1.dp, Color(0x1AFFFFFF), CircleShape).clickable {
+                                    resizeMode = when (resizeMode) {
+                                        AspectRatioFrameLayout.RESIZE_MODE_FIT -> AspectRatioFrameLayout.RESIZE_MODE_FILL
+                                        AspectRatioFrameLayout.RESIZE_MODE_FILL -> AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                                        else -> AspectRatioFrameLayout.RESIZE_MODE_FIT
+                                    }
+                                }, contentAlignment = Alignment.Center) {
+                                    Icon(Icons.Filled.AspectRatio, contentDescription = "scale $resizeLabel", tint = if (resizeMode == AspectRatioFrameLayout.RESIZE_MODE_FIT) Color.White else GoldPrimary, modifier = Modifier.size(18.dp))
+                                }
                                 if (supportsPip) {
                                     Box(modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x66000000)).border(1.dp, Color(0x1AFFFFFF), CircleShape).clickable { enterPip() }, contentAlignment = Alignment.Center) {
                                         Icon(Icons.Filled.PictureInPictureAlt, contentDescription = "pip", tint = Color.White, modifier = Modifier.size(18.dp))
@@ -309,6 +333,15 @@ fun WatchScreen(
                             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                                 Text("${formatTime(position / 1000)} / ${formatTime(duration / 1000)}", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Medium)
                                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
+                                    Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(if (resizeMode == AspectRatioFrameLayout.RESIZE_MODE_FIT) Color(0x33000000) else Color(0x33FFDB89)).border(1.dp, if (resizeMode == AspectRatioFrameLayout.RESIZE_MODE_FIT) Color(0x33FFFFFF) else Color(0x33FFDB89), RoundedCornerShape(6.dp)).padding(horizontal = 6.dp, vertical = 2.dp).clickable {
+                                        resizeMode = when (resizeMode) {
+                                            AspectRatioFrameLayout.RESIZE_MODE_FIT -> AspectRatioFrameLayout.RESIZE_MODE_FILL
+                                            AspectRatioFrameLayout.RESIZE_MODE_FILL -> AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                                            else -> AspectRatioFrameLayout.RESIZE_MODE_FIT
+                                        }
+                                    }) {
+                                        Text(resizeLabel, color = if (resizeMode == AspectRatioFrameLayout.RESIZE_MODE_FIT) Color.White else GoldPrimary, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                                    }
                                     Box(modifier = Modifier.clip(RoundedCornerShape(6.dp)).background(Color(0x33FFDB89)).border(1.dp, Color(0x1AFFDB89), RoundedCornerShape(6.dp)).padding(horizontal = 6.dp, vertical = 2.dp)) {
                                         Text(quality, color = GoldPrimary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                                     }
@@ -353,6 +386,24 @@ fun WatchScreen(
                                     }
                                 }
                             }
+                            Text("Tampilan Video — pilih jangan full crop", color = Color(0xFF8A8FA3), fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                for ((mode, label, desc) in listOf(
+                                    Triple(AspectRatioFrameLayout.RESIZE_MODE_FIT, "Original", "tidak kepotong"),
+                                    Triple(AspectRatioFrameLayout.RESIZE_MODE_FILL, "Regang", "isi lebar"),
+                                    Triple(AspectRatioFrameLayout.RESIZE_MODE_ZOOM, "Full Crop", "potong")
+                                )) {
+                                    val sel = resizeMode == mode
+                                    Column(
+                                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(12.dp)).background(if (sel) GoldPrimary else GlassBg).border(1.dp, if (sel) GoldPrimary else GlassBorder, RoundedCornerShape(12.dp)).clickable { resizeMode = mode; showQualitySheet = false }.padding(10.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally
+                                    ) {
+                                        Text(label, color = if (sel) Color(0xFF030303) else Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                                        Text(desc, color = if (sel) Color(0xFF030303).copy(0.7f) else Color(0xFF8A8FA3), fontSize = 10.sp)
+                                    }
+                                }
+                            }
+                            Text("Original = biarkan apa adanya (ada black bar tapi tidak kepotong). Regang = penuhi lebar tanpa full crop.", color = Color(0xFF5A5A6A), fontSize = 10.sp)
                             Spacer(Modifier.height(8.dp))
                         }
                     }

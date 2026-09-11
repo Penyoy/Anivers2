@@ -96,7 +96,7 @@ fun WatchScreen(
     var sinopsisExpanded by remember { mutableStateOf(false) }
     var showQualitySheet by remember { mutableStateOf(false) }
     var resizeMode by remember { mutableIntStateOf(AspectRatioFrameLayout.RESIZE_MODE_FIT) }
-    val resizeLabel: String get() = when (resizeMode) {
+    val resizeLabel = when (resizeMode) {
         AspectRatioFrameLayout.RESIZE_MODE_FIT -> "Original"
         AspectRatioFrameLayout.RESIZE_MODE_FILL -> "Regang"
         AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> "Full Crop"

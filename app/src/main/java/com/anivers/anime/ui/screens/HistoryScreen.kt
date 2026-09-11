@@ -48,11 +48,36 @@ fun HistoryScreen(onWatchClick: (String, String) -> Unit) {
 
     fun refresh() {
         scope.launch {
+            // Jika login, pull Firestore dulu biar recent dari cloud ke local
+            try {
+                val uid = FirebaseAuth.getInstance().currentUser?.uid
+                if (uid != null) {
+                    val snap = FirebaseFirestore.getInstance().collection("users").document(uid).collection("history").orderBy("watchedAt", com.google.firebase.firestore.Query.Direction.DESCENDING).limit(50).get().await()
+                    for (doc in snap.documents) {
+                        val data = doc.data ?: continue
+                        val seriesUrl = (data["seriesUrl"] ?: data["animeId"] ?: "").toString()
+                        val episode = (data["episode"] ?: data["episodeId"] ?: "").toString()
+                        val judul = (data["judul"] ?: data["title"] ?: "").toString()
+                        val cover = (data["cover"] ?: data["poster"] ?: "").toString()
+                        val pos = (data["position"] as? Number)?.toLong() ?: (data["currentTime"] as? Number)?.toLong() ?: 0L
+                        val dur = (data["duration"] as? Number)?.toLong() ?: 0L
+                        val prog = if (dur > 0) ((pos.toDouble()/dur)*100).toInt().coerceIn(0,100) else 0
+                        if (seriesUrl.isNotBlank() && episode.isNotBlank()) {
+                            // upsert ke local tanpa duplikat timestamp
+                            dao.insert(com.anivers.anime.data.local.HistoryEntity(seriesUrl=seriesUrl, episode=episode, judul=judul.ifBlank { seriesUrl }, cover=cover, currentTime=pos, duration=dur, progress=prog, timestamp = (data["watchedAt"] as? com.google.firebase.Timestamp)?.toDate()?.time ?: System.currentTimeMillis()))
+                        }
+                    }
+                }
+            } catch (_: Exception) {}
             history = dao.getAll().sortedByDescending { it.timestamp }
         }
     }
 
     LaunchedEffect(Unit) { refresh() }
+    // Auto-refresh saat kembali ke screen atau data berubah
+    LaunchedEffect(dao) {
+        dao.getRecentFlow(50).collect { list -> history = list.sortedByDescending { it.timestamp } }
+    }
 
     GlassBackground {
         Column(modifier = Modifier.fillMaxSize().statusBarsPadding().padding(bottom = 96.dp)) {

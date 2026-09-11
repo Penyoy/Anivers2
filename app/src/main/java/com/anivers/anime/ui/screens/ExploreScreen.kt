@@ -73,51 +73,91 @@ fun ExploreScreen(
         }
     }
 
+    val isCategory = initialType in listOf("ongoing", "baruupload", "movie", "rekomendasi", "top")
+    val categoryTitle = when (initialType) {
+        "ongoing" -> "Trending • Ongoing"
+        "baruupload" -> "Baru Rilis"
+        "movie" -> "Movie • Completed"
+        "rekomendasi", "top" -> "Rekomendasi"
+        else -> null
+    }
+
     GlassBackground {
         Column(modifier = Modifier.fillMaxSize().statusBarsPadding().padding(bottom = 96.dp)) {
-            GlassTopBar(title = "Jelajahi Genre", subtitle = "Pilih mood kamu hari ini")
+            GlassTopBar(
+                title = categoryTitle ?: "Jelajahi Genre",
+                subtitle = if (isCategory) "${filteredList.size} anime • $initialType" else "Pilih mood kamu hari ini"
+            )
 
             LazyColumn(modifier = Modifier.weight(1f, fill = false), contentPadding = PaddingValues(bottom = 16.dp)) {
-                item {
-                    Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        for (row in genres.chunked(2)) {
-                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                                for (g in row) {
-                                    Box(
-                                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(16.dp)).background(g.gradient).border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp)).clickable { onGenreClick(g.slug) }.padding(14.dp)
-                                    ) {
-                                        Column {
-                                            Text(g.name, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
-                                            Text(g.desc, color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp)
-                                            Spacer(Modifier.height(6.dp))
-                                            Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0x33000000)).padding(horizontal = 8.dp, vertical = 3.dp)) {
-                                                Text("Jelajahi →", color = Color.White, fontSize = 10.sp)
-                                            }
+                // Kategori view: langsung list tanpa grid genre (fix more -> genre bug)
+                if (isCategory) {
+                    item {
+                        Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            if (loading) {
+                                Box(Modifier.fillMaxWidth().height(180.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = GoldPrimary) }
+                            } else if (filteredList.isEmpty()) {
+                                Box(Modifier.fillMaxWidth().padding(24.dp), contentAlignment = Alignment.Center) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text("Belum ada data", color = Color.White, fontWeight = FontWeight.Bold)
+                                        Text("Kategori $initialType kosong", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+                                    }
+                                }
+                            } else {
+                                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    for (row in filteredList.chunked(3)) {
+                                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                                            for (a in row) Box(Modifier.weight(1f)) { AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }, showBookmark = false) }
+                                            repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
                                         }
                                     }
                                 }
-                                if (row.size == 1) Spacer(Modifier.weight(1f))
                             }
+                            Spacer(Modifier.height(16.dp))
                         }
-                        Spacer(Modifier.height(6.dp))
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Box(Modifier.width(3.dp).height(16.dp).clip(RoundedCornerShape(50)).background(GoldPrimary))
-                            Text("Rekomendasi Lain", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
-                        }
-                        if (loading) {
-                            Box(Modifier.fillMaxWidth().height(180.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = GoldPrimary) }
-                        } else {
-                            val list = if (filteredList.isNotEmpty()) filteredList else rekomendasi
-                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                                for (row in list.take(12).chunked(3)) {
-                                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
-                                        for (a in row) Box(Modifier.weight(1f)) { AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }, showBookmark = false) }
-                                        repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
+                    }
+                } else {
+                    item {
+                        Column(modifier = Modifier.padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                            for (row in genres.chunked(2)) {
+                                Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                                    for (g in row) {
+                                        Box(
+                                            modifier = Modifier.weight(1f).clip(RoundedCornerShape(16.dp)).background(g.gradient).border(1.dp, Color(0x1AFFFFFF), RoundedCornerShape(16.dp)).clickable { onGenreClick(g.slug) }.padding(14.dp)
+                                        ) {
+                                            Column {
+                                                Text(g.name, color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                                                Text(g.desc, color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp)
+                                                Spacer(Modifier.height(6.dp))
+                                                Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(Color(0x33000000)).padding(horizontal = 8.dp, vertical = 3.dp)) {
+                                                    Text("Jelajahi →", color = Color.White, fontSize = 10.sp)
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (row.size == 1) Spacer(Modifier.weight(1f))
+                                }
+                            }
+                            Spacer(Modifier.height(6.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Box(Modifier.width(3.dp).height(16.dp).clip(RoundedCornerShape(50)).background(GoldPrimary))
+                                Text("Rekomendasi Lain", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                            }
+                            if (loading) {
+                                Box(Modifier.fillMaxWidth().height(180.dp), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = GoldPrimary) }
+                            } else {
+                                val list = if (filteredList.isNotEmpty()) filteredList else rekomendasi
+                                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    for (row in list.take(12).chunked(3)) {
+                                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                                            for (a in row) Box(Modifier.weight(1f)) { AnimeCard(anime = a, onClick = { onAnimeClick(a.url) }, showBookmark = false) }
+                                            repeat(3 - row.size) { Spacer(Modifier.weight(1f)) }
+                                        }
                                     }
                                 }
                             }
+                            Spacer(Modifier.height(16.dp))
                         }
-                        Spacer(Modifier.height(16.dp))
                     }
                 }
             }

@@ -48,6 +48,13 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
     val scope = rememberCoroutineScope()
     val isLoggedIn = FirebaseAuth.getInstance().currentUser != null
 
+    // Pull dari Firebase saat login agar save terambil dari cloud
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn) {
+            try { repo.pullFromFirebase() } catch (_: Exception) {}
+        }
+    }
+
     val filtered = remember(bookmarks, query, sort) {
         var list = bookmarks.filter { it.url.isNotEmpty() && it.url != "undefined" }
         if (query.isNotBlank()) list = list.filter { it.judul.contains(query, ignoreCase = true) }

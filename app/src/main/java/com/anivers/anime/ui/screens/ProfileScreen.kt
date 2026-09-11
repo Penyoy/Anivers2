@@ -229,18 +229,6 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                             Text(if (isLogin) "Lanjutkan dengan Google" else "Daftar dengan Google", fontSize = 13.sp)
                         }
                     }
-                    // Bantuan SHA-1
-                    Box(
-                        modifier = Modifier.fillMaxWidth().padding(top = 6.dp).clip(RoundedCornerShape(8.dp)).background(Color(0x0DFFFFFF)).border(1.dp, GlassBorder, RoundedCornerShape(8.dp)).padding(8.dp)
-                    ) {
-                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                            Text("Butuh SHA-1 untuk Google Sign-In:", color = GoldPrimary, fontSize = 10.sp, fontWeight = FontWeight.Bold)
-                            Text("1. Jalankan: ./gradlew signingReport", color = Color(0xFF8A8FA3), fontSize = 10.sp)
-                            Text("2. Copy SHA1 debug → Firebase Console → Project Settings → Your apps → SHA certificate fingerprints → Add", color = Color(0xFF8A8FA3), fontSize = 10.sp)
-                            Text("3. Download google-services.json baru → ganti app/google-services.json → rebuild", color = Color(0xFF8A8FA3), fontSize = 10.sp)
-                        }
-                    }
-                    Spacer(Modifier.height(12.dp))
                     Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(GlassBorder))
                     Spacer(Modifier.height(12.dp))
                     if (!isLogin) {

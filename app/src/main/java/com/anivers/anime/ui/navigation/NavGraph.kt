@@ -126,7 +126,12 @@ fun AppNavGraph(navController: NavHostController) {
         ) { backStack ->
             val seriesUrl = backStack.arguments?.getString("seriesUrl") ?: ""
             val episode = backStack.arguments?.getString("episode") ?: ""
-            WatchScreen(seriesUrl = seriesUrl, episode = episode, onBack = { navController.popBackStack() })
+            WatchScreen(
+                seriesUrl = seriesUrl,
+                episode = episode,
+                onBack = { navController.popBackStack() },
+                onEpisodeClick = { s, e -> navController.navigate(Routes.watch(s, e)) }
+            )
         }
         composable(Routes.HISTORY) { HistoryScreen(onWatchClick = { s, e -> navController.navigate(Routes.watch(s, e)) }) }
         composable(Routes.BOOKMARK) { BookmarkScreen(onAnimeClick = { slug -> navController.navigate(Routes.detail(slug)) }) }

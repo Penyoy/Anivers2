@@ -243,6 +243,61 @@ class AnimeRepository(
         }
     }
 
+    suspend fun getComments(slug: String): List<com.anivers.anime.data.model.Comment> = withContext(Dispatchers.IO) {
+        val candidates = listOf(slug, slug.trimEnd('/'), slug.removeSuffix("/"))
+        var last: List<com.anivers.anime.data.model.Comment> = emptyList()
+        for (s in candidates.distinct()) {
+            try {
+                val el = try { api.getComments(s) } catch (_: Exception) { api.getCommentsByUrl(s) }
+                val list = parseComments(el)
+                if (list.isNotEmpty()) return@withContext list
+                last = list
+            } catch (e: Exception) { android.util.Log.w("ANIVERS_API", "getComments fail slug=$s", e) }
+        }
+        last
+    }
+
+    suspend fun postComment(slug: String, message: String, user: String = "Anon"): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val body = mapOf("slug" to slug, "url" to slug, "message" to message, "comment" to message, "user" to user, "name" to user)
+            val el = api.postComment(body)
+            // anggap sukses jika tidak throw dan bukan error primitive
+            if (el == null || el.isJsonNull) return@withContext false
+            if (el.isJsonPrimitive && el.asJsonPrimitive.asString.contains("error", true)) return@withContext false
+            true
+        } catch (e: Exception) { android.util.Log.w("ANIVERS_API", "postComment fail slug=$slug", e); false }
+    }
+
+    private fun parseComments(el: com.google.gson.JsonElement?): List<com.anivers.anime.data.model.Comment> {
+        if (el == null || el.isJsonNull) return emptyList()
+        return try {
+            if (el.isJsonArray) {
+                val arr = el.asJsonArray
+                // langsung array of comments
+                return arr.mapNotNull { try { gson.fromJson(it, com.anivers.anime.data.model.Comment::class.java) } catch (_: Exception) { null } }.filter { it.displayMessage.isNotBlank() }
+            }
+            if (el.isJsonObject) {
+                val obj = el.asJsonObject
+                // wrapper data: {"data":[...]} atau {"comments":[...]} atau {"result":[...]}
+                val keys = listOf("data", "comments", "result", "list")
+                for (k in keys) if (obj.has(k)) {
+                    val d = obj.get(k)
+                    if (d.isJsonArray) return d.asJsonArray.mapNotNull { try { gson.fromJson(it, com.anivers.anime.data.model.Comment::class.java) } catch (_: Exception) { null } }.filter { it.displayMessage.isNotBlank() }
+                    if (d.isJsonObject && d.asJsonObject.has("comments")) {
+                        val c = d.asJsonObject.get("comments")
+                        if (c.isJsonArray) return c.asJsonArray.mapNotNull { try { gson.fromJson(it, com.anivers.anime.data.model.Comment::class.java) } catch (_: Exception) { null } }.filter { it.displayMessage.isNotBlank() }
+                    }
+                }
+                // single object comment
+                if (obj.has("comment") || obj.has("message") || obj.has("user")) {
+                    val c = gson.fromJson(obj, com.anivers.anime.data.model.Comment::class.java)
+                    if (c.displayMessage.isNotBlank()) return listOf(c)
+                }
+            }
+            emptyList()
+        } catch (e: Exception) { android.util.Log.w("ANIVERS_API", "parseComments fail", e); emptyList() }
+    }
+
     // helpers - mirrors api.js extractSearchAnimes
     fun extractSearchAnimes(element: JsonElement): List<com.anivers.anime.data.model.Anime> {
         if (element == null || element.isJsonNull) return emptyList()

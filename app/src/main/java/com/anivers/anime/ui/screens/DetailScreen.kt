@@ -43,6 +43,7 @@ import androidx.compose.material.icons.filled.VpnKey
 import com.anivers.anime.data.ads.AdsManager
 import com.anivers.anime.data.local.SettingsStore
 import com.anivers.anime.data.repository.KeysRepository
+import com.anivers.anime.ui.components.CommentsSection
 import com.anivers.anime.ui.theme.GlassBg
 import com.anivers.anime.ui.theme.GlassBorder
 import com.anivers.anime.ui.theme.GoldPrimary
@@ -379,6 +380,8 @@ fun DetailScreen(
                             Text("Episode belum tersedia", color = Color(0xFF8A8FA3), fontSize = 14.sp)
                         }
                     }
+                    // Komentar per slug anime (endpoint /comments.php?slug=xxx)
+                    CommentsSection(slug = slug, modifier = Modifier.padding(horizontal = 16.dp))
                     Spacer(Modifier.height(24.dp))
                     if (showLockDialog) {
                         AlertDialog(

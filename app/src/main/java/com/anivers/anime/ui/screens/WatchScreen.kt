@@ -45,6 +45,7 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import com.anivers.anime.data.repository.BookmarkRepository
+import com.anivers.anime.ui.components.CommentsSection
 import com.anivers.anime.ui.theme.GlassBg
 import com.anivers.anime.ui.theme.GlassBorder
 import com.anivers.anime.ui.theme.GoldPrimary
@@ -58,6 +59,7 @@ fun WatchScreen(
     seriesUrl: String,
     episode: String,
     onBack: () -> Unit,
+    onEpisodeClick: (String, String) -> Unit = { _, _ -> },
     vm: WatchViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -414,11 +416,27 @@ fun WatchScreen(
                         items(series!!.chapter!!) { ep ->
                             val isActive = ep.url == episode
                             Box(
-                                modifier = Modifier.size(48.dp, 40.dp).clip(RoundedCornerShape(10.dp)).background(if (isActive) GoldPrimary else GlassBg).border(1.dp, if (isActive) GoldPrimary else GlassBorder, RoundedCornerShape(10.dp)).clickable { /* keep in player, not navigate */ },
+                                modifier = Modifier.size(48.dp, 40.dp).clip(RoundedCornerShape(10.dp)).background(if (isActive) GoldPrimary else GlassBg).border(1.dp, if (isActive) GoldPrimary else GlassBorder, RoundedCornerShape(10.dp)).clickable {
+                                    if (!isActive && ep.url != null) onEpisodeClick(seriesUrl, ep.url)
+                                },
                                 contentAlignment = Alignment.Center
                             ) { Text(ep.ch ?: "?", color = if (isActive) Color(0xFF030303) else Color(0xFF8A8FA3), fontSize = 12.sp, fontWeight = if (isActive) FontWeight.Bold else FontWeight.Normal) }
                         }
                     }
+                    // Next/Prev buttons glass
+                    Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
+                        val idx = series!!.chapter!!.indexOfFirst { it.url == episode }
+                        val prev = if (idx > 0) series!!.chapter!![idx - 1] else null
+                        val next = if (idx >= 0 && idx < series!!.chapter!!.size - 1) series!!.chapter!![idx + 1] else null
+                        if (prev != null) OutlinedButton(onClick = { onEpisodeClick(seriesUrl, prev.url ?: "") }, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder), modifier = Modifier.weight(1f)) {
+                            Icon(Icons.Filled.SkipPrevious, null, tint = Color.White, modifier = Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Prev Ep ${prev.ch}", color = Color.White, fontSize = 12.sp)
+                        } else Spacer(Modifier.weight(1f))
+                        if (next != null) Button(onClick = { onEpisodeClick(seriesUrl, next.url ?: "") }, colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)), shape = RoundedCornerShape(50.dp), modifier = Modifier.weight(1f)) {
+                            Text("Next Ep ${next.ch}", fontWeight = FontWeight.Bold, fontSize = 12.sp); Spacer(Modifier.width(6.dp)); Icon(Icons.Filled.SkipNext, null, modifier = Modifier.size(16.dp))
+                        } else Spacer(Modifier.weight(1f))
+                    }
+                    // Komentar per episode slug
+                    CommentsSection(slug = episode.ifBlank { seriesUrl }, modifier = Modifier.padding(top = 12.dp))
                 }
             }
         }

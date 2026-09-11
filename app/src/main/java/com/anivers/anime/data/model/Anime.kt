@@ -114,3 +114,27 @@ data class GenreItem(
     val score: String? = null,
     val status: String? = null
 )
+
+// Comments per slug (endpoint /comments.php?slug=xxx)
+data class Comment(
+    val id: String = "",
+    val user: String = "",
+    val name: String = "",
+    val username: String = "",
+    val avatar: String = "",
+    val photo: String = "",
+    val message: String = "",
+    val comment: String = "",
+    val text: String = "",
+    val content: String = "",
+    val date: String = "",
+    val createdAt: String = "",
+    val time: String = "",
+    val likes: Int = 0
+) {
+    val displayName: String get() = user.ifNotBlank() ?: name.ifNotBlank() ?: username.ifNotBlank() ?: "Anon"
+    val displayMessage: String get() = message.ifNotBlank() ?: comment.ifNotBlank() ?: text.ifNotBlank() ?: content.ifNotBlank() ?: ""
+    val displayDate: String get() = date.ifNotBlank() ?: createdAt.ifNotBlank() ?: time.ifNotBlank() ?: ""
+    val displayAvatar: String get() = avatar.ifNotBlank() ?: photo.ifNotBlank() ?: ""
+    private fun String.ifNotBlank(): String = if (isNotBlank()) this else ""
+}

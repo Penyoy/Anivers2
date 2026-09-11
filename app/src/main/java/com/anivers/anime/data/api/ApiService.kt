@@ -48,4 +48,14 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("url") url: String
     ): List<Map<String, Any>>
+
+    @GET("comments.php")
+    suspend fun getComments(@Query("slug") slug: String): JsonElement
+
+    @GET("comments.php")
+    suspend fun getCommentsByUrl(@Query("url") url: String): JsonElement
+
+    @POST("comments.php")
+    @Headers("Content-Type: application/json")
+    suspend fun postComment(@Body body: Map<String, String>): JsonElement
 }

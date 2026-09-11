@@ -54,9 +54,9 @@ fun WelcomeScreen(
                     }
                 }
                 Spacer(Modifier.height(24.dp))
-                Text("Streaming Anime\nPremium & Elegant", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, lineHeight = 28.sp)
+                Text("Streaming Anime\nElegant & HD", color = Color.White, fontSize = 24.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, lineHeight = 28.sp)
                 Spacer(Modifier.height(12.dp))
-                Text("Nonton ribuan anime subtitle Indonesia\nkualitas HD, tanpa iklan mengganggu.", color = Color(0xFFB8B8B8), fontSize = 13.sp, textAlign = TextAlign.Center, lineHeight = 18.sp)
+                Text("Nonton ribuan anime subtitle Indonesia\nkualitas HD, pengalaman glass modern.", color = Color(0xFFB8B8B8), fontSize = 13.sp, textAlign = TextAlign.Center, lineHeight = 18.sp)
             }
 
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(12.dp)) {

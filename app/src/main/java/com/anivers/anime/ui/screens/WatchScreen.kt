@@ -156,6 +156,7 @@ fun WatchScreen(
         }
     }
 
+    // Recent fix: hanya upsertProgress tiap 8s (dedup per episode), jangan addHistory tiap 8s (bikin 50 row)
     LaunchedEffect(exoPlayer) {
         while (true) {
             delay(8000)
@@ -164,7 +165,10 @@ fun WatchScreen(
             val dur = p.duration / 1000
             if (dur > 5 && pos > 3) {
                 repo.upsertProgress(seriesUrl, episode, pos, dur)
-                repo.addHistory(seriesUrl, episode, series?.judul ?: seriesUrl, series?.cover ?: "", pos, dur, !p.isPlaying && pos >= dur - 2)
+                // addHistory hanya saat pause/complete, tidak tiap 8s biar tidak 50 duplikat
+                if (!p.isPlaying && pos >= dur - 2) {
+                    repo.addHistory(seriesUrl, episode, series?.judul ?: seriesUrl, series?.cover ?: "", pos, dur, true)
+                }
             }
         }
     }
@@ -194,34 +198,34 @@ fun WatchScreen(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) context.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE) else false
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize().background(Color.Black).verticalScroll(rememberScrollState()).padding(bottom = if (isFullscreen) 0.dp else 96.dp)
-    ) {
-        if (!isFullscreen) Spacer(Modifier.height(28.dp))
+    // Final: player di luar verticalScroll, original top/bottom nempel (pillar-box), tanpa border radius di portrait maupun landscape
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (!isFullscreen) Spacer(Modifier.statusBarsPadding().height(8.dp))
 
-        when {
-            loading -> Box(Modifier.fillMaxWidth().height(240.dp).background(Color.Black), contentAlignment = Alignment.Center) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    CircularProgressIndicator(color = GoldPrimary)
-                    Text("Memuat video...", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+            when {
+                loading -> Box(Modifier.fillMaxWidth().height(240.dp).background(Color.Black), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        CircularProgressIndicator(color = GoldPrimary)
+                        Text("Memuat video...", color = Color(0xFF8A8FA3), fontSize = 12.sp)
+                    }
                 }
-            }
-            error != null -> Column(Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Box(modifier = Modifier.size(56.dp).clip(CircleShape).background(Color(0x1AFF5F5F)), contentAlignment = Alignment.Center) {
-                    Icon(Icons.Filled.ErrorOutline, contentDescription = null, tint = Color(0xFFFF5F5F), modifier = Modifier.size(28.dp))
+                error != null -> Column(Modifier.fillMaxWidth().padding(24.dp).verticalScroll(rememberScrollState()), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Box(modifier = Modifier.size(56.dp).clip(CircleShape).background(Color(0x1AFF5F5F)), contentAlignment = Alignment.Center) {
+                        Icon(Icons.Filled.ErrorOutline, contentDescription = null, tint = Color(0xFFFF5F5F), modifier = Modifier.size(28.dp))
+                    }
+                    Text("Gagal memuat video", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text(error ?: "", color = Color(0xFF8A8FA3), fontSize = 12.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+                    Spacer(Modifier.height(6.dp))
+                    Button(onClick = { vm.load(seriesUrl, episode) }, colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)), shape = RoundedCornerShape(50.dp)) {
+                        Icon(Icons.Filled.Refresh, contentDescription = null, modifier = Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Coba Lagi", fontWeight = FontWeight.Bold)
+                    }
+                    OutlinedButton(onClick = onBack, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder)) { Text("Kembali", color = Color.White) }
                 }
-                Text("Gagal memuat video", color = Color.White, fontWeight = FontWeight.Bold)
-                Text(error ?: "", color = Color(0xFF8A8FA3), fontSize = 12.sp, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
-                Spacer(Modifier.height(6.dp))
-                Button(onClick = { vm.load(seriesUrl, episode) }, colors = ButtonDefaults.buttonColors(containerColor = GoldPrimary, contentColor = Color(0xFF030303)), shape = RoundedCornerShape(50.dp)) {
-                    Icon(Icons.Filled.Refresh, contentDescription = null, modifier = Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Coba Lagi", fontWeight = FontWeight.Bold)
-                }
-                OutlinedButton(onClick = onBack, shape = RoundedCornerShape(50.dp), border = androidx.compose.foundation.BorderStroke(1.dp, GlassBorder)) { Text("Kembali", color = Color.White) }
-            }
-            currentLink != null -> {
-                // GLASS PLAYER - pertahankan 16:9 / original, jangan full crop. User pilih via tombol AspectRatio.
-                val playerModifier = if (isFullscreen) Modifier.fillMaxSize().background(Color.Black)
-                else Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(RoundedCornerShape(if (isFullscreen) 0.dp else 12.dp)).background(Color.Black)
+                currentLink != null -> {
+                    // GLASS PLAYER - original top/bottom nempel, sisi hitam jika perlu, tanpa radius
+                    val playerModifier = if (isFullscreen) Modifier.fillMaxSize().background(Color.Black)
+                    else Modifier.fillMaxWidth().aspectRatio(16f / 9f).background(Color.Black)
                 Box(
                     modifier = playerModifier
                         .pointerInput(Unit) {
@@ -419,7 +423,7 @@ fun WatchScreen(
         }
 
         if (!isFullscreen) {
-            Column(modifier = Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(16.dp).padding(bottom = 96.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(series?.judul ?: seriesUrl, color = Color.White, fontSize = 16.sp, fontWeight = FontWeight.Bold, lineHeight = 18.sp, maxLines = 2)
                 Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (!series?.rating.isNullOrEmpty()) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -486,11 +490,12 @@ fun WatchScreen(
                             Text("Next Ep ${next.ch}", fontWeight = FontWeight.Bold, fontSize = 12.sp); Spacer(Modifier.width(6.dp)); Icon(Icons.Filled.SkipNext, null, modifier = Modifier.size(16.dp))
                         } else Spacer(Modifier.weight(1f))
                     }
-                    // Komentar per episode slug
-                    CommentsSection(slug = episode.ifBlank { seriesUrl }, modifier = Modifier.padding(top = 12.dp))
+                    // Komentar per episode slug - disabled sementara (endpoint belum ketemu)
+                    // CommentsSection(slug = episode.ifBlank { seriesUrl }, modifier = Modifier.padding(top = 12.dp))
                 }
             }
         }
+    }
     }
 }
 

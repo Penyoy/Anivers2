@@ -380,8 +380,8 @@ fun DetailScreen(
                             Text("Episode belum tersedia", color = Color(0xFF8A8FA3), fontSize = 14.sp)
                         }
                     }
-                    // Komentar per slug anime (endpoint /comments.php?slug=xxx)
-                    CommentsSection(slug = slug, modifier = Modifier.padding(horizontal = 16.dp))
+                    // Komentar per slug anime - disabled sementara endpoint belum ketemu
+                    // CommentsSection(slug = slug, modifier = Modifier.padding(horizontal = 16.dp))
                     Spacer(Modifier.height(24.dp))
                     if (showLockDialog) {
                         AlertDialog(

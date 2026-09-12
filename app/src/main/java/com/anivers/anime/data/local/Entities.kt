@@ -34,7 +34,9 @@ data class ProgressEntity(
     val currentTime: Long,
     val duration: Long,
     val progress: Int,
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+    val judul: String = "",
+    val cover: String = ""
 )
 
 @Entity(tableName = "unlocked_anime")

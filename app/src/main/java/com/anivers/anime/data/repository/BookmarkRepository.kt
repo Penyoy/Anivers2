@@ -103,7 +103,7 @@ class BookmarkRepository(private val context: Context) {
         val progress = ((currentTime.toDouble() / duration.toDouble()) * 100).toInt().coerceIn(0, 100)
         val key = "$seriesUrl|$episode"
         val completed = if (duration > 0) (currentTime.toDouble() / duration.toDouble()) >= 0.90 else false
-        historyDao.upsertProgress(ProgressEntity(key = key, seriesUrl = seriesUrl, episode = episode, currentTime = currentTime, duration = duration, progress = progress))
+        historyDao.upsertProgress(ProgressEntity(key = key, seriesUrl = seriesUrl, episode = episode, currentTime = currentTime, duration = duration, progress = progress, judul = title.ifBlank { seriesUrl }, cover = poster))
         // Firestore watchProgress subcollection with throttling handled by caller (8s)
         try {
             val uid = auth.currentUser?.uid ?: return
@@ -132,7 +132,7 @@ class BookmarkRepository(private val context: Context) {
     suspend fun addHistory(seriesUrl: String, episode: String, judul: String, cover: String, currentTime: Long, duration: Long, completed: Boolean = false) {
         val progress = if (duration > 0) ((currentTime.toDouble()/duration)*100).toInt().coerceIn(0,100) else 0
         historyDao.insert(HistoryEntity(seriesUrl = seriesUrl, episode = episode, judul = judul, cover = cover, currentTime = currentTime, duration = duration, progress = progress, completed = completed))
-        historyDao.upsertProgress(ProgressEntity(key = "$seriesUrl|$episode", seriesUrl = seriesUrl, episode = episode, currentTime = currentTime, duration = duration, progress = progress))
+        historyDao.upsertProgress(ProgressEntity(key = "$seriesUrl|$episode", seriesUrl = seriesUrl, episode = episode, currentTime = currentTime, duration = duration, progress = progress, judul = judul, cover = cover))
         // Firestore history subcollection
         try {
             val uid = auth.currentUser?.uid ?: return

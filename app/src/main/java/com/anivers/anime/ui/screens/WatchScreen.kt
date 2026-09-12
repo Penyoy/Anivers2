@@ -156,7 +156,7 @@ fun WatchScreen(
         }
     }
 
-    // Recent fix: hanya upsertProgress tiap 8s (dedup per episode), jangan addHistory tiap 8s (bikin 50 row)
+    // Recent fix: hanya upsertProgress tiap 8s (dedup per episode) dengan cover/judul agar recent muncul, jangan addHistory tiap 8s (bikin 50 row)
     LaunchedEffect(exoPlayer) {
         while (true) {
             delay(8000)
@@ -164,7 +164,7 @@ fun WatchScreen(
             val pos = p.currentPosition / 1000
             val dur = p.duration / 1000
             if (dur > 5 && pos > 3) {
-                repo.upsertProgress(seriesUrl, episode, pos, dur)
+                repo.upsertProgress(seriesUrl, episode, pos, dur, seriesUrl, series?.judul ?: seriesUrl, series?.cover ?: "")
                 // addHistory hanya saat pause/complete, tidak tiap 8s biar tidak 50 duplikat
                 if (!p.isPlaying && pos >= dur - 2) {
                     repo.addHistory(seriesUrl, episode, series?.judul ?: seriesUrl, series?.cover ?: "", pos, dur, true)

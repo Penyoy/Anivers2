@@ -22,7 +22,7 @@ android {
         vectorDrawables { useSupportLibrary = true }
 
         // API base bisa di-override via local.properties / BuildConfig
-        buildConfigField("String", "API_BASE", "\"https://apps.animekita.org/api/v1.2.5\"")
+        buildConfigField("String", "API_BASE", "\"https://proxy.hiyuuki.my.id/api/v1.2.5\"")
         buildConfigField("String", "PROXY_FALLBACKS", "\"\"")
     }
 

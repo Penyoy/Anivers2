@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="Anivers — anime streaming experience.">
+  <title>Anivers — Watch Anime Your Way</title>
+
+  <!-- Font Awesome: icons, no emoji -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#070707;
+      --bg-soft:#0d0d0d;
+      --panel:rgba(255,255,255,.055);
+      --panel-strong:rgba(255,255,255,.085);
+      --line:rgba(255,255,255,.10);
+      --text:#f6f1e4;
+      --muted:#9b968b;
+      --gold:#e5c879;
+      --gold-2:#cdae61;
+      --gold-soft:rgba(229,200,121,.14);
+      --green:#77f28a;
+      --radius:24px;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 78% 10%, rgba(229,200,121,.12), transparent 27rem),
+        radial-gradient(circle at 15% 65%, rgba(119,242,138,.045), transparent 24rem),
+        var(--bg);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+
+    .noise{
+      position:fixed;inset:0;pointer-events:none;opacity:.025;z-index:20;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+    }
+
+    .nav{
+      position:fixed;top:18px;left:50%;transform:translateX(-50%);
+      width:min(calc(100% - 32px),var(--max));
+      z-index:30;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 12px 10px 16px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:rgba(10,10,10,.72);
+      backdrop-filter:blur(22px);
+      box-shadow:0 18px 60px rgba(0,0,0,.35);
+    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em}
+    .brand img{width:34px;height:34px;object-fit:cover;border-radius:10px}
+    .brand span{font-size:16px}
+    .navlinks{display:flex;gap:6px}
+    .navlinks a{
+      padding:9px 12px;border-radius:12px;color:var(--muted);font-size:13px;
+      transition:.2s;
+    }
+    .navlinks a:hover,.navlinks a.active{color:var(--text);background:rgba(255,255,255,.055)}
+    .nav-cta{
+      padding:10px 15px;border-radius:12px;background:var(--gold);color:#18140a;
+      font-weight:800;font-size:13px;
+    }
+
+    main{position:relative}
+    .hero{
+      min-height:850px;
+      width:min(calc(100% - 32px),var(--max));
+      margin:auto;
+      display:grid;grid-template-columns:1fr 1fr;align-items:center;
+      gap:45px;padding-top:125px;
+    }
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:7px 11px;border:1px solid rgba(229,200,121,.25);
+      border-radius:999px;background:var(--gold-soft);
+      color:var(--gold);font-size:11px;font-weight:800;letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .eyebrow i{font-size:9px}
+    h1{
+      font-size:clamp(48px,7vw,82px);line-height:.92;letter-spacing:-.065em;
+      margin:22px 0 20px;max-width:700px;
+    }
+    h1 em{font-style:normal;color:var(--gold)}
+    .lead{
+      color:var(--muted);font-size:17px;line-height:1.7;max-width:550px;
+      margin:0 0 28px;
+    }
+    .actions{display:flex;gap:11px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;gap:9px;
+      padding:13px 17px;border-radius:14px;border:1px solid var(--line);
+      font-weight:800;font-size:13px;transition:.2s;
+    }
+    .btn.primary{background:var(--gold);color:#15120b;border-color:var(--gold)}
+    .btn.secondary{background:rgba(255,255,255,.045)}
+    .btn:hover{transform:translateY(-2px)}
+
+    .hero-visual{position:relative;height:600px}
+    .orb{
+      position:absolute;width:420px;height:420px;border-radius:50%;
+      right:20px;top:85px;
+      background:radial-gradient(circle,rgba(229,200,121,.22),rgba(229,200,121,.035) 48%,transparent 70%);
+      filter:blur(2px);
+    }
+    .visual-logo{
+      position:absolute;width:235px;height:235px;object-fit:cover;
+      right:135px;top:170px;border-radius:52px;
+      box-shadow:0 35px 100px rgba(0,0,0,.65),0 0 70px rgba(229,200,121,.10);
+      transform:rotate(-3deg);
+      z-index:3;
+    }
+    .anime-card{
+      position:absolute;width:138px;height:205px;border-radius:19px;overflow:hidden;
+      border:1px solid rgba(255,255,255,.13);
+      box-shadow:0 22px 50px rgba(0,0,0,.55);
+      background:#151515;
+      transition:.3s;
+    }
+    .anime-card img{width:100%;height:100%;object-fit:cover;filter:saturate(.9)}
+    .anime-card:after{
+      content:"";position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.78));
+    }
+    .card-label{
+      position:absolute;left:11px;bottom:11px;right:11px;z-index:2;
+      font-size:10px;font-weight:800;letter-spacing:.02em;
+    }
+    .c1{left:4px;top:135px;transform:rotate(-11deg)}
+    .c2{left:65px;bottom:25px;transform:rotate(5deg)}
+    .c3{right:3px;top:95px;transform:rotate(10deg)}
+    .c4{right:25px;bottom:10px;transform:rotate(-5deg)}
+    .anime-card:hover{transform:translateY(-10px) rotate(0deg);z-index:5}
+
+    .spark{
+      position:absolute;color:var(--green);font-size:25px;filter:drop-shadow(0 0 14px rgba(119,242,138,.45))
+    }
+    .s1{right:75px;top:80px}.s2{left:120px;bottom:95px;font-size:14px}.s3{right:0;bottom:175px;font-size:12px}
+
+    section{
+      width:min(calc(100% - 32px),var(--max));margin:0 auto;padding:100px 0;
+    }
+    .section-head{
+      display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:25px;
+    }
+    .section-head h2{margin:0;font-size:31px;letter-spacing:-.04em}
+    .section-head p{margin:0;color:var(--muted);font-size:13px;max-width:450px;line-height:1.6}
+
+    .features{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:14px;
+    }
+    .feature{
+      padding:25px;border:1px solid var(--line);border-radius:var(--radius);
+      background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+    }
+    .feature-icon{
+      width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+      color:var(--gold);background:var(--gold-soft);border:1px solid rgba(229,200,121,.18);
+      margin-bottom:35px;
+    }
+    .feature h3{margin:0 0 8px;font-size:17px}
+    .feature p{margin:0;color:var(--muted);font-size:13px;line-height:1.65}
+
+    .showcase{
+      display:grid;grid-template-columns:1.05fr .95fr;gap:15px;
+    }
+    .showcase-panel{
+      min-height:410px;border:1px solid var(--line);border-radius:28px;
+      overflow:hidden;position:relative;background:#101010;
+    }
+    .showcase-panel.big{
+      padding:34px;
+      background:
+        radial-gradient(circle at 80% 20%,rgba(229,200,121,.15),transparent 16rem),
+        linear-gradient(145deg,#17140d,#0c0c0c 60%);
+    }
+    .showcase-panel h3{font-size:36px;letter-spacing:-.05em;max-width:400px;margin:10px 0 12px}
+    .showcase-panel p{color:var(--muted);max-width:420px;line-height:1.7;font-size:14px}
+    .mini-ui{
+      position:absolute;right:-10px;bottom:-70px;width:330px;padding:14px;
+      border:1px solid rgba(255,255,255,.13);border-radius:24px;
+      background:rgba(10,10,10,.86);backdrop-filter:blur(16px);
+      transform:rotate(-7deg);box-shadow:0 35px 80px rgba(0,0,0,.55);
+    }
+    .mini-ui .row{display:flex;gap:9px}
+    .mini-ui img{width:78px;height:115px;object-fit:cover;border-radius:12px}
+    .mini-ui .copy{padding:7px}.copy b{font-size:12px}.copy small{display:block;color:var(--muted);margin-top:7px;line-height:1.4}
+    .stack{
+      display:grid;grid-template-columns:1fr 1fr;gap:14px;
+    }
+    .stat{
+      border:1px solid var(--line);border-radius:24px;padding:25px;
+      background:rgba(255,255,255,.035);display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .stat i{font-size:19px;color:var(--gold)}
+    .stat strong{font-size:35px;letter-spacing:-.05em}.stat span{color:var(--muted);font-size:12px}
+
+    .cta{
+      text-align:center;border:1px solid rgba(229,200,121,.18);border-radius:30px;
+      padding:75px 25px;
+      background:radial-gradient(circle at 50% 0,rgba(229,200,121,.12),transparent 55%),rgba(255,255,255,.025);
+    }
+    .cta h2{font-size:clamp(34px,5vw,54px);letter-spacing:-.055em;margin:0 0 13px}
+    .cta p{color:var(--muted);margin:0 auto 25px;max-width:520px;line-height:1.65;font-size:14px}
+
+    footer{
+      width:min(calc(100% - 32px),var(--max));margin:auto;
+      padding:30px 0 45px;border-top:1px solid var(--line);
+      display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px;
+    }
+    footer .footer-brand{display:flex;align-items:center;gap:8px;color:var(--text);font-weight:800}
+    footer img{width:24px;height:24px;border-radius:7px;object-fit:cover}
+
+    @media (max-width:850px){
+      .navlinks{display:none}
+      .hero{grid-template-columns:1fr;min-height:auto;padding-top:145px;padding-bottom:30px}
+      .hero-visual{height:480px;margin-top:-25px}
+      .visual-logo{width:180px;height:180px;right:calc(50% - 90px);top:135px}
+      .orb{width:330px;height:330px;right:calc(50% - 165px);top:75px}
+      .c1{left:calc(50% - 205px);top:95px}.c2{left:calc(50% - 170px);bottom:15px}
+      .c3{right:calc(50% - 205px);top:70px}.c4{right:calc(50% - 175px);bottom:0}
+      .features,.showcase{grid-template-columns:1fr}
+      section{padding:75px 0}
+    }
+    @media (max-width:520px){
+      .nav{top:10px;width:calc(100% - 20px)}
+      .brand span{display:none}
+      .nav-cta{padding:9px 12px}
+      .hero{width:min(calc(100% - 24px),var(--max))}
+      h1{font-size:53px}
+      .lead{font-size:15px}
+      .anime-card{width:106px;height:158px}
+      .hero-visual{height:400px}
+      .visual-logo{width:150px;height:150px;right:calc(50% - 75px);top:120px;border-radius:35px}
+      .orb{width:290px;height:290px;right:calc(50% - 145px);top:55px}
+      .c1{left:0;top:95px}.c2{left:38px;bottom:4px}
+      .c3{right:0;top:70px}.c4{right:38px;bottom:-5px}
+      .stack{grid-template-columns:1fr 1fr}
+      .stat{min-height:160px;padding:18px}.stat strong{font-size:28px}
+      footer{flex-direction:column}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="noise"></div>
+
+  <nav class="nav">
+    <a class="brand" href="#">
+      <img src="assets/logo.png" alt="Anivers logo">
+      <span>ANIVERS</span>
+    </a>
+    <div class="navlinks">
+      <a class="active" href="#home">Home</a>
+      <a href="#features">Features</a>
+      <a href="#experience">Experience</a>
+    </div>
+    <a class="nav-cta" href="#download">Get Anivers <i class="fa-solid fa-arrow-right"></i></a>
+  </nav>
+
+  <main>
+    <section class="hero" id="home">
+      <div>
+        
+        <h1>Anime that feels <em>made for you.</em></h1>
+        <p class="lead">
+          Anivers brings your anime library, discoveries, bookmarks and watching experience
+          into one dark, clean and focused space.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="#download"><i class="fa-solid fa-play"></i> Start Watching</a>
+          <a class="btn secondary" href="#experience"><i class="fa-solid fa-arrow-down"></i> Explore</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orb"></div>
+        <div class="spark s1"><i class="fa-solid fa-star"></i></div>
+        <div class="spark s2"><i class="fa-solid fa-plus"></i></div>
+        <div class="spark s3"><i class="fa-solid fa-circle"></i></div>
+
+        <div class="anime-card c1"><img src="assets/card-1.jpg" alt=""><span class="card-label">Trending</span></div>
+        <div class="anime-card c2"><img src="assets/card-2.jpg" alt=""><span class="card-label">Continue watching</span></div>
+        <div class="anime-card c3"><img src="assets/card-3.jpg" alt=""><span class="card-label">New release</span></div>
+        <div class="anime-card c4"><img src="assets/card-4.jpg" alt=""><span class="card-label">Your library</span></div>
+
+        <img class="visual-logo" src="assets/logo.png" alt="Anivers">
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="section-head">
+        <h2>Built around watching.</h2>
+        <p>No clutter for the sake of clutter. The interface keeps discovery, watching and saving close at hand.</p>
+      </div>
+      <div class="features">
+        <article class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-compass"></i></div>
+          <h3>Discover faster</h3>
+          <p>Browse trending titles, recent releases, genres and recommendations without losing the visual focus.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-bookmark"></i></div>
+          <h3>Keep your library</h3>
+          <p>Save anime you want to follow and keep your personal list organized around what you actually watch.</p>
+        </article>
+        <article class="feature">
+          <div class="feature-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+          <h3>Made for mobile</h3>
+          <p>A responsive layout with touch-friendly controls, compact cards and a dark viewing-first aesthetic.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="section-head">
+        <h2>The Anivers experience.</h2>
+        <p>A small landing page concept matching the gold, charcoal and glass language of the app UI.</p>
+      </div>
+
+      <div class="showcase">
+        <div class="showcase-panel big">
+          <div class="eyebrow"><i class="fa-solid fa-layer-group"></i> One focused space</div>
+          <h3>Less interface. More anime.</h3>
+          <p>
+            Gold accents define actions and important states while the near-black surface keeps
+            artwork as the visual hero.
+          </p>
+          <div class="mini-ui">
+            <div class="row">
+              <img src="assets/card-5.jpg" alt="">
+              <div class="copy">
+                <b>Continue watching</b>
+                <small>Your saved titles and recent episodes stay within reach.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="stat"><i class="fa-solid fa-film"></i><strong>01</strong><span>Focused home experience</span></div>
+          <div class="stat"><i class="fa-solid fa-bookmark"></i><strong>Save</strong><span>Keep titles for later</span></div>
+          <div class="stat"><i class="fa-solid fa-calendar-days"></i><strong>Live</strong><span>Schedule-oriented discovery</span></div>
+          <div class="stat"><i class="fa-solid fa-moon"></i><strong>Dark</strong><span>Viewing-first visual system</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="download">
+      <div class="cta">
+        <h2>Ready to enter Anivers?</h2>
+        <p>This section can later point directly to your APK, Play Store listing, or web app.</p>
+        <div class="actions" style="justify-content:center">
+          <a class="btn primary" href="#"><i class="fa-solid fa-download"></i> Get the App</a>
+          <a class="btn secondary" href="#home"><i class="fa-solid fa-arrow-up"></i> Back to top</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand"><img src="assets/logo.png" alt=""> ANIVERS</div>
+    <span>© 2026 Anivers. Built for anime fans.</span>
+  </footer>
+
+  <script>
+    // Smooth anchor navigation without adding a framework.
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href');
+        if (id && id !== '#') {
+          const target = document.querySelector(id);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

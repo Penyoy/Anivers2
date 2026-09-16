@@ -3,6 +3,8 @@
 
 # ANIVERS ANIME — Android Native Streaming Anime
 
+## official web - penyoy.github.io/Anivers2
+
 Aplikasi Android native streaming anime premium dengan package `com.anivers.anime`. Source lengkap siap push ke GitHub dan build via GitHub Actions tanpa Android Studio.
 
 **Package:** `com.anivers.anime`  

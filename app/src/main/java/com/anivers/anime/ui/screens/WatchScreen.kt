@@ -46,6 +46,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
 import com.anivers.anime.data.repository.BookmarkRepository
+import com.anivers.anime.data.repository.FirestoreRepository
 import com.anivers.anime.ui.components.CommentsSection
 import com.anivers.anime.ui.theme.GlassBg
 import com.anivers.anime.ui.theme.GlassBorder
@@ -72,6 +73,7 @@ fun WatchScreen(
     val quality by vm.quality.collectAsState()
     val scope = rememberCoroutineScope()
     val repo = remember { BookmarkRepository(context) }
+    val fsRepo = remember { FirestoreRepository(context) }
     val settingsStore = remember { com.anivers.anime.data.local.SettingsStore(context) }
     val appSettings by settingsStore.flow.collectAsState(initial = com.anivers.anime.data.local.AppSettings())
 
@@ -133,7 +135,7 @@ fun WatchScreen(
             exoPlayer?.release()
             exoPlayer = p
             scope.launch {
-                val prog = repo.getProgress(seriesUrl, episode)
+                val prog = fsRepo.getProgress(seriesUrl, episode)
                 if (prog != null && prog.currentTime > 5 && prog.progress in 4..94) {
                     savedTime = prog.currentTime
                     showResume = true
@@ -164,10 +166,10 @@ fun WatchScreen(
             val pos = p.currentPosition / 1000
             val dur = p.duration / 1000
             if (dur > 5 && pos > 3) {
-                repo.upsertProgress(seriesUrl, episode, pos, dur, seriesUrl, series?.judul ?: seriesUrl, series?.cover ?: "")
+                fsRepo.upsertProgress(seriesUrl, episode, pos, dur, series?.judul ?: seriesUrl, series?.cover ?: "")
                 // addHistory hanya saat pause/complete, tidak tiap 8s biar tidak 50 duplikat
                 if (!p.isPlaying && pos >= dur - 2) {
-                    repo.addHistory(seriesUrl, episode, series?.judul ?: seriesUrl, series?.cover ?: "", pos, dur, true)
+                    fsRepo.upsertProgress(seriesUrl, episode, pos, dur, series?.judul ?: seriesUrl, series?.cover ?: "")
                 }
             }
         }

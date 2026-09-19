@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.anivers.anime.data.local.AppDatabase
 import com.anivers.anime.data.repository.BookmarkRepository
 import com.anivers.anime.ui.components.*
 import android.app.Activity
@@ -42,6 +41,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.VpnKey
 import com.anivers.anime.data.ads.AdsManager
 import com.anivers.anime.data.local.SettingsStore
+import com.anivers.anime.data.repository.FirestoreRepository
 import com.anivers.anime.data.repository.KeysRepository
 import com.anivers.anime.ui.components.CommentsSection
 import com.anivers.anime.ui.theme.GlassBg
@@ -67,9 +67,11 @@ fun DetailScreen(
     val scope = rememberCoroutineScope()
     var isBookmarked by remember { mutableStateOf(false) }
     val repo = remember { BookmarkRepository(context) }
+    val fsRepo = remember { FirestoreRepository(context) }
     val keysRepo = remember { KeysRepository(context) }
     val settingsStore = remember { SettingsStore(context) }
     val settings by settingsStore.flow.collectAsState(initial = com.anivers.anime.data.local.AppSettings())
+    val keysCount by fsRepo.keysFlow().collectAsState(initial = 0)
     var isUnlocked by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
     var synopsisExpanded by remember { mutableStateOf(false) }
@@ -85,7 +87,7 @@ fun DetailScreen(
             }
             if (showDetailCountdown && detailCountdown == 0) {
                 showDetailCountdown = false
-                val before = settings.keys
+                val before = keysCount
                 val ok = keysRepo.earnKeys(com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS)
                 if (ok) android.widget.Toast.makeText(context, "Dapat ${com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS} kunci! ${before} -> ${minOf(6, before + 3)}/6", android.widget.Toast.LENGTH_SHORT).show()
             }
@@ -98,7 +100,7 @@ fun DetailScreen(
     LaunchedEffect(detail) {
         detail?.let {
             val id = it.id?.toString() ?: slug
-            isBookmarked = repo.isBookmarked(id, slug)
+            isBookmarked = fsRepo.isBookmarked(id, slug)
         }
     }
 
@@ -242,7 +244,7 @@ fun DetailScreen(
                                 Icon(Icons.Filled.Lock, contentDescription = null, tint = Color(0xFFFF5F5F), modifier = Modifier.size(18.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text("Terkunci — butuh 1 kunci (permanen)", color = Color(0xFFFF5F5F), fontSize = 12.sp, fontWeight = FontWeight.Bold)
-                                    Text("Kunci: ${settings.keys}/6 • Premium buka semua", color = Color(0xFFB8B8B8), fontSize = 11.sp)
+                                    Text("Kunci: ${keysCount}/6 • Premium buka semua", color = Color(0xFFB8B8B8), fontSize = 11.sp)
                                 }
                             }
                             Spacer(Modifier.height(10.dp))
@@ -264,7 +266,7 @@ fun DetailScreen(
                                         if (isUnlocked || settings.isPremium) {
                                             val first = d.chapter?.sortedWith(compareBy { if (it.ch == "Movie") -1 else it.ch?.toIntOrNull() ?: 9999 })?.firstOrNull()
                                             if (first != null) onEpisodeClick(d.seriesId ?: slug, first.url ?: "")
-                                        } else if (settings.keys > 0) {
+                                        } else if (keysCount > 0) {
                                             val ok = keysRepo.unlock(slug, d.judul ?: slug, d.cover ?: "")
                                             if (ok) { isUnlocked = true; android.widget.Toast.makeText(context, "Terbuka! 1 kunci terpakai", android.widget.Toast.LENGTH_SHORT).show()
                                                 val first = d.chapter?.sortedWith(compareBy { if (it.ch == "Movie") -1 else it.ch?.toIntOrNull() ?: 9999 })?.firstOrNull()
@@ -275,13 +277,13 @@ fun DetailScreen(
                                         }
                                     }
                                 },
-                                colors = ButtonDefaults.buttonColors(containerColor = if (isUnlocked || settings.isPremium || settings.keys > 0) GoldPrimary else Color(0xFF3A3A3C), contentColor = if (isUnlocked || settings.isPremium || settings.keys > 0) Color(0xFF030303) else Color.White),
+                                colors = ButtonDefaults.buttonColors(containerColor = if (isUnlocked || settings.isPremium || keysCount > 0) GoldPrimary else Color(0xFF3A3A3C), contentColor = if (isUnlocked || settings.isPremium || keysCount > 0) Color(0xFF030303) else Color.White),
                                 shape = RoundedCornerShape(50.dp),
                                 modifier = Modifier.weight(1f).height(46.dp)
                             ) {
                                 Icon(if (isUnlocked || settings.isPremium) Icons.Filled.PlayArrow else Icons.Filled.Lock, contentDescription = null, modifier = Modifier.size(20.dp))
                                 Spacer(Modifier.width(6.dp))
-                                Text(if (isUnlocked || settings.isPremium) "Mulai Nonton" else if (settings.keys > 0) "Buka (1 Kunci)" else "Terkunci", fontWeight = FontWeight.Bold, fontSize = 13.sp)
+                                Text(if (isUnlocked || settings.isPremium) "Mulai Nonton" else if (keysCount > 0) "Buka (1 Kunci)" else "Terkunci", fontWeight = FontWeight.Bold, fontSize = 13.sp)
                             }
                             OutlinedButton(
                                 onClick = {
@@ -341,14 +343,14 @@ fun DetailScreen(
                             for (ep in visible) {
                                 var watched by remember { mutableStateOf(false) }
                                 LaunchedEffect(ep.url) {
-                                    val prog = AppDatabase.get(context).historyDao().getProgress(d.seriesId ?: slug, ep.url ?: "")
+                                    val prog = fsRepo.getProgress(d.seriesId ?: slug, ep.url ?: "")
                                     watched = prog != null && prog.progress > 5
                                 }
                                 Row(
                                     Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(GlassBg).border(1.dp, if (watched) Color(0x33FFDB89) else if (!isUnlocked && !settings.isPremium) Color(0x33FF5F5F) else GlassBorder, RoundedCornerShape(16.dp)).clickable {
                                         scope.launch {
                                             if (isUnlocked || settings.isPremium) onEpisodeClick(d.seriesId ?: slug, ep.url ?: "")
-                                            else if (settings.keys > 0) {
+                                            else if (keysCount > 0) {
                                                 if (keysRepo.unlock(slug, d.judul ?: slug, d.cover ?: "")) { isUnlocked = true; onEpisodeClick(d.seriesId ?: slug, ep.url ?: "") }
                                             } else showLockDialog = true
                                         }
@@ -392,7 +394,7 @@ fun DetailScreen(
                             title = { Text("Terkunci", fontWeight = FontWeight.Bold) },
                             text = {
                                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                    Text("Anime ini butuh 1 kunci (permanen) untuk dibuka. Kunci mu: ${settings.keys}/6", fontSize = 13.sp)
+                                    Text("Anime ini butuh 1 kunci (permanen) untuk dibuka. Kunci mu: ${keysCount}/6", fontSize = 13.sp)
                                     if (showDetailCountdown) {
                                         Column(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(10.dp)).background(Color(0x1AFFDB89)).border(1.dp, GoldPrimary, RoundedCornerShape(10.dp)).padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                                             Text("Menunggu $detailCountdown detik...", color = GoldPrimary, fontSize = 13.sp, fontWeight = FontWeight.Bold)
@@ -408,7 +410,7 @@ fun DetailScreen(
                             confirmButton = {
                                 Button(
                                     onClick = {
-                                        if (settings.keys >= 6) {
+                                        if (keysCount >= 6) {
                                             android.widget.Toast.makeText(context, "Sudah maks 6 kunci", android.widget.Toast.LENGTH_SHORT).show()
                                             return@Button
                                         }
@@ -418,7 +420,7 @@ fun DetailScreen(
                                                     scope.launch {
                                                         val ok = keysRepo.earnKeys(com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
                                                         if (ok) {
-                                                            val after = minOf(6, settings.keys + com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
+                                                            val after = minOf(6, keysCount + com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
                                                             android.widget.Toast.makeText(context, "Dapat ${com.anivers.anime.utils.Constants.AD_REWARD_KEYS} kunci! Sekarang $after/6", android.widget.Toast.LENGTH_SHORT).show()
                                                             showLockDialog = false
                                                         }
@@ -437,7 +439,7 @@ fun DetailScreen(
                             },
                             dismissButton = {
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    if (settings.keys > 0) {
+                                    if (keysCount > 0) {
                                         OutlinedButton(onClick = {
                                             scope.launch {
                                                 val ok = keysRepo.unlock(slug, detail?.judul ?: slug, detail?.cover ?: "")

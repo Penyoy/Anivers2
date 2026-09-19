@@ -27,8 +27,8 @@ import android.app.Activity
 import coil.compose.AsyncImage
 import com.anivers.anime.R
 import com.anivers.anime.data.ads.AdsManager
-import com.anivers.anime.data.local.AppDatabase
 import com.anivers.anime.data.local.SettingsStore
+import com.anivers.anime.data.repository.FirestoreRepository
 import com.anivers.anime.data.repository.KeysRepository
 import com.anivers.anime.data.repository.PremiumRepository
 import com.anivers.anime.ui.components.GlassBackground
@@ -59,13 +59,13 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
     val scope = rememberCoroutineScope()
     val settingsStore = remember { SettingsStore(context) }
     val settings by settingsStore.flow.collectAsState(initial = com.anivers.anime.data.local.AppSettings())
-    val db = remember { AppDatabase.get(context) }
-    val bookmarks by db.bookmarkDao().getAllFlow().collectAsState(initial = emptyList())
-    val historyCount = remember { mutableStateOf(0) }
+    val fsRepo = remember { FirestoreRepository(context) }
+    val bookmarks by fsRepo.bookmarksFlow().collectAsState(initial = emptyList())
+    val keysCount by fsRepo.keysFlow().collectAsState(initial = 0)
+    val progressList by fsRepo.watchProgressFlow().collectAsState(initial = emptyList())
+    val historyCount = progressList.size
     val keysRepo = remember { KeysRepository(context) }
     val premiumRepo = remember { PremiumRepository(context) }
-
-    LaunchedEffect(Unit) { historyCount.value = db.historyDao().getAll().size }
 
     // Google Sign-In launcher - butuh SHA-1 terdaftar di Firebase (debug + release)
     val googleLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -179,8 +179,8 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                     Spacer(Modifier.height(14.dp))
                     Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                         StatPill(value = "${bookmarks.size}", label = "Bookmark", icon = Icons.Filled.Bookmark)
-                        StatPill(value = "${historyCount.value}", label = "Ditonton", icon = Icons.Filled.History)
-                        StatPill(value = "${settings.keys}/6", label = "Kunci", icon = Icons.Filled.VpnKey)
+                        StatPill(value = "$historyCount", label = "Ditonton", icon = Icons.Filled.History)
+                        StatPill(value = "$keysCount/6", label = "Kunci", icon = Icons.Filled.VpnKey)
                     }
                     Spacer(Modifier.height(14.dp))
                     OutlinedButton(
@@ -300,7 +300,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                     }
                     if (showCountdown && countdown == 0) {
                         showCountdown = false
-                        val before = settings.keys
+                        val before = keysCount
                         val ok = keysRepo.earnKeys(com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS)
                         if (ok) android.widget.Toast.makeText(context, "Dapat ${com.anivers.anime.utils.Constants.COUNTDOWN_REWARD_KEYS} kunci! ${before} -> ${minOf(6, before + 3)}/6", android.widget.Toast.LENGTH_SHORT).show()
                     }
@@ -319,7 +319,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                         Text("1 kunci = 1 anime permanen • Maks 6", color = Color(0xFF8A8FA3), fontSize = 11.sp)
                     }
                     Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(if (settings.isPremium) Color(0xFF22C55E) else GlassBg).border(1.dp, if (settings.isPremium) Color(0xFF22C55E) else GlassBorder, RoundedCornerShape(50)).padding(horizontal = 12.dp, vertical = 6.dp)) {
-                        Text(if (settings.isPremium) "Premium" else "${settings.keys}/6", color = if (settings.isPremium) Color.White else GoldPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                        Text(if (settings.isPremium) "Premium" else "${keysCount}/6", color = if (settings.isPremium) Color.White else GoldPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
                     }
                 }
                 if (settings.isPremium) {
@@ -333,13 +333,13 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         repeat(6) { idx ->
                             Box(
-                                modifier = Modifier.weight(1f).height(6.dp).clip(RoundedCornerShape(50)).background(if (idx < settings.keys) GoldPrimary else Color(0x33FFFFFF))
+                                modifier = Modifier.weight(1f).height(6.dp).clip(RoundedCornerShape(50)).background(if (idx < keysCount) GoldPrimary else Color(0x33FFFFFF))
                             )
                         }
                     }
                     Button(
                         onClick = {
-                            if (settings.keys >= 6) {
+                            if (keysCount >= 6) {
                                 android.widget.Toast.makeText(context, "Maks 6 kunci, pakai dulu untuk buka anime", android.widget.Toast.LENGTH_SHORT).show()
                                 return@Button
                             }
@@ -351,7 +351,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                                         val ok = keysRepo.earnKeys(com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
                                         adLoading = false
                                         if (ok) {
-                                            val after = minOf(6, settings.keys + com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
+                                            val after = minOf(6, keysCount + com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
                                             android.widget.Toast.makeText(context, "Dapat ${com.anivers.anime.utils.Constants.AD_REWARD_KEYS} kunci! Sekarang $after/6", android.widget.Toast.LENGTH_SHORT).show()
                                         } else android.widget.Toast.makeText(context, "Gagal tambah kunci (maks 6)", android.widget.Toast.LENGTH_SHORT).show()
                                     }
@@ -421,7 +421,7 @@ fun ProfileScreen(onAuthSuccess: (() -> Unit)? = null, onNavigate: ((String) -> 
                     android.widget.Toast.makeText(context, "Edit Profile: login lalu ubah displayName di pengaturan akun", android.widget.Toast.LENGTH_SHORT).show()
                 }
                 ProfileMenuItem(icon = Icons.Filled.Bookmark, title = "Koleksi Saya", subtitle = "${bookmarks.size} bookmark") { onNavigate?.invoke("bookmark") }
-                ProfileMenuItem(icon = Icons.Filled.History, title = "Riwayat Tonton", subtitle = "${historyCount.value} riwayat") { onNavigate?.invoke("history") }
+                ProfileMenuItem(icon = Icons.Filled.History, title = "Riwayat Tonton", subtitle = "$historyCount riwayat") { onNavigate?.invoke("history") }
                 ProfileMenuItem(icon = Icons.Filled.PlayArrow, title = "Playback Settings", subtitle = "Kualitas & autoplay") {
                     android.widget.Toast.makeText(context, "Pengaturan playback ada di kartu Pengaturan di atas", android.widget.Toast.LENGTH_SHORT).show()
                 }

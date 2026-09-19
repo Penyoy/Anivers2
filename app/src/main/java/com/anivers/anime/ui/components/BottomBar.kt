@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.anivers.anime.data.local.AppDatabase
+import com.anivers.anime.data.repository.FirestoreRepository
 import com.anivers.anime.ui.theme.GlassBg
 import com.anivers.anime.ui.theme.GlassBorder
 import com.anivers.anime.ui.theme.GoldPrimary
@@ -42,8 +42,8 @@ data class BottomItem(val route: String, val label: String, val icon: ImageVecto
 @Composable
 fun BottomBar(navController: NavController) {
     val context = LocalContext.current
-    val db = remember { AppDatabase.get(context) }
-    val bookmarks by db.bookmarkDao().getAllFlow().collectAsState(initial = emptyList())
+    val fsRepo = remember { FirestoreRepository(context) }
+    val bookmarks by fsRepo.bookmarksFlow().collectAsState(initial = emptyList())
 
     val items = remember(bookmarks.size) {
         listOf(
@@ -58,7 +58,6 @@ fun BottomBar(navController: NavController) {
     val navBackStack by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStack?.destination?.route ?: "home"
 
-    // Floating glass container
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -92,22 +91,15 @@ fun BottomBar(navController: NavController) {
                     selected = isSelected,
                     badgeCount = if (item.route == "bookmark" && bookmarks.isNotEmpty()) bookmarks.size else null,
                     onClick = {
-                        // Force navigation even from Detail/Watch/Explore/Search - always pop to tab root
-                        // Jika sudah di tab yang sama, pop ke home juga untuk reset stack
                         val isSameTab = currentRoute == item.route
                         navController.navigate(item.route) {
-                            // popUpTo home agar stack Detail/Watch/Genre/Search ter-clear
                             popUpTo("home") {
                                 saveState = true
-                                // jika klik tab yang sama (misal Home saat di Home), inclusive false untuk tidak hapus Home
-                                // tapi jika dari Detail (anime/*) tetap clear Detail karena Detail bukan home
                                 inclusive = isSameTab
                             }
                             launchSingleTop = true
                             restoreState = !isSameTab
                         }
-                        // Force: jika tap bottom nav dari halaman lain (anime/watch/genre/search/explore), selalu kembali ke tab root
-                        // Tanpa early return, ensure tap selalu responsif
                     }
                 )
             }
@@ -166,7 +158,6 @@ private fun BottomGlassItem(
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
             letterSpacing = 0.2.sp
         )
-        // indicator dot
         if (selected) {
             Spacer(Modifier.height(2.dp))
             Box(modifier = Modifier.size(4.dp).clip(CircleShape).background(GoldPrimary))

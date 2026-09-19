@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.VpnKey
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.anivers.anime.data.local.AppDatabase
 import com.anivers.anime.data.model.Anime
+import com.anivers.anime.data.repository.FirestoreRepository
 import com.anivers.anime.ui.components.*
 import com.anivers.anime.ui.theme.GlassBg
 import com.anivers.anime.ui.theme.GlassBorder
@@ -48,11 +49,23 @@ fun HomeScreen(
 ) {
     val state by vm.state.collectAsState()
     val context = LocalContext.current
-    val history by AppDatabase.get(context).historyDao().getRecentFlow(6).collectAsState(initial = emptyList())
+    val fsRepo = remember { FirestoreRepository(context) }
+    val continueWatching by fsRepo.watchProgressFlow().collectAsState(initial = emptyList())
+    val keysCount by fsRepo.keysFlow().collectAsState(initial = 0)
     val authUser = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
     var selectedTab by remember { mutableIntStateOf(0) }
     val tabs = listOf("Untukmu", "Jadwal", "Terpopuler")
     val scrollState = rememberScrollState()
+
+    // Group progress by seriesUrl → 1 per anime
+    val continueAnime = remember(continueWatching) {
+        continueWatching
+            .filter { it.seriesUrl.isNotBlank() && it.progress > 5 }
+            .groupBy { it.seriesUrl }
+            .map { (_, episodes) -> episodes.maxByOrNull { it.updatedAt } ?: episodes.first() }
+            .sortedByDescending { it.updatedAt }
+            .take(6)
+    }
 
     GlassBackground {
         Column(
@@ -62,7 +75,7 @@ fun HomeScreen(
                 .padding(bottom = 96.dp)
                 .statusBarsPadding()
         ) {
-            // === HEADER GLASS ===
+            // HEADER
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,30 +96,28 @@ fun HomeScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     if (authUser?.photoUrl != null) {
-                        AsyncImage(
-                            model = authUser.photoUrl.toString(),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize().clip(CircleShape),
-                            contentScale = ContentScale.Crop
-                        )
+                        AsyncImage(model = authUser.photoUrl.toString(), contentDescription = null, modifier = Modifier.fillMaxSize().clip(CircleShape), contentScale = ContentScale.Crop)
                     } else {
-                        Text(
-                            (authUser?.displayName?.take(1) ?: "A").uppercase(),
-                            color = GoldPrimary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
-                        )
+                        Text((authUser?.displayName?.take(1) ?: "A").uppercase(), color = GoldPrimary, fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
                 }
                 Column(Modifier.weight(1f)) {
                     Text("Selamat datang,", color = Color(0xFF8A8FA3), fontSize = 11.sp)
-                    Text(
-                        authUser?.displayName ?: "Anivers User",
-                        color = Color.White,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1
-                    )
+                    Text(authUser?.displayName ?: "Anivers User", color = Color.White, fontSize = 15.sp, fontWeight = FontWeight.Bold, maxLines = 1)
+                }
+                // Keys badge
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(GlassBg)
+                        .border(1.dp, GlassBorder, RoundedCornerShape(50))
+                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Icon(Icons.Filled.VpnKey, contentDescription = null, tint = GoldPrimary, modifier = Modifier.size(14.dp))
+                        Text("$keysCount/6", color = GoldPrimary, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
                 Box(
                     modifier = Modifier
@@ -122,7 +133,7 @@ fun HomeScreen(
 
             Spacer(Modifier.height(8.dp))
 
-            // === TAB PILLS GLASS ===
+            // TAB PILLS
             Row(
                 modifier = Modifier.padding(horizontal = 16.dp).clip(RoundedCornerShape(50)).background(GlassBg).border(1.dp, GlassBorder, RoundedCornerShape(50)).padding(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -136,17 +147,11 @@ fun HomeScreen(
                             .clickable { selectedTab = idx }
                             .padding(horizontal = 18.dp, vertical = 9.dp)
                     ) {
-                        Text(
-                            title,
-                            color = if (selected) Color(0xFF030303) else Color(0xFFB8B8B8),
-                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
-                            fontSize = 12.sp
-                        )
+                        Text(title, color = if (selected) Color(0xFF030303) else Color(0xFFB8B8B8), fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium, fontSize = 12.sp)
                     }
                 }
             }
 
-            // Loading / Error
             if (state.loading) {
                 Spacer(Modifier.height(16.dp))
                 ShimmerGridPlaceholder()
@@ -160,7 +165,6 @@ fun HomeScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            // Tab content with fade slide - fix tumpuk dengan SizeTransform clip
             AnimatedContent(
                 targetState = selectedTab,
                 transitionSpec = {
@@ -171,7 +175,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) { tab ->
                 when (tab) {
-                    0 -> UntukmuTabGlass(state, history, onAnimeClick, onMoreClick, onGenreClick)
+                    0 -> UntukmuTabGlass(state, continueAnime, onAnimeClick, onMoreClick, onGenreClick)
                     1 -> JadwalTabGlass(state, onAnimeClick)
                     2 -> TerpopulerTabGlass(state, onAnimeClick, onMoreClick)
                 }
@@ -185,7 +189,7 @@ fun HomeScreen(
 @Composable
 private fun UntukmuTabGlass(
     state: com.anivers.anime.viewmodel.HomeUiState,
-    history: List<com.anivers.anime.data.local.HistoryEntity>,
+    continueAnime: List<com.anivers.anime.data.local.ProgressEntity>,
     onAnimeClick: (String) -> Unit,
     onMoreClick: (String) -> Unit,
     onGenreClick: (String) -> Unit
@@ -208,7 +212,6 @@ private fun UntukmuTabGlass(
                 ) {
                     AsyncImage(model = a.cover, contentDescription = a.judul, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
                     Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color(0x33000000), Color(0xE6030303)))))
-                    // top badge
                     Row(modifier = Modifier.align(Alignment.TopStart).padding(12.dp), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         Box(modifier = Modifier.clip(RoundedCornerShape(50)).background(GoldPrimary).padding(horizontal = 10.dp, vertical = 4.dp)) {
                             Text("FEATURED", color = Color(0xFF030303), fontSize = 10.sp, fontWeight = FontWeight.Bold)
@@ -230,18 +233,18 @@ private fun UntukmuTabGlass(
         Spacer(Modifier.height(18.dp))
     }
 
-    if (history.isNotEmpty()) {
-        SectionHeaderGlass(title = "Lanjutkan Nonton", subtitle = "${history.size} progress tersimpan")
+    if (continueAnime.isNotEmpty()) {
+        SectionHeaderGlass(title = "Lanjutkan Nonton", subtitle = "${continueAnime.size} progress tersimpan")
         LazyRow(contentPadding = PaddingValues(horizontal = 16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(history.size) { i ->
-                val h = history[i]
+            items(continueAnime.size) { i ->
+                val h = continueAnime[i]
                 Column(
                     Modifier
                         .width(132.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(GlassBg)
                         .border(1.dp, GlassBorder, RoundedCornerShape(16.dp))
-                        .clickable { /* keep history click via detail not watch directly */ }
+                        .clickable { onAnimeClick(h.seriesUrl) }
                 ) {
                     Box(Modifier.fillMaxWidth().aspectRatio(3f / 4f).clip(RoundedCornerShape(16.dp))) {
                         AsyncImage(model = h.cover, contentDescription = h.judul, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
@@ -253,7 +256,7 @@ private fun UntukmuTabGlass(
                         }
                     }
                     Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text(h.judul, color = Color.White, fontSize = 11.sp, maxLines = 2, lineHeight = 13.sp, fontWeight = FontWeight.Medium)
+                        Text(h.judul.ifBlank { h.seriesUrl }, color = Color.White, fontSize = 11.sp, maxLines = 2, lineHeight = 13.sp, fontWeight = FontWeight.Medium)
                         Text("Ep ${h.episode}", color = GoldPrimary, fontSize = 10.sp)
                     }
                 }
@@ -440,7 +443,6 @@ private fun TerpopulerTabGlass(
 
 @Composable
 private fun AnimeGridSectionGlass(animes: List<Anime>, onAnimeClick: (String) -> Unit) {
-    // Opsi A: revert ke pattern sehat seperti ExploreScreen - tanpa IntrinsicSize.Min
     Column(
         modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(12.dp)

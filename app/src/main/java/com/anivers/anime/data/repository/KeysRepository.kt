@@ -2,48 +2,40 @@ package com.anivers.anime.data.repository
 
 import android.content.Context
 import com.anivers.anime.data.local.AppDatabase
-import com.anivers.anime.data.local.SettingsStore
 import com.anivers.anime.data.local.UnlockedAnimeEntity
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 
 class KeysRepository(private val context: Context) {
+    private val fs = FirestoreRepository(context)
     private val db = AppDatabase.get(context)
-    private val store = SettingsStore(context)
 
-    fun keysFlow(): Flow<Int> = store.flow.map { it.keys }
-    fun premiumFlow(): Flow<Boolean> = store.flow.map { it.isPremium }
-    suspend fun keys(): Int = store.flow.first().keys
-    suspend fun isPremium(): Boolean = store.flow.first().isPremium
+    fun keysFlow(): Flow<Int> = fs.keysFlow()
+
+    suspend fun keys(): Int = fs.getKeys()
+    suspend fun isPremium(): Boolean = try { PremiumRepository(context).isPremium() } catch (_: Exception) { false }
 
     suspend fun canEarn(): Boolean = keys() < com.anivers.anime.utils.Constants.MAX_KEYS
 
     suspend fun earnKey(): Boolean = earnKeys(com.anivers.anime.utils.Constants.AD_REWARD_KEYS)
     suspend fun earnKeys(n: Int): Boolean {
         if (keys() >= com.anivers.anime.utils.Constants.MAX_KEYS) return false
-        val toAdd = minOf(n, com.anivers.anime.utils.Constants.MAX_KEYS - keys())
-        if (toAdd <= 0) return false
-        store.addKey(toAdd)
-        return true
+        return fs.addKeys(n)
     }
 
-    fun unlockedFlow(): Flow<List<UnlockedAnimeEntity>> = db.unlockedDao().getAllFlow()
+    fun unlockedFlow(): Flow<List<UnlockedAnimeEntity>> = fs.unlockedFlow()
     suspend fun isUnlocked(slug: String): Boolean {
         if (isPremium()) return true
-        return db.unlockedDao().isUnlocked(slug)
+        return fs.isUnlocked(slug)
     }
 
     suspend fun unlock(slug: String, judul: String = "", cover: String = "", source: String = "key"): Boolean {
         if (isPremium()) {
-            db.unlockedDao().insert(UnlockedAnimeEntity(slug = slug, judul = judul, cover = cover, source = "premium"))
-            return true
+            return fs.unlock(slug, judul, cover, "premium")
         }
         if (isUnlocked(slug)) return true
-        val consumed = store.consumeKey()
+        val consumed = fs.consumeKey()
         if (!consumed) return false
-        db.unlockedDao().insert(UnlockedAnimeEntity(slug = slug, judul = judul, cover = cover, source = source))
-        return true
+        return fs.unlock(slug, judul, cover, source)
     }
 
     suspend fun hasKeyForUnlock(slug: String): Boolean = isPremium() || isUnlocked(slug) || keys() > 0

@@ -132,9 +132,10 @@ data class Comment(
     val time: String = "",
     val likes: Int = 0
 ) {
-    val displayName: String get() = user.ifNotBlank() ?: name.ifNotBlank() ?: username.ifNotBlank() ?: "Anon"
-    val displayMessage: String get() = message.ifNotBlank() ?: comment.ifNotBlank() ?: text.ifNotBlank() ?: content.ifNotBlank() ?: ""
-    val displayDate: String get() = date.ifNotBlank() ?: createdAt.ifNotBlank() ?: time.ifNotBlank() ?: ""
-    val displayAvatar: String get() = avatar.ifNotBlank() ?: photo.ifNotBlank() ?: ""
-    private fun String.ifNotBlank(): String = if (isNotBlank()) this else ""
+    val displayName: String get() = user.ifNotBlankOr() ?: name.ifNotBlankOr() ?: username.ifNotBlankOr() ?: "Anon"
+    val displayMessage: String get() = message.ifNotBlankOr() ?: comment.ifNotBlankOr() ?: text.ifNotBlankOr() ?: content.ifNotBlankOr() ?: ""
+    val displayDate: String get() = date.ifNotBlankOr() ?: createdAt.ifNotBlankOr() ?: time.ifNotBlankOr() ?: ""
+    val displayAvatar: String get() = avatar.ifNotBlankOr() ?: photo.ifNotBlankOr() ?: ""
 }
+
+private fun String?.ifNotBlankOr(): String? = if (!isNullOrBlank()) this else null

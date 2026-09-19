@@ -25,8 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.anivers.anime.data.local.AppDatabase
-import com.anivers.anime.data.repository.BookmarkRepository
+import com.anivers.anime.data.repository.FirestoreRepository
 import com.anivers.anime.ui.components.EmptyState
 import com.anivers.anime.ui.components.GlassBackground
 import com.anivers.anime.ui.components.GlassTopBar
@@ -40,20 +39,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
     val context = LocalContext.current
-    val repo = remember { BookmarkRepository(context) }
-    val db = remember { AppDatabase.get(context) }
-    val bookmarks by db.bookmarkDao().getAllFlow().collectAsState(initial = emptyList())
+    val fsRepo = remember { FirestoreRepository(context) }
+    val bookmarks by fsRepo.bookmarksFlow().collectAsState(initial = emptyList())
     var query by remember { mutableStateOf("") }
     var sort by remember { mutableStateOf("newest") }
     val scope = rememberCoroutineScope()
     val isLoggedIn = FirebaseAuth.getInstance().currentUser != null
-
-    // Pull dari Firebase saat login agar save terambil dari cloud
-    LaunchedEffect(isLoggedIn) {
-        if (isLoggedIn) {
-            try { repo.pullFromFirebase() } catch (_: Exception) {}
-        }
-    }
 
     val filtered = remember(bookmarks, query, sort) {
         var list = bookmarks.filter { it.url.isNotEmpty() && it.url != "undefined" }
@@ -91,7 +82,6 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
                     )
                 }
             } else {
-                // Toolbar glass
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -131,7 +121,7 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
                             DropdownMenuItem(text = { Text("A-Z", color = Color.White) }, onClick = { sort = "az"; expanded = false })
                         }
                     }
-                    IconButton(onClick = { scope.launch { repo.clearAll() } }, modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x1AFF5F5F))) {
+                    IconButton(onClick = { scope.launch { fsRepo.clearAllBookmarks() } }, modifier = Modifier.size(36.dp).clip(CircleShape).background(Color(0x1AFF5F5F))) {
                         Icon(Icons.Filled.Delete, contentDescription = "clear", tint = Color(0xFFFCA5A5), modifier = Modifier.size(16.dp))
                     }
                 }
@@ -166,13 +156,10 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
                                     .clickable { onAnimeClick(b.url) }
                             ) {
                                 AsyncImage(model = b.cover, contentDescription = b.judul, modifier = Modifier.fillMaxSize(), contentScale = ContentScale.Crop)
-                                // gradient
                                 Box(modifier = Modifier.fillMaxWidth().height(64.dp).align(Alignment.BottomCenter).background(androidx.compose.ui.graphics.Brush.verticalGradient(listOf(Color.Transparent, Color(0xAA000000)))))
-                                // top bookmark badge
                                 Box(modifier = Modifier.align(Alignment.TopStart).padding(8.dp).clip(RoundedCornerShape(50)).background(GoldPrimary).padding(horizontal = 8.dp, vertical = 3.dp)) {
                                     Text("Saved", color = Color(0xFF030303), fontSize = 10.sp, fontWeight = FontWeight.Bold)
                                 }
-                                // delete
                                 Box(
                                     modifier = Modifier
                                         .align(Alignment.TopEnd)
@@ -181,12 +168,11 @@ fun BookmarkScreen(onAnimeClick: (String) -> Unit) {
                                         .clip(CircleShape)
                                         .background(Color(0x99000000))
                                         .border(1.dp, Color(0x33FFFFFF), CircleShape)
-                                        .clickable { scope.launch { repo.removeBookmark(b.id) } },
+                                        .clickable { scope.launch { fsRepo.removeBookmark(b.id) } },
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(Icons.Filled.Delete, contentDescription = null, tint = Color(0xFFFCA5A5), modifier = Modifier.size(14.dp))
                                 }
-                                // bottom title overlay
                                 Column(modifier = Modifier.align(Alignment.BottomStart).padding(10.dp)) {
                                     Text(b.judul, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 2, lineHeight = 13.sp)
                                     Text(

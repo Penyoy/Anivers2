@@ -21,13 +21,21 @@ jobs:
           cache: gradle
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        
-      - name: Install Android SDK packages
         run: |
-          sdkmanager "platform-tools"
-          sdkmanager "platforms;android-35"
-          sdkmanager "build-tools;35.0.0"
+          export ANDROID_HOME=/usr/local/lib/android/sdk
+          export PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH
+          if [ ! -d "$ANDROID_HOME/cmdline-tools/latest" ]; then
+            mkdir -p "$ANDROID_HOME/cmdline-tools"
+            cd "$ANDROID_HOME/cmdline-tools"
+            curl -sLo cmdline-tools.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+            unzip -q cmdline-tools.zip
+            mv cmdline-tools latest
+          fi
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platform-tools" "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set ANDROID_HOME env
+        run: echo "ANDROID_HOME=/usr/local/lib/android/sdk" >> $GITHUB_ENV
     
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew

@@ -3,7 +3,7 @@
 
 # ANIVERS ANIME — Android Native Streaming Anime
 
-## official web - ![link]wanz0.web.id
+## official web - wanz0.web.id
 
 Aplikasi Android native streaming anime premium dengan package `com.anivers.anime`. Source lengkap siap push ke GitHub dan build via GitHub Actions tanpa Android Studio.
 
